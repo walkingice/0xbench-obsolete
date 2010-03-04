@@ -11,10 +11,11 @@ import android.content.*;
 import java.nio.*;
 
 /* Construct a basic UI */
-public class Benchmark extends Activity {
+public class Benchmark extends Activity implements View.OnClickListener {
 
     private Button   mRun;
     private CheckBox mCheckList[];
+    private TextView mBannerInfo;
 
     private ScrollView   mScrollView;
     private LinearLayout mLinearLayout;
@@ -32,7 +33,11 @@ public class Benchmark extends Activity {
 
     private void initViews() {
 	mRun = (Button)findViewById(R.id.btn_run);
+	mRun.setOnClickListener(this);
+
 	mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
+
+	mBannerInfo = (TextView)findViewById(R.id.banner_info);
 
 	int length = test.length;
 	mCheckList = new CheckBox[length];
@@ -40,6 +45,19 @@ public class Benchmark extends Activity {
 	    mCheckList[i] = new CheckBox(this);
 	    mCheckList[i].setText(test[i]);
 	    mLinearLayout.addView(mCheckList[i]);
+	}
+    }
+
+    public void onClick(View v) {
+	if (v == mRun) {
+	    String result = "result\n";
+	    int length = mCheckList.length;
+	    for (int i = 0; i < length; i++) {
+		result += test[i] + ":" + mCheckList[i].isChecked() + "\n";
+		mCheckList[i].setChecked(false);
+	    }
+
+	    mBannerInfo.setText(result);
 	}
     }
 }
