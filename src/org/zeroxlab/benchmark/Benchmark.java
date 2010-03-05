@@ -27,12 +27,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     LinkedList<CaseCanvas> mCases;
 
-    final int RUN_CASE = 1;
-
-    private String test[] = {"aaa", "bbb", "ccc",
-	"ddd", "eee", "fff", "ggg", "hhh", "iii",
-	"jjj", "kkk"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
