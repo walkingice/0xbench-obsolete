@@ -10,6 +10,8 @@ import android.view.*;
 import android.content.*;
 import java.nio.*;
 
+import java.util.LinkedList;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
@@ -23,7 +25,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private ScrollView   mScrollView;
     private LinearLayout mLinearLayout;
 
-    CaseCanvas mCase;
+    LinkedList<CaseCanvas> mCases;
 
     final int RUN_CASE = 1;
 
@@ -35,8 +37,10 @@ public class Benchmark extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
+	mCases = new LinkedList<CaseCanvas>();
+	CaseCanvas mycase = new CaseCanvas(3);
+	mCases.add(mycase);
 	initViews();
-	mCase = new CaseCanvas(3);
     }
 
     private void initViews() {
@@ -47,35 +51,46 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
 	mBannerInfo = (TextView)findViewById(R.id.banner_info);
 
-	int length = test.length;
+	int length = mCases.size();
 	mCheckList = new CheckBox[length];
 	for (int i = 0; i < length; i++) {
 	    mCheckList[i] = new CheckBox(this);
-	    mCheckList[i].setText(test[i]);
+	    mCheckList[i].setText(mCases.get(i).getTitle());
 	    mLinearLayout.addView(mCheckList[i]);
 	}
     }
 
     public void onClick(View v) {
 	if (v == mRun) {
-	    String result = "result\n";
-	    int length = mCheckList.length;
-	    for (int i = 0; i < length; i++) {
-		result += test[i] + ":" + mCheckList[i].isChecked() + "\n";
-		mCheckList[i].setChecked(false);
+	    for (int i = 0; i < mCheckList.length; i++) {
+		if (mCheckList[i].isChecked()) {
+		    mCases.get(i).reset();
+		} else {
+		    mCases.get(i).clear();
+		}
 	    }
-
-	    mBannerInfo.setText(result);
+	    runCase(mCases);
 	}
-
-	mCase.reset();
-	runCase(mCase);
     }
 
-    public void runCase(CaseCanvas mycase) {
-	Intent intent = mycase.generateIntent();
-	if (intent != null) {
-	    startActivityForResult(intent, 0);
+    public void runCase(LinkedList<CaseCanvas> list) {
+	CaseCanvas pointer = null;
+	boolean finish = true;
+	for (int i = 0; i < list.size(); i++) {
+	    pointer = list.get(i);
+	    if (!pointer.isFinish()) {
+		finish = false;
+		break;
+	    }
+	}
+
+	if (finish) {
+	    mBannerInfo.setText("Finished");
+	} else {
+	    Intent intent = pointer.generateIntent();
+	    if (intent != null) {
+		startActivityForResult(intent, 0);
+	    }
 	}
     }
 
@@ -84,11 +99,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    Log.i(TAG,"oooops....Intent is null");
 	    return;
 	}
-	if (mCase.isFinish()) {
-	    Log.i(TAG, mCase.getResult());
-	} else {
-	    mCase.parseIntent(data);
-	    runCase(mCase);
-	}
+	runCase(mCases);
     }
 }
