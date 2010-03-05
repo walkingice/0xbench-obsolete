@@ -25,14 +25,14 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private ScrollView   mScrollView;
     private LinearLayout mLinearLayout;
 
-    LinkedList<CaseCanvas> mCases;
+    LinkedList<Case> mCases;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
-	mCases = new LinkedList<CaseCanvas>();
-	CaseCanvas mycase = new CaseCanvas(3);
+	mCases = new LinkedList<Case>();
+	Case mycase = new CaseCanvas();
 	mCases.add(mycase);
 	initViews();
     }
@@ -67,8 +67,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	}
     }
 
-    public void runCase(LinkedList<CaseCanvas> list) {
-	CaseCanvas pointer = null;
+    public void runCase(LinkedList<Case> list) {
+	Case pointer = null;
 	boolean finish = true;
 	for (int i = 0; i < list.size(); i++) {
 	    pointer = list.get(i);
@@ -90,11 +90,11 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     public String getResult() {
 	String result = "";
-	CaseCanvas mycase;
+	Case mycase;
 	for (int i = 0; i < mCases.size(); i++) {
 	    mycase = mCases.get(i);
 	    result += mycase.getTitle() + "\n";
-	    result += mycase.getResult()+"\n";
+	    result += mycase.getBenchmark()+"\n";
 	}
 
 	return result;
@@ -106,15 +106,12 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    return;
 	}
 
-	String source = data.getStringExtra(CaseCanvas.SOURCE_TAG);
-	if (source != null || !source.equals("")) {
-	    CaseCanvas mycase;
-	    for (int i = 0; i < mCases.size(); i++) {
-		mycase = mCases.get(i);
-		if (source.equals(CaseCanvas.TAG)) {
-		    mycase.parseIntent(data);
-		    break;
-		}
+	Case mycase;
+	for (int i = 0; i < mCases.size(); i++) {
+	    mycase = mCases.get(i);
+	    if (mycase.realize(data)) {
+		mycase.parseIntent(data);
+		break;
 	    }
 	}
 	runCase(mCases);
