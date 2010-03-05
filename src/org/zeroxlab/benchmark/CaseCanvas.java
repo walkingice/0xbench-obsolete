@@ -38,6 +38,10 @@ public class CaseCanvas {
 	reset();
     }
 
+    public String getTitle() {
+	return TAG;
+    }
+
     public Intent generateIntent() {
 	/* if run out of the repeat times, go back directly */
 	if (mRepeatNow <= 0) {
@@ -54,6 +58,11 @@ public class CaseCanvas {
 	mRepeatNow = mRepeatNow -1;
 
 	return intent;
+    }
+
+    public void clear() {
+	mResult = new long[mRepeatMax];
+	mRepeatNow = 0;
     }
 
     /* Reset the repeat time to default value. clear result */
