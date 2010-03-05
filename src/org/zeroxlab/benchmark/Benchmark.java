@@ -13,12 +13,19 @@ import java.nio.*;
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
+    public final static String TAG     = "Benchmark";
+    public final static String PACKAGE = "org.zeroxlab.benchmark";
+
     private Button   mRun;
     private CheckBox mCheckList[];
     private TextView mBannerInfo;
 
     private ScrollView   mScrollView;
     private LinearLayout mLinearLayout;
+
+    CaseCanvas mCase;
+
+    final int RUN_CASE = 1;
 
     private String test[] = {"aaa", "bbb", "ccc",
 	"ddd", "eee", "fff", "ggg", "hhh", "iii",
@@ -29,6 +36,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.main);
 	initViews();
+	mCase = new CaseCanvas(3);
     }
 
     private void initViews() {
@@ -58,6 +66,29 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    }
 
 	    mBannerInfo.setText(result);
+	}
+
+	mCase.reset();
+	runCase(mCase);
+    }
+
+    public void runCase(CaseCanvas mycase) {
+	Intent intent = mycase.generateIntent();
+	if (intent != null) {
+	    startActivityForResult(intent, 0);
+	}
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	if (data == null) {
+	    Log.i(TAG,"oooops....Intent is null");
+	    return;
+	}
+	if (mCase.isFinish()) {
+	    Log.i(TAG, mCase.getResult());
+	} else {
+	    mCase.parseIntent(data);
+	    runCase(mCase);
 	}
     }
 }
