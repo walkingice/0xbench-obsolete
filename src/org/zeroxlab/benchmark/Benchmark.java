@@ -105,6 +105,18 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    Log.i(TAG,"oooops....Intent is null");
 	    return;
 	}
+
+	String source = data.getStringExtra(CaseCanvas.SOURCE_TAG);
+	if (source != null || !source.equals("")) {
+	    CaseCanvas mycase;
+	    for (int i = 0; i < mCases.size(); i++) {
+		mycase = mCases.get(i);
+		if (source.equals(CaseCanvas.TAG)) {
+		    mycase.parseIntent(data);
+		    break;
+		}
+	    }
+	}
 	runCase(mCases);
     }
 }
