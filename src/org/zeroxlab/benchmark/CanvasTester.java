@@ -16,6 +16,7 @@ import android.os.*;
 
 public class CanvasTester extends Activity{
     public final String TAG = "CanvasTester";
+    public final static String PACKAGE = "org.zeroxlab.benchmark";
     MyView mView;
     int mRound;
     int mNow;
@@ -23,14 +24,20 @@ public class CanvasTester extends Activity{
 
     private String mSourceTag = "unknown";
 
+    public final static String getPackage() {
+	return PACKAGE;
+    }
+    public static String getFullClassName() {
+	return getPackage()+".CanvasTester";
+    }
     public void onCreate(Bundle bundle) {
 	super.onCreate(bundle);
 	Intent intent = getIntent();
 	mView = new MyView(this);
 	if (intent != null) {
-	    mRound = intent.getIntExtra(CaseCanvas.ROUND, 100);
-	    mSourceTag = intent.getStringExtra(CaseCanvas.SOURCE_TAG);
-	    mIndex = intent.getIntExtra(CaseCanvas.INDEX, -1);
+	    mRound     = Case.getRound(intent);
+	    mSourceTag = Case.getSource(intent);
+	    mIndex     = Case.getIndex(intent);
 	} else {
 	    mRound = 80;
 	    mIndex = -1;
@@ -47,14 +54,14 @@ public class CanvasTester extends Activity{
     protected void TestFinish(long start, long end) {
 	long elapse = end - start;
 	Intent intent = new Intent();
-	intent.putExtra(CaseCanvas.RESULT, elapse);
+	Case.putResult(intent, elapse);
 	if (mSourceTag == null || mSourceTag.equals("")) {
-	    intent.putExtra(CaseCanvas.SOURCE_TAG, "unknown");
+	    Case.putSource(intent, "unknown");
 	} else {
-	    intent.putExtra(CaseCanvas.SOURCE_TAG, mSourceTag);
+	    Case.putSource(intent, mSourceTag);
 	}
 
-	intent.putExtra(CaseCanvas.INDEX, mIndex);
+	Case.putIndex(intent, mIndex);
 	setResult(0, intent);
 	finish();
     }
