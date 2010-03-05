@@ -14,7 +14,7 @@ import android.view.*;
 import java.nio.*;
 
 public class CaseCanvas {
-    public final String TAG = "CaseCanvas";
+    public final static String TAG = "CaseCanvas";
 
     public final static String PACKAGE = Benchmark.PACKAGE;
     public final static String TESTER  = PACKAGE + ".CanvasTester";
