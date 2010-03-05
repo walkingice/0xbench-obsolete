@@ -79,13 +79,25 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	}
 
 	if (finish) {
-	    mBannerInfo.setText("Finished");
+	    mBannerInfo.setText(getResult());
 	} else {
 	    Intent intent = pointer.generateIntent();
 	    if (intent != null) {
 		startActivityForResult(intent, 0);
 	    }
 	}
+    }
+
+    public String getResult() {
+	String result = "";
+	CaseCanvas mycase;
+	for (int i = 0; i < mCases.size(); i++) {
+	    mycase = mCases.get(i);
+	    result += mycase.getTitle() + "\n";
+	    result += mycase.getResult()+"\n";
+	}
+
+	return result;
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
