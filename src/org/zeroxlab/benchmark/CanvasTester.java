@@ -14,63 +14,49 @@ import android.view.*;
 import android.graphics.Canvas;
 import android.os.*;
 
-public class CanvasTester extends Activity{
+import java.util.Random;
+
+public class CanvasTester extends Tester {
     public final String TAG = "CanvasTester";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
     MyView mView;
-    int mRound;
-    int mNow;
-    int mIndex;
 
-    private String mSourceTag = "unknown";
+    public String getTag() {
+	return TAG;
+    }
 
-    public final static String getPackage() {
+    public static String getPackage() {
 	return PACKAGE;
     }
+
     public static String getFullClassName() {
 	return getPackage()+".CanvasTester";
     }
+
+    public int sleepBetweenRound() {
+	return 15;
+    }
+    public int sleepBeforeStart() {
+	return 1000;
+    }
+
+    public void oneRound() {
+	mView.postInvalidate();
+    }
+
     public void onCreate(Bundle bundle) {
 	super.onCreate(bundle);
-	Intent intent = getIntent();
 	mView = new MyView(this);
-	if (intent != null) {
-	    mRound     = Case.getRound(intent);
-	    mSourceTag = Case.getSource(intent);
-	    mIndex     = Case.getIndex(intent);
-	} else {
-	    mRound = 80;
-	    mIndex = -1;
-	}
-	mNow   = mRound;
-	Log.i(TAG,"index = " + mIndex);
 	setContentView(mView);
-    }
-
-    public void onDestroy() {
-	super.onDestroy();
-    }
-
-    protected void TestFinish(long start, long end) {
-	long elapse = end - start;
-	Intent intent = new Intent();
-	Case.putResult(intent, elapse);
-	if (mSourceTag == null || mSourceTag.equals("")) {
-	    Case.putSource(intent, "unknown");
-	} else {
-	    Case.putSource(intent, mSourceTag);
-	}
-
-	Case.putIndex(intent, mIndex);
-	setResult(0, intent);
-	finish();
     }
 
     class MyView extends View {
 	int i = 0;
+	Random mRandom;
 
 	MyView(Context context) {
 	    super(context);
+	    mRandom = new Random();
 	}
 
 	@Override
@@ -80,38 +66,15 @@ public class CanvasTester extends Activity{
 		return;
 	    }
 
-	    MyThread t = new MyThread(this);
-	    t.start();
+	    startTester();
 	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
 	    super.onDraw(canvas);
-	    i = i + 3;
-	    i = i % 0xff;
-	    canvas.drawRGB(i, i, i);
-	    mNow--;
-	    Log.i(TAG,"mNow = "+mNow);
-	}
-    }
-
-    class MyThread extends Thread {
-	View mView;
-	MyThread(View target) {
-	    mView = target;
-	}
-
-	public void run() {
-	    try {
-		sleep(1000);
-	    } catch (Exception e) {}
-
-	    long start = SystemClock.uptimeMillis();
-	    while (mNow > 0) {
-		mView.postInvalidate();
-	    }
-	    long end = SystemClock.uptimeMillis();
-	    TestFinish(start, end);
+	    int r = 0xFF & mRandom.nextInt();
+	    canvas.drawRGB(r, r, r);
+	    decreaseCounter();
 	}
     }
 }
