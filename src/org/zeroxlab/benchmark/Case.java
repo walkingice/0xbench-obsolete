@@ -28,10 +28,20 @@ public abstract class Case{
     private final static String ROUND  = "ROUND";
     private int mCaseRound = 30;
 
-    protected Case(String tag, String tester, int repeat) {
+    /**
+     * Constructor to generate instance.
+     *
+     * It defines the Case as "Please run Tester for N round, repeat N times"
+     * @param tag The tag name of the subclass Case. It is generally the Subclass Name
+     * @param tester The taget tester be used by subclass Case. It should be full class name.
+     * @param repeat The tester will run *repeat* times.
+     * @param round To tell tester to run itself as *round* round.
+     */
+    protected Case(String tag, String tester, int repeat, int round) {
 	TAG    = tag;
 	TESTER = tester;
 	mRepeatMax = repeat;
+	mCaseRound = round;
 	reset();
     }
 
