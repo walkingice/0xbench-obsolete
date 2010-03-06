@@ -164,7 +164,7 @@ public abstract class Case{
 	long total = 0;
 	int length = mResult.length;
 	for (int i = 0; i < length; i++) {
-	    total = mResult[i];
+	    total  += mResult[i];
 	    result += "round " + i + ":" + mResult[i] + "\n";
 	}
 
