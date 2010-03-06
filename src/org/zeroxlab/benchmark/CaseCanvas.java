@@ -16,7 +16,7 @@ import java.nio.*;
 public class CaseCanvas extends Case{
 
     CaseCanvas() {
-	super("CaseCanvas", CanvasTester.getFullClassName(), 3);
+	super("CaseCanvas", CanvasTester.getFullClassName(), 3, 300);
     }
 
     public String getDescription() {
