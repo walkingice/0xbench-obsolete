@@ -16,6 +16,8 @@
 
 package org.zeroxlab.kubench;
 
+import org.zeroxlab.benchmark.Tester;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
@@ -36,12 +38,14 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private GLWorld mWorld;
     private float mAngle;
     private GLSurfaceViewClient mClient;
+    private Tester mTester;
     
     /**
      * The View constructor is a good place to allocate our OpenGL context
      */
-    public GLSurfaceView(Context context, GLWorld world) {
+    public GLSurfaceView(Context context, GLWorld world, Tester tester) {
         super(context);
+	mTester = tester;
         mWorld = world;
         mHolder = getHolder();
         mHolder.addCallback(this);
@@ -98,7 +102,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
         private int mWidth;
         private int mHeight;
         private float mFramerate;
-        
+
         GLThread() {
             super();
             mDone = false;
@@ -178,6 +182,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             // This is our main acquisition thread's loop, we go until
             // asked to quit.
              long starttime=0, stoptime=0, drawcount=0;
+	     long startTester = System.currentTimeMillis();
             while (!mDone) {
                 // Update the asynchronous state (window size, key events)
                 int w, h;
@@ -196,11 +201,12 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                  * Once we're done with GL, we need to call post()
                  */
                 egl.eglSwapBuffers(dpy, surface);
+		mTester.decreaseCounter();
+		mDone = mTester.isTesterFinished();
                 drawcount++;
             	stoptime = System.currentTimeMillis();
                 if (stoptime - starttime >= 1) {
                 	mFramerate = (float)(1000 * drawcount)/(float)(stoptime - starttime);
-                	starttime = 0;
                 	drawcount = 0;
 				}
 
@@ -218,6 +224,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
             
+	     long stopTester = System.currentTimeMillis();
             /*
              * clean-up everything...
              */
@@ -226,6 +233,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             egl.eglDestroyContext(dpy, context);
             egl.eglDestroySurface(dpy, surface);
             egl.eglTerminate(dpy);
+	    mTester.finishTester(startTester, stopTester);
         }
         
         private void drawFrame(GL10 gl, int w, int h) {
