@@ -16,6 +16,8 @@
 
 package org.zeroxlab.kubench;
 
+import org.zeroxlab.benchmark.Tester;
+
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
@@ -24,8 +26,31 @@ import android.view.KeyEvent;
 
 import java.util.Random;
 
-public class Kubench extends Activity implements GLSurfaceView.GLSurfaceViewClient {
-    
+public class Kubench extends Tester implements GLSurfaceView.GLSurfaceViewClient {
+
+    public final String TAG = "Kubench";
+    public final static String PACKAGE = "org.zeroxlab.kubench";
+
+    public String getTag() {
+	return TAG;
+    }
+
+    public static String getFullClassName() {
+	return PACKAGE + ".Kubench";
+    }
+
+    public int sleepBeforeStart() {
+	return 1000; //1 second
+    }
+
+    public int sleepBetweenRound() {
+	return 0;
+    }
+
+    public void oneRound() {
+	// do nothing;
+    }
+
 	private GLWorld makeGLWorld()
 	{
 	    GLWorld world = new GLWorld();
@@ -213,7 +238,7 @@ public class Kubench extends Activity implements GLSurfaceView.GLSurfaceViewClie
 	}
 
     @Override
-	protected void onCreate(Bundle icicle)
+    public void onCreate(Bundle icicle)
     {
         super.onCreate(icicle);     
 
@@ -225,9 +250,9 @@ public class Kubench extends Activity implements GLSurfaceView.GLSurfaceViewClie
         // We don't need a title either.
         // requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setTitle(org.zeroxlab.ZeroXBench.R.string.window_title);
+        setTitle(TAG);
         
-        mView = new GLSurfaceView(getApplication(), makeGLWorld());
+        mView = new GLSurfaceView(getApplication(), makeGLWorld(), this);
         setContentView(mView);
         mView.setClient(this);
         mPrevFramerate = 0.0f;
