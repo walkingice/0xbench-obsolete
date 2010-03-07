@@ -22,4 +22,24 @@ public class CaseCanvas extends Case{
     public String getDescription() {
 	return "Hi";
     }
+
+    @Override
+    public String getBenchmark() {
+	if (!isFinish()) {
+	    return TAG + " not finish yet";
+	}
+
+	String result = "";
+	long total = 0;
+	int length = mResult.length;
+
+	for (int i = 0; i < length; i++) {
+	    long fps = mCaseRound / (mResult[i] / 1000); // milliseconds to seconds
+	    result += "Round " + i + ": fps = " + fps + "\n";
+	    total  += fps;
+	}
+
+	result += "Average: fps = " + (total/length) + "\n";
+	return result;
+    }
 }
