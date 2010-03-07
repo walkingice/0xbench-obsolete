@@ -51,7 +51,7 @@ public abstract class Tester extends Activity{
     }
 
     /* call this method if you finish your testing */
-    protected void finishTester(long start, long end) {
+    public void finishTester(long start, long end) {
 	long elapse = end - start;
 	Intent intent = new Intent();
 	Case.putResult(intent, elapse);
