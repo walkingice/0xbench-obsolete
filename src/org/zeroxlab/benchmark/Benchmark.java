@@ -33,7 +33,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	setContentView(R.layout.main);
 	mCases = new LinkedList<Case>();
 	Case mycase = new CaseCanvas();
+	Case glcube = new CaseGLCube();
 	mCases.add(mycase);
+	mCases.add(glcube);
 	initViews();
     }
 
