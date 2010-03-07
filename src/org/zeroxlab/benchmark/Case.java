@@ -20,13 +20,13 @@ public abstract class Case{
     protected static String TESTER;
     private int mRepeatMax = 1;
     private int mRepeatNow;
-    private long[] mResult;
+    protected long[] mResult;
 
     private final static String SOURCE = "SOURCE";
     private final static String INDEX  = "INDEX";
     private final static String RESULT = "RESULT";
     private final static String ROUND  = "ROUND";
-    private int mCaseRound = 30;
+    protected int mCaseRound = 30;
 
     /**
      * Constructor to generate instance.
