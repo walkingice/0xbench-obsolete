@@ -25,15 +25,8 @@ public class CaseCanvas extends Case{
 
     @Override
     public String getBenchmark() {
-	if (!isFinish()) {
-	    return TAG + " not finish yet";
-	}
-
-	if (mInvolved == false) {
-	    Log.i(TAG, " is not a benchmark target");
-	    return TAG + " is not a benchmark target";
-	} else {
-	    Log.i(TAG, " is a benchmark target");
+	if (!couldFetchReport()) {
+	    return "Cavas has no report";
 	}
 
 	String result = "";
