@@ -34,8 +34,9 @@ public class CaseCanvas extends Case{
 	int length = mResult.length;
 
 	for (int i = 0; i < length; i++) {
-	    long fps = mCaseRound / (mResult[i] / 1000); // milliseconds to seconds
-	    result += "Round " + i + ": fps = " + fps + "\n";
+	    float second = (mResult[i] / 1000f);
+	    float fps = (float)mCaseRound / second; // milliseconds to seconds
+	    result += "Round " + i +" fps = " + fps + "\n";
 	    total  += fps;
 	}
 
