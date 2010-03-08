@@ -168,13 +168,21 @@ public abstract class Case{
 	mResult[index - 1] = result;
     }
 
-    public String getBenchmark() {
+    public boolean couldFetchReport() {
 	if (!isFinish()) {
-	    return TAG+" not finish yet";
+	    return false;
 	}
 
 	if (mInvolved == false) {
-	    return TAG + " is not a benchmark target";
+	    return false;
+	}
+
+	return true;
+    }
+    public String getBenchmark() {
+
+	if (!couldFetchReport()) {
+	    return "No benchmark report";
 	}
 
 	String result = "";
