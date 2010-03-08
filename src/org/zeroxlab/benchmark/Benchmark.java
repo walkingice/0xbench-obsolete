@@ -19,6 +19,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
     public final static String PACKAGE = "org.zeroxlab.benchmark";
 
     private Button   mRun;
+    private Button   mShow;
     private CheckBox mCheckList[];
     private TextView mBannerInfo;
 
@@ -47,6 +48,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	mRun = (Button)findViewById(R.id.btn_run);
 	mRun.setOnClickListener(this);
 
+	mShow = (Button)findViewById(R.id.btn_show);
+	mShow.setOnClickListener(this);
+
 	mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
 	mBannerInfo = (TextView)findViewById(R.id.banner_info);
@@ -70,6 +74,12 @@ public class Benchmark extends Activity implements View.OnClickListener {
 		}
 	    }
 	    runCase(mCases);
+	} else if (v == mShow) {
+	    String result = getResult();
+	    Intent intent = new Intent();
+	    intent.putExtra(Report.REPORT, result);
+	    intent.setClassName(Report.packageName(), Report.fullClassName());
+	    startActivity(intent);
 	}
     }
 
