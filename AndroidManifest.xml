@@ -8,6 +8,7 @@
 	android:name="Benchmark"
 	android:label="0xBenchmark"
         android:icon="@drawable/icon"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
@@ -17,6 +18,7 @@
 
 	<activity
 	android:name="CanvasTester"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
@@ -24,6 +26,7 @@
 	</activity>
 	<activity
 	android:name="org.zeroxlab.kubench.Kubench"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
@@ -31,6 +34,7 @@
 	</activity>
 	<activity
 	android:name="org.zeroxlab.graphics.DrawCircle"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
@@ -39,6 +43,7 @@
 
 	<activity
 	android:name="org.zeroxlab.benchmark.GC"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
@@ -47,6 +52,7 @@
 
 	<activity
 	android:name="org.zeroxlab.benchmark.Report"
+	android:screenOrientation="portrait"
 	>
 	<intent-filter>
 	<action android:name="android.intent.action.MAIN" />
