@@ -26,7 +26,7 @@ public abstract class Tester extends Activity{
     protected abstract int sleepBetweenRound();
     protected abstract void oneRound();
 
-    private String mSourceTag = "unknown";
+    protected String mSourceTag = "unknown";
     private boolean mNextRound = true;
 
     public void onCreate(Bundle bundle) {
