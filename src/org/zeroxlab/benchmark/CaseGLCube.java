@@ -18,7 +18,7 @@ import java.nio.*;
 public class CaseGLCube extends Case{
 
     CaseGLCube() {
-	super("CaseGLCube", Kubench.getFullClassName(), 3, 80);
+	super("CaseGLCube", Kubench.getFullClassName(), 3, 1000);
     }
 
     public String getDescription() {
