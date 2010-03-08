@@ -327,7 +327,7 @@ public class Kubench extends Tester implements GLSurfaceView.GLSurfaceViewClient
      	if (mPrevFramerate != mView.getFramerate()) {
      		mPrevFramerate = mView.getFramerate();
      		// setTitle(mPrevFramerate + "fps");
-     		Log.v("Kubench", mPrevFramerate + "fps");
+		//Log.v("Kubench", mPrevFramerate + "fps");
      	}
     }
     
