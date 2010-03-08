@@ -201,6 +201,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                  * Once we're done with GL, we need to call post()
                  */
                 egl.eglSwapBuffers(dpy, surface);
+		gl.glFinish();
 		mTester.decreaseCounter();
 		mDone = mTester.isTesterFinished();
                 drawcount++;
