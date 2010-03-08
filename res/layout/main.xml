@@ -27,11 +27,22 @@
 
 	</ScrollView>
 
+	<LinearLayout android:id="@+id/buttons_container"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	>
 	<Button android:id="@+id/btn_run"
 	android:layout_width="fill_parent"
 	android:layout_height="wrap_content"
 	android:layout_weight="1"
 	android:text="@string/btn_run_text"
 	/>
+	<Button android:id="@+id/btn_show"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:layout_weight="1"
+	android:text="@string/btn_show_text"
+	/>
+	</LinearLayout>
 </LinearLayout>
 
