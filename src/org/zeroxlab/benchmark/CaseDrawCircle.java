@@ -16,7 +16,7 @@ import java.nio.*;
 public class CaseDrawCircle extends Case{
 
     CaseDrawCircle() {
-	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 1, 300);
+	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, 300);
     }
 
     public String getDescription() {
