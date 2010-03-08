@@ -1,5 +1,7 @@
 package org.zeroxlab.graphics;
 
+import org.zeroxlab.benchmark.Tester;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,27 +11,46 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 
-public class DrawCircle extends Activity {
+public class DrawCircle extends Tester {
 	/** Called when the activity is first created. */
+
+	SampleView mView;
+
+	public String getTag() {
+	    return "DrawCircle";
+	}
+
+	public int sleepBeforeStart() {
+	    return 1000;
+	}
+
+	public int sleepBetweenRound() {
+	    return 15;
+	}
+
+	public void oneRound() {
+	    mView.postInvalidate();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(new SampleView(this));
+		mView = new SampleView(this);
+		setContentView(mView);
 	}
 
-	private static class SampleView extends View {
+	private class SampleView extends View {
 		private Paint[] mPaints;
 		private Paint mFramePaint;
 
 		private float mSweep;
 		private int mBigIndex;
 
-		private static final float SWEEP_INC = 2;
-		private static int counter = 0;
-		static int i, row;
-		static long current;
-		static long last;
+		private final float SWEEP_INC = 2;
+		private int counter = 0;
+		int i, row;
+		long current;
+		long last;
 
 		public SampleView(Context context) {
 			super(context);
@@ -60,6 +81,16 @@ public class DrawCircle extends Activity {
 		}
 
 		@Override
+		protected void onWindowVisibilityChanged(int visibility) {
+		    super.onWindowVisibilityChanged(visibility);
+		    if (visibility != View.VISIBLE) {
+			return;
+		    }
+
+		    startTester();
+		}
+
+		@Override
 		protected void onDraw(Canvas canvas) {
 			canvas.drawColor(Color.WHITE);
 
@@ -85,6 +116,7 @@ public class DrawCircle extends Activity {
 			}
 
 			invalidate();
+			decreaseCounter();
 		}
 	}
 }
