@@ -29,6 +29,13 @@ public class CaseCanvas extends Case{
 	    return TAG + " not finish yet";
 	}
 
+	if (mInvolved == false) {
+	    Log.i(TAG, " is not a benchmark target");
+	    return TAG + " is not a benchmark target";
+	} else {
+	    Log.i(TAG, " is a benchmark target");
+	}
+
 	String result = "";
 	long total = 0;
 	int length = mResult.length;
