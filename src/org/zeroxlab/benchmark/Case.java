@@ -16,8 +16,8 @@ import java.nio.*;
 public abstract class Case{
     protected String TAG = "Case";
 
-    public final static String PACKAGE = Benchmark.PACKAGE;
-    protected static String TESTER;
+    protected String PACKAGE = Benchmark.PACKAGE;
+    protected String TESTER;
     private int mRepeatMax = 1;
     private int mRepeatNow;
     protected boolean mInvolved;
