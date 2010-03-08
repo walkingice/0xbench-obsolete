@@ -1,6 +1,6 @@
 package org.zeroxlab.gc;
 
-import org.zeroxlab.ZeroXBench.GC;
+import org.zeroxlab.benchmark.GC;
 
 import android.os.Message;
 
