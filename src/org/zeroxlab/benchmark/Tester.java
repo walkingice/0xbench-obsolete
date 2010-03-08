@@ -29,6 +29,9 @@ public abstract class Tester extends Activity{
     protected String mSourceTag = "unknown";
     private boolean mNextRound = true;
 
+    protected boolean mDropTouchEvent     = true;
+    protected boolean mDropTrackballEvent = true;
+
     public void onCreate(Bundle bundle) {
 	super.onCreate(bundle);
 	TAG = getTag();
@@ -43,6 +46,25 @@ public abstract class Tester extends Activity{
 	    mIndex = -1;
 	}
 	mNow   = mRound;
+    }
+
+    /* drop the annoying event */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+	if (mDropTouchEvent) {
+	    return false;
+	} else {
+	    return super.dispatchTouchEvent(ev);
+	}
+    }
+
+    @Override
+    public boolean dispatchTrackballEvent(MotionEvent ev) {
+	if (mDropTrackballEvent) {
+	    return false;
+	} else {
+	    return super.dispatchTouchEvent(ev);
+	}
     }
 
     protected void startTester() {
