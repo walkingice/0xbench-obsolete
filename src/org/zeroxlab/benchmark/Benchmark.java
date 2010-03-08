@@ -54,6 +54,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
 	mBannerInfo = (TextView)findViewById(R.id.banner_info);
+	mBannerInfo.setText("Select benchmarking target and click Run");
 
 	int length = mCases.size();
 	mCheckList = new CheckBox[length];
@@ -76,6 +77,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    runCase(mCases);
 	} else if (v == mShow) {
 	    String result = getResult();
+	    Log.i(TAG,"\n\n"+result+"\n\n");
 	    Intent intent = new Intent();
 	    intent.putExtra(Report.REPORT, result);
 	    intent.setClassName(Report.packageName(), Report.fullClassName());
@@ -95,7 +97,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	}
 
 	if (finish) {
-	    mBannerInfo.setText(getResult());
+	    mBannerInfo.setText("Benchmark finished. click show to read report");
 	} else {
 	    Intent intent = pointer.generateIntent();
 	    if (intent != null) {
