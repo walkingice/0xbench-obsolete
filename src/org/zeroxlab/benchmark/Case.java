@@ -20,6 +20,7 @@ public abstract class Case{
     protected static String TESTER;
     private int mRepeatMax = 1;
     private int mRepeatNow;
+    protected boolean mInvolved;
     protected long[] mResult;
 
     private final static String SOURCE = "SOURCE";
@@ -117,12 +118,14 @@ public abstract class Case{
     public void clear() {
 	mResult = new long[mRepeatMax];
 	mRepeatNow = 0;
+	mInvolved  = false;
     }
 
     /* Reset the repeat time to default value. clear result */
     public void reset() {
 	mResult = new long[mRepeatMax];
 	mRepeatNow = mRepeatMax;
+	mInvolved  = true;
     }
 
     public boolean isFinish() {
@@ -168,6 +171,10 @@ public abstract class Case{
     public String getBenchmark() {
 	if (!isFinish()) {
 	    return TAG+" not finish yet";
+	}
+
+	if (mInvolved == false) {
+	    return TAG + " is not a benchmark target";
 	}
 
 	String result = "";
