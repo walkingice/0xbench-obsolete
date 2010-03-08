@@ -45,6 +45,14 @@
 	</intent-filter>
 	</activity>
 
+	<activity
+	android:name="org.zeroxlab.benchmark.Report"
+	>
+	<intent-filter>
+	<action android:name="android.intent.action.MAIN" />
+	</intent-filter>
+	</activity>
+
     </application>
 </manifest>
 
