@@ -21,6 +21,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private Button   mRun;
     private Button   mShow;
     private CheckBox mCheckList[];
+    private TextView mDesc[];
     private TextView mBannerInfo;
 
     private ScrollView   mScrollView;
@@ -58,10 +59,25 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
 	int length = mCases.size();
 	mCheckList = new CheckBox[length];
+	mDesc      = new TextView[length];
+	boolean gray = true;
 	for (int i = 0; i < length; i++) {
 	    mCheckList[i] = new CheckBox(this);
 	    mCheckList[i].setText(mCases.get(i).getTitle());
 	    mLinearLayout.addView(mCheckList[i]);
+	    mDesc[i] = new TextView(this);
+	    mDesc[i].setText(mCases.get(i).getDescription());
+	    mDesc[i].setTextSize(mDesc[i].getTextSize() - 2);
+	    mDesc[i].setPadding(42, 0, 10, 10);
+	    mLinearLayout.addView(mDesc[i]);
+
+	    if (gray) {
+		int color = 0xFF333333; //ARGB
+		mCheckList[i].setBackgroundColor(color);
+		mDesc[i].setBackgroundColor(color);
+	    }
+
+	    gray = !gray;
 	}
     }
 
