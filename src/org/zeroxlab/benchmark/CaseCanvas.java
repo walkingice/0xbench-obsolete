@@ -15,12 +15,17 @@ import java.nio.*;
 
 public class CaseCanvas extends Case{
 
+    public static int CanvasRound = 300;
     CaseCanvas() {
-	super("CaseCanvas", CanvasTester.getFullClassName(), 3, 300);
+	super("CaseCanvas", CanvasTester.getFullClassName(), 3, CanvasRound);
+    }
+
+    public String getTitle() {
+	return "Draw Canvas";
     }
 
     public String getDescription() {
-	return "Hi";
+	return "call canvas.drawRGB to fill the canvas repeatedly. It redraw for " + CanvasRound + " times";
     }
 
     @Override
