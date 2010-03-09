@@ -17,12 +17,17 @@ import java.nio.*;
 
 public class CaseGLCube extends Case{
 
+    public static int CubeRound = 1000;
     CaseGLCube() {
-	super("CaseGLCube", Kubench.getFullClassName(), 3, 1000);
+	super("CaseGLCube", Kubench.getFullClassName(), 3, CubeRound);
+    }
+
+    public String getTitle() {
+	return "OpenGL Cube";
     }
 
     public String getDescription() {
-	return "OpenGL Cube benchmark";
+	return "use OpenGL to draw a magic cube.";
     }
 
     @Override
