@@ -21,8 +21,12 @@ public class CaseGC extends Case{
 	super("CaseGC", "org.zeroxlab.benchmark.GC", 1, 1); // GC benchmark only run once
     }
 
+    public String getTitle() {
+	return "Garbage Collection";
+    }
+
     public String getDescription() {
-	return "GC benchmark";
+	return "It create long-live binary tree of depth and array of doubles to test GC";
     }
 
     @Override
