@@ -47,6 +47,7 @@ public abstract class Case{
     }
 
     abstract public String getDescription();
+    abstract public String getTitle();
 
     public final static void putRound(Intent intent, int round) {
 	intent.putExtra(ROUND, round);
@@ -91,10 +92,6 @@ public abstract class Case{
     }
 
     public String getTag() {
-	return TAG;
-    }
-
-    public String getTitle() {
 	return TAG;
     }
 
