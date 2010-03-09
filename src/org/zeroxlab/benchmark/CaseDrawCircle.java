@@ -15,12 +15,18 @@ import java.nio.*;
 
 public class CaseDrawCircle extends Case{
 
+    public static int CircleRound = 300;
+
     CaseDrawCircle() {
-	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, 300);
+	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, CircleRound);
+    }
+
+    public String getTitle() {
+	return "Draw Circle";
     }
 
     public String getDescription() {
-	return "Hi";
+	return "call canvas.drawCircle to draw circle for " + CircleRound + " times";
     }
 
     @Override
