@@ -1,5 +1,8 @@
 package org.zeroxlab.arithmetic;
 
+import org.zeroxlab.benchmark.ArithmeticTester;
+import android.os.Bundle;
+
 /*
 
 Modified 3/3/97 by David M. Doolin (dmd) doolin@cs.utk.edu
@@ -38,9 +41,12 @@ import android.util.*;
 
 public class Linpack {
 
-  public static String main(String[] args)
+  static Bundle mInfo;
+
+  public static String main(Bundle info)
   {
     Linpack l = new Linpack();
+    mInfo = info;
     return l.run_benchmark();
   }
 
@@ -129,6 +135,11 @@ public class Linpack {
 	mflops_result += 0.0005; // for rounding
 	mflops_result = (int)(mflops_result*1000);
 	mflops_result /= 1000;
+
+	mInfo.putDouble(ArithmeticTester.MFLOPS, mflops_result);
+	mInfo.putDouble(ArithmeticTester.RESIDN, residn_result);
+	mInfo.putDouble(ArithmeticTester.TIME, time_result);
+	mInfo.putDouble(ArithmeticTester.EPS, eps_result);
 
 	Log.d("test", "Mflops/s: " + mflops_result +
 		    "  Time: " + time_result + " secs" +
