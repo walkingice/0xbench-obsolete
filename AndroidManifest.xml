@@ -42,7 +42,7 @@
 	</activity>
 
 	<activity
-	android:name="org.zeroxlab.benchmark.GC"
+	android:name="org.zeroxlab.benchmark.TesterGC"
 	android:screenOrientation="portrait"
 	>
 	<intent-filter>

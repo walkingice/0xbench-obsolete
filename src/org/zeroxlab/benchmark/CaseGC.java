@@ -18,7 +18,7 @@ public class CaseGC extends Case{
     String mStringBuf = "";
     public static String GCRESULT = "GC_RESULT";
     CaseGC() {
-	super("CaseGC", "org.zeroxlab.benchmark.GC", 1, 1); // GC benchmark only run once
+	super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
     }
 
     public String getTitle() {

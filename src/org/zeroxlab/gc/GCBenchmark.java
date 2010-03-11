@@ -1,6 +1,6 @@
 package org.zeroxlab.gc;
 
-import org.zeroxlab.benchmark.GC;
+import org.zeroxlab.benchmark.TesterGC;
 
 import android.os.Message;
 
@@ -23,8 +23,8 @@ public class GCBenchmark  {
 	static void update(String s){
 		out.append(s+"\n");
 		Message m = new Message();
-		m.what = GC.GUINOTIFIER;
-		GC.mHandler.sendMessage(m);   
+		m.what = TesterGC.GUINOTIFIER;
+		TesterGC.mHandler.sendMessage(m);
 	}
 
 	// Nodes used by a tree of a given size

@@ -10,7 +10,7 @@ import android.os.Message;
 import android.content.Intent;
 import android.widget.TextView;
 
-public class GC extends Tester{
+public class TesterGC extends Tester{
 
 	private TextView mTextView1;
 
@@ -62,7 +62,7 @@ public class GC extends Tester{
 		mHandler = new Handler() {
 			public void handleMessage(Message msg) {
 				switch (msg.what) {
-					case GC.GUINOTIFIER:
+					case GUINOTIFIER:
 						mTextView1.setText(GCBenchmark.out);
 						break;
 				}
