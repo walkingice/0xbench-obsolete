@@ -18,6 +18,8 @@ public abstract class Case{
 
     protected String PACKAGE = Benchmark.PACKAGE;
     protected String TESTER;
+
+    /* If mRepeatMax = 3, mRepeatNow will count from 0 to 2*/
     private int mRepeatMax = 1;
     private int mRepeatNow;
     protected boolean mInvolved;
@@ -97,7 +99,7 @@ public abstract class Case{
 
     protected Intent generateIntent() {
 	/* if run out of the repeat times, go back directly */
-	if (mRepeatNow <= 0) {
+	if (mRepeatNow >= mRepeatMax) {
 	    return null;
 	}
 
@@ -107,26 +109,27 @@ public abstract class Case{
 	Case.putSource(intent, TAG);
 	Case.putIndex(intent, mRepeatNow);
 
-	mRepeatNow = mRepeatNow - 1;
+	mRepeatNow = mRepeatNow + 1;
 
 	return intent;
     }
 
     public void clear() {
 	mResult = new long[mRepeatMax];
-	mRepeatNow = 0;
+	mRepeatNow = mRepeatMax; // no more repeating times
 	mInvolved  = false;
     }
 
     /* Reset the repeat time to default value. clear result */
     public void reset() {
 	mResult = new long[mRepeatMax];
-	mRepeatNow = mRepeatMax;
+	mRepeatNow = 0;
 	mInvolved  = true;
     }
 
     public boolean isFinish() {
-	return (mRepeatNow == 0);
+	/* If mRepeatMax = 3, mRepeatNow will count from 0 to 2*/
+	return (mRepeatNow >= mRepeatMax);
     }
 
     /** To read the SOURCE of this intent to see if this intent belong to this case
@@ -164,9 +167,9 @@ public abstract class Case{
 	    return false;
 	}
 
-	int  index  = Case.getIndex(intent);
-	if (index <= 0) {
-	    Log.i(TAG,"Ooooops index <= 0, how come?");
+	int  index = Case.getIndex(intent);
+	if (index >= mRepeatMax) {
+	    Log.i(TAG,"Ooooops index >= mRepeatMax("+mRepeatMax+"), how come?");
 	    return false;
 	}
 
@@ -189,7 +192,7 @@ public abstract class Case{
 	    return false;
 	}
 
-	mResult[index -1] = result;
+	mResult[index] = result;
 	return true;
     }
 
