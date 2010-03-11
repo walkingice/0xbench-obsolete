@@ -47,26 +47,15 @@ public class CaseGC extends Case{
     }
 
     @Override
-    public void parseIntent(Intent intent) {
-    	if (intent == null) {
-	    Log.i(TAG, "Intent is null");
-	    return;
-	}
-
-	String tag = Case.getSource(intent);
-
-	if (tag == null || !tag.equals(TAG)) {
-	    Log.i(TAG,"Unknown intent, cannot parse it");
-	    return;
-	}
-
-	int index  = Case.getIndex(intent);
-	String result = intent.getStringExtra(GCRESULT) ;
+    protected boolean saveResult(Intent intent, int index) {
+	String result = intent.getStringExtra(GCRESULT);
 
 	if (result == null || result.equals("")) {
 	    mStringBuf += "\nReport not found\n";
 	} else {
 	    mStringBuf += "\n"+result+"\n";
 	}
+
+	return true;
     }
 }
