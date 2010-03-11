@@ -129,7 +129,16 @@ public abstract class Case{
 	return (mRepeatNow == 0);
     }
 
+    /** To read the SOURCE of this intent to see if this intent belong to this case
+     *
+     * @return return True if this intent belong to this case, otherwise return false
+     */
     public boolean realize(Intent intent) {
+	if (intent == null) {
+	    Log.i(TAG, "Intent is null");
+	    return false;
+	}
+
 	String source = Case.getSource(intent);
 	if (source == null || source.equals("")) {
 	    return false;
