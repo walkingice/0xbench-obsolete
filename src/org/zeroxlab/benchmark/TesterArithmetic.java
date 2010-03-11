@@ -37,23 +37,12 @@ public class TesterArithmetic extends Tester{
     }
 
     @Override
-    public void finishTester(long start, long end) {
-        Intent intent = new Intent();
-
-        if (mSourceTag == null || mSourceTag.equals("")) {
-	   Case.putSource(intent, "unknown");
-        } else {
-	   Case.putSource(intent, mSourceTag);
-        }
-    
-        Case.putIndex(intent, mIndex);
-    
+    protected boolean saveResult(Intent intent) {
         Bundle result = new Bundle();
         TesterArithmetic.average(result, mInfo);
     
         intent.putExtra(CaseArithmetic.LIN_RESULT, result);
-        setResult(0, intent);
-        finish();
+	return true;
     }
     
     /** Called when the activity is first created. */
