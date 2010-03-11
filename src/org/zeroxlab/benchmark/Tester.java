@@ -21,6 +21,9 @@ public abstract class Tester extends Activity{
     int mNow;
     int mIndex;
 
+    protected long mTesterStart = 0;
+    protected long mTesterEnd   = 0;
+
     protected abstract String getTag();
     protected abstract int sleepBeforeStart();
     protected abstract int sleepBetweenRound();
@@ -72,11 +75,16 @@ public abstract class Tester extends Activity{
 	thread.start();
     }
 
-    /* call this method if you finish your testing */
+    /**
+     * Call this method if you finish your testing.
+     *
+     * @param start The starting time of testing round
+     * @param end The ending time of testing round
+     */
     public void finishTester(long start, long end) {
-	long elapse = end - start;
+	mTesterStart = start;
+	mTesterEnd   = end;
 	Intent intent = new Intent();
-	Case.putResult(intent, elapse);
 	if (mSourceTag == null || mSourceTag.equals("")) {
 	    Case.putSource(intent, "unknown");
 	} else {
@@ -84,8 +92,23 @@ public abstract class Tester extends Activity{
 	}
 
 	Case.putIndex(intent, mIndex);
+	saveResult(intent);
+
 	setResult(0, intent);
 	finish();
+    }
+
+    /**
+     * Save the benchmarking result into intent
+     * If this Case and Tester has their own way to pass benchmarking result
+     * just override this method
+     *
+     * @param intent The intent will return to Case
+     */
+    protected boolean saveResult(Intent intent) {
+	long elapse = mTesterEnd - mTesterStart;
+	Case.putResult(intent, elapse);
+	return true;
     }
 
     public void resetCounter() {
