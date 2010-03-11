@@ -63,25 +63,15 @@ public class CaseArithmetic extends Case{
     }
 
     @Override
-    public void parseIntent(Intent intent) {
-    	if (intent == null) {
-	    Log.i(TAG, "Intent is null");
-	    return;
-	}
-
-	String tag = Case.getSource(intent);
-
-	if (tag == null || !tag.equals(TAG)) {
-	    Log.i(TAG,"Unknown intent, cannot parse it");
-	    return;
-	}
-
-	int index  = Case.getIndex(intent) - 1;
-	Bundle info = intent.getBundleExtra(LIN_RESULT) ;
+    protected boolean saveResult(Intent intent, int index) {
+	Bundle info = intent.getBundleExtra(LIN_RESULT);
 	if (info == null) {
 	    Log.i(TAG, "Weird! cannot find LinpackInfo");
+	    return false;
 	} else {
 	    mInfo[index] = info;
 	}
+
+	return true;
     }
 }
