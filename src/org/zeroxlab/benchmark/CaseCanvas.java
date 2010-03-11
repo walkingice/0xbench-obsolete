@@ -17,7 +17,7 @@ public class CaseCanvas extends Case{
 
     public static int CanvasRound = 300;
     CaseCanvas() {
-	super("CaseCanvas", CanvasTester.getFullClassName(), 3, CanvasRound);
+	super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
     }
 
     public String getTitle() {

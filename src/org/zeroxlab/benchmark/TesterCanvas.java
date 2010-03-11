@@ -16,8 +16,8 @@ import android.os.*;
 
 import java.util.Random;
 
-public class CanvasTester extends Tester {
-    public final String TAG = "CanvasTester";
+public class TesterCanvas extends Tester {
+    public final String TAG = "TesterCanvas";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
     MyView mView;
 
@@ -30,7 +30,7 @@ public class CanvasTester extends Tester {
     }
 
     public static String getFullClassName() {
-	return getPackage()+".CanvasTester";
+	return getPackage()+".TesterCanvas";
     }
 
     public int sleepBetweenRound() {
