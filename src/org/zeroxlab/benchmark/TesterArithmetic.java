@@ -10,7 +10,7 @@ import android.os.Message;
 import android.content.Intent;
 import android.widget.TextView;
 
-public class ArithmeticTester extends Tester{
+public class TesterArithmetic extends Tester{
 
     TextView mTextView;
     Bundle mInfo[];
@@ -49,7 +49,7 @@ public class ArithmeticTester extends Tester{
         Case.putIndex(intent, mIndex);
     
         Bundle result = new Bundle();
-        ArithmeticTester.average(result, mInfo);
+        TesterArithmetic.average(result, mInfo);
     
         intent.putExtra(CaseArithmetic.LIN_RESULT, result);
         setResult(0, intent);

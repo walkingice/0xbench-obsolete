@@ -1,6 +1,6 @@
 package org.zeroxlab.arithmetic;
 
-import org.zeroxlab.benchmark.ArithmeticTester;
+import org.zeroxlab.benchmark.TesterArithmetic;
 import android.os.Bundle;
 
 /*
@@ -136,10 +136,10 @@ public class Linpack {
 	mflops_result = (int)(mflops_result*1000);
 	mflops_result /= 1000;
 
-	mInfo.putDouble(ArithmeticTester.MFLOPS, mflops_result);
-	mInfo.putDouble(ArithmeticTester.RESIDN, residn_result);
-	mInfo.putDouble(ArithmeticTester.TIME, time_result);
-	mInfo.putDouble(ArithmeticTester.EPS, eps_result);
+	mInfo.putDouble(TesterArithmetic.MFLOPS, mflops_result);
+	mInfo.putDouble(TesterArithmetic.RESIDN, residn_result);
+	mInfo.putDouble(TesterArithmetic.TIME, time_result);
+	mInfo.putDouble(TesterArithmetic.EPS, eps_result);
 
 	Log.d("test", "Mflops/s: " + mflops_result +
 		    "  Time: " + time_result + " secs" +

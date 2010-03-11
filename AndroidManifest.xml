@@ -51,7 +51,7 @@
 	</activity>
 
 	<activity
-	android:name="org.zeroxlab.benchmark.ArithmeticTester"
+	android:name="org.zeroxlab.benchmark.TesterArithmetic"
 	android:screenOrientation="portrait"
 	>
 	<intent-filter>

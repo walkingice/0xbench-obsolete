@@ -10,7 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.zeroxlab.benchmark.ArithmeticTester;
+import org.zeroxlab.benchmark.TesterArithmetic;
 
 public class CaseArithmetic extends Case{
 
@@ -21,7 +21,7 @@ public class CaseArithmetic extends Case{
     public static int Round  = 3;
 
     CaseArithmetic() {
-	super("CaseArithmetic", "org.zeroxlab.benchmark.ArithmeticTester", Repeat, Round);
+	super("CaseArithmetic", "org.zeroxlab.benchmark.TesterArithmetic", Repeat, Round);
 	generateInfo();
     }
 
@@ -56,7 +56,7 @@ public class CaseArithmetic extends Case{
     public String getBenchmark() {
 	String result = "\n";
 	for (int i = 0; i < mInfo.length; i++) {
-	    result += ArithmeticTester.bundleToString(mInfo[i]);
+	    result += TesterArithmetic.bundleToString(mInfo[i]);
 	    result += "\n";
 	}
 	return result;
