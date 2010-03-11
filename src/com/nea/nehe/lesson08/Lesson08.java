@@ -61,9 +61,9 @@ public class Lesson08 extends GLSurfaceView implements Renderer {
 	private int filter = 0;				//Which texture filter?
 	
 	/** Is light enabled */
-	private boolean light = false;
+	private boolean light = true;
 	/** Is blending enabled ( NEW ) */
-	private boolean blend = false;
+	private boolean blend = true;
 
 	/* The initial light values */
 	private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
