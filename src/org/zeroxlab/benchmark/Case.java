@@ -151,27 +151,46 @@ public abstract class Case{
 	}
     }
 
-    public void parseIntent(Intent intent) {
+    public boolean parseIntent(Intent intent) {
 	if (intent == null) {
 	    Log.i(TAG, "Intent is null");
-	    return;
+	    return false;
 	}
 
 	String tag = Case.getSource(intent);
 
 	if (tag == null || !tag.equals(TAG)) {
 	    Log.i(TAG,"Unknown intent, cannot parse it");
-	    return;
+	    return false;
 	}
 
 	int  index  = Case.getIndex(intent);
-	long result = Case.getResult(intent);
-	if (index == -1 || result == -1) {
-	    Log.i(TAG,"Ooooops index=" + index + " result=" + result);
-	    return;
+	if (index <= 0) {
+	    Log.i(TAG,"Ooooops index <= 0, how come?");
+	    return false;
 	}
 
-	mResult[index - 1] = result;
+	return saveResult(intent, index);
+    }
+
+    /**
+     * To Save the result from Tester into this Case
+     * If subclass has its own way to analysis result, override this method
+     *
+     * @param intent The intent will be analysis
+     * @param index The repeating time of this intent. (Tester might repeat N times)
+     * @return return True if analysis sucessfully
+     */
+    protected boolean saveResult(Intent intent, int index) {
+	long result = Case.getResult(intent);
+
+	if (result == -1) {
+	    Log.i(TAG,"Oooops! result is " + result);
+	    return false;
+	}
+
+	mResult[index -1] = result;
+	return true;
     }
 
     public boolean couldFetchReport() {
