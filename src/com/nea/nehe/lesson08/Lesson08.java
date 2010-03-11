@@ -1,5 +1,7 @@
 package com.nea.nehe.lesson08;
 
+import org.zeroxlab.benchmark.Tester;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -40,6 +42,8 @@ import android.view.MotionEvent;
  * @author Savas Ziplies (nea/INsanityDesign)
  */
 public class Lesson08 extends GLSurfaceView implements Renderer {
+
+    private Tester mTester;
 	
 	/** Cube instance */
 	private Cube cube;	
@@ -123,6 +127,12 @@ public class Lesson08 extends GLSurfaceView implements Renderer {
 		cube = new Cube();
 	}
 
+	public void setSpeedAndTester(int speedX, int speedY, Tester tester) {
+	    xspeed = speedX;
+	    yspeed = speedY;
+	    mTester = tester;
+	}
+
 	/**
 	 * The Surface is created/init()
 	 */
@@ -187,7 +197,8 @@ public class Lesson08 extends GLSurfaceView implements Renderer {
 		gl.glRotatef(yrot, 0.0f, 1.0f, 0.0f);	//Y
 				
 		cube.draw(gl, filter);					//Draw the Cube	
-		
+		gl.glFinish();
+		mTester.decreaseCounter();
 		//Change rotation factors
 		xrot += xspeed;
 		yrot += yspeed;
