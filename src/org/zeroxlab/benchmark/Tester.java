@@ -35,7 +35,7 @@ public abstract class Tester extends Activity{
     protected boolean mDropTouchEvent     = true;
     protected boolean mDropTrackballEvent = true;
 
-    public void onCreate(Bundle bundle) {
+    protected void onCreate(Bundle bundle) {
 	super.onCreate(bundle);
 	TAG = getTag();
 
