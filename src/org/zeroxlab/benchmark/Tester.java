@@ -51,6 +51,12 @@ public abstract class Tester extends Activity{
 	mNow   = mRound;
     }
 
+    @Override
+    protected void onPause() {
+	super.onPause();
+	interruptTester();
+    }
+
     /* drop the annoying event */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -73,6 +79,11 @@ public abstract class Tester extends Activity{
     protected void startTester() {
 	TesterThread thread = new TesterThread(sleepBeforeStart(), sleepBetweenRound());
 	thread.start();
+    }
+
+    public void interruptTester() {
+	mNow = 0;
+	finish();
     }
 
     /**
