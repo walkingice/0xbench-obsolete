@@ -1,5 +1,7 @@
 package com.nea.nehe.lesson16;
 
+import org.zeroxlab.benchmark.Tester;
+
 import android.app.Activity;
 import android.os.Bundle;
 
@@ -9,10 +11,32 @@ import android.os.Bundle;
  *
  * @author Savas Ziplies (nea/INsanityDesign)
  */
-public class Run extends Activity {
+public class Run extends Tester {
+
+	public final static String FullName = "com.nea.nehe.lesson16.Run";
 
 	/** Our own OpenGL View overridden */
 	private Lesson16 lesson16;
+
+	@Override
+	public String getTag() {
+	    return "Nehe16";
+	}
+
+	@Override
+	public int sleepBeforeStart() {
+	    return 1200; //1.2 second
+	}
+
+	@Override
+	public int sleepBetweenRound() {
+	    return 15; // 15 ms
+	}
+
+	@Override
+	protected void oneRound() {
+	    lesson16.requestRender();
+	}
 
 	/**
 	 * Initiate our @see Lesson16.java,
@@ -24,8 +48,10 @@ public class Run extends Activity {
 
 		//Initiate our Lesson with this Activity Context handed over
 		lesson16 = new Lesson16(this);
+		lesson16.setSpeedAndTester(1, 1, this);
 		//Set the lesson as View to the Activity
 		setContentView(lesson16);
+		startTester();
 	}
 
 	/**
