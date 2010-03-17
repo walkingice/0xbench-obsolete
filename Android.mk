@@ -25,3 +25,4 @@ LOCAL_PACKAGE_NAME := ZeroX_Benchmark
 LOCAL_CERTIFICATE := shared
 
 include $(BUILD_PACKAGE)
+include $(LOCAL_PATH)/native/Android.mk
