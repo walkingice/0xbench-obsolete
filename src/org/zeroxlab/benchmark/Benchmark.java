@@ -9,6 +9,7 @@ import android.widget.*;
 import android.view.*;
 import android.content.*;
 import java.nio.*;
+import java.io.*;
 
 import java.util.LinkedList;
 
@@ -17,6 +18,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     public final static String TAG     = "Benchmark";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
+
+    private final static String SDCARD      = "/sdcard";
+    private final static String mOutputFile = "0xBenchmark";
 
     private Button   mRun;
     private Button   mShow;
@@ -100,6 +104,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	} else if (v == mShow) {
 	    String result = getResult();
 	    Log.i(TAG,"\n\n"+result+"\n\n");
+	    writeToSDCard(mOutputFile, result);
 	    Intent intent = new Intent();
 	    intent.putExtra(Report.REPORT, result);
 	    intent.setClassName(Report.packageName(), Report.fullClassName());
@@ -155,5 +160,22 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    }
 	}
 	runCase(mCases);
+    }
+
+    private void writeToSDCard(String filename, String output) {
+	File file = new File(SDCARD, filename);
+	if (file.exists()) {
+	    Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
+	    file.delete();
+	}
+
+	try {
+	    file.createNewFile();
+	    FileOutputStream fos = new FileOutputStream(file);
+	    fos.write(output.getBytes());
+	    fos.flush();
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
     }
 }
