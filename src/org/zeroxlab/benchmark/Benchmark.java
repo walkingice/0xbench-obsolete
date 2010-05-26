@@ -45,11 +45,13 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case gc     = new CaseGC();
 	Case nehe08 = new CaseNeheLesson08();
 	Case nehe16 = new CaseNeheLesson16();
+	Case teapot = new CaseTeapot();
 	mCases.add(arith);
 	mCases.add(mycase);
 	mCases.add(glcube);
 	mCases.add(nehe08);
 	mCases.add(nehe16);
+	mCases.add(teapot);
 	mCases.add(circle);
 	mCases.add(gc);
 	initViews();

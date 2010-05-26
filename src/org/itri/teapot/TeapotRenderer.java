@@ -16,6 +16,8 @@
 
 package org.itri.teapot;
 
+import org.zeroxlab.benchmark.Tester;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -30,7 +32,6 @@ import android.opengl.GLSurfaceView;
 
 
 public class TeapotRenderer implements GLSurfaceView.Renderer {
-
 	static float teapot_vertices[] = { 0.0663056f, 0.117825f, 2.10688e-008f,
 		0.0672f, 0.1152f, 2.05994e-008f, 0.0639726f, 0.117825f, 0.0178043f,
 		0.0648356f, 0.1152f, 0.0180445f, 0.0573666f, 0.117825f, 0.0336931f,
@@ -1522,9 +1523,19 @@ public class TeapotRenderer implements GLSurfaceView.Renderer {
 	float size;
 	float kFilteringFactor = 0.1f;
 
-	public TeapotRenderer() {
+	private Tester mTester;
+	private float xspeed;
+	private float yspeed;
+	private float zspeed;
+
+	public TeapotRenderer(float _xspeed, float _yspeed, float _zspeed, Tester tester) {
 		// mContext = context;
+		xspeed = _xspeed;
+		yspeed = _yspeed;
+		zspeed = _zspeed;
+		mTester = tester;
 		teapot = new Teapot();
+		teapot.setSpeedAndTester(xspeed, yspeed, zspeed, mTester);
 		Log.d("glesteapot", "TeapotRender");
 	}
 
@@ -1620,10 +1631,7 @@ class Teapot {
 
 	private float xrot = 0;
 	private float yrot = 0;
-
-	private float xspeed = 1;
-	private float yspeed = 1;
-
+	private float zrot = 0;
 	static short teapot_indices[] = { 1122, 1243, 1272, 1242, 1273, 1241, 1274,
 		1240, 1275, 1239, 1276, 1238, 1277, 1205, 1278, 1204, 1279, 1203,
 		1280, 1202, 1281, 1201, 1282, 1200, 1283, 1199, -1, 1243, 1249,
@@ -1844,6 +1852,19 @@ class Teapot {
 		1045, 1046, 1052, 1053, -1, 1039, 1040, 1046, 1047, 1053, 1054, -1,
 		1054, 1047, 1048, 1041, 1042, -1, 1041, 1047, 1040, -1, };
 
+	private Tester mTester;
+	private float xspeed;
+	private float yspeed;
+	private float zspeed;
+
+	public void setSpeedAndTester(float _xspeed, float _yspeed, float _zspeed, Tester tester) {
+		xspeed = _xspeed;
+		yspeed = _yspeed;
+		zspeed = _zspeed;
+		mTester = tester;
+	}
+
+
 	public Teapot() {
 
 		ByteBuffer vbb = ByteBuffer.allocateDirect(teapot_indices.length * 4);
@@ -1871,10 +1892,14 @@ class Teapot {
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		gl.glRotatef(xrot, 1, 0, 0);
 		gl.glRotatef(yrot, 0, 1, 0);
+		gl.glRotatef(zrot, 0, 0, 1);
 		gl.glRotatef(90.0f, 0, 0, -1);
 
 		xrot += xspeed;
 		yrot += yspeed;
+		zrot += zspeed;
+
+		mTester.decreaseCounter();
 /*
 		switch (sensorMode) {
 		case TeapotES.ACCEL_ID:

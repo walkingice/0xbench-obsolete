@@ -21,11 +21,11 @@ public class CaseTeapot extends Case {
     }
 
     public String getTitle() {
-	return "Rotating Teapot";
+	return "Flying Teapot";
     }
 
     public String getDescription() {
-	return "A rotating standard Utah Teapot";
+	return "A flying standard Utah Teapot";
     }
 
     @Override

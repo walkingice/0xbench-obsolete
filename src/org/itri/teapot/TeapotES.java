@@ -1,5 +1,7 @@
 package org.itri.teapot;
 
+import org.zeroxlab.benchmark.Tester;
+
 import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -9,10 +11,33 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-//public class TeapotES extends Activity implements SensorEventListener {
-public class TeapotES extends Activity implements SensorEventListener {
-		
+public class TeapotES extends Tester implements SensorEventListener {
+
+	public final static String FullName = "org.itri.teapot.TeapotES";
+
+	/** Our own OpenGL View overridden */
     private MyGLSurfaceView mGLSurfaceView;
+
+	@Override
+	public String getTag() {
+	    return "Teapot";
+	}
+
+	@Override
+	public int sleepBeforeStart() {
+	    return 1200; // 1.2 second
+	}
+
+	@Override
+	public int sleepBetweenRound() {
+	    return 15; // 15 ms
+	}
+
+	@Override
+	protected void oneRound() {
+	    mGLSurfaceView.requestRender();
+	}
+		
 	private SensorManager sensorManager;
 	private float[] sensorValues;
 	private int sensorMode;
@@ -27,8 +52,9 @@ public class TeapotES extends Activity implements SensorEventListener {
 		// Create our Preview view and set it as the content of our
 		// Activity
 		mGLSurfaceView = new MyGLSurfaceView(this);
-		mGLSurfaceView.setRenderer(new TeapotRenderer());
+		mGLSurfaceView.setRenderer(new TeapotRenderer(5,1,1,this));
 		setContentView(mGLSurfaceView);
+		startTester();
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         sensorValues = new float[3];
         sensorMode = ACCEL_ID;
@@ -79,6 +105,7 @@ public class TeapotES extends Activity implements SensorEventListener {
 	
 	@Override
 	public void onSensorChanged(SensorEvent event) {
+		/*
 		switch (sensorMode) {
 		case ACCEL_ID:
 			if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -95,5 +122,6 @@ public class TeapotES extends Activity implements SensorEventListener {
 			}
 			return;
 		}
+		*/
 	}
 }
