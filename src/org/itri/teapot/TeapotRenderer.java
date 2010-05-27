@@ -1589,7 +1589,6 @@ public class TeapotRenderer implements GLSurfaceView.Renderer {
 
 	public void onDrawFrame(GL10 gl) {
 		teapot.draw(gl);
-		// Log.d("glesteapot", "drawFrame()");
 	}
 
 	public void onSurfaceChanged(GL10 gl, int w, int h) {
@@ -1864,9 +1863,7 @@ class Teapot {
 		mTester = tester;
 	}
 
-
 	public Teapot() {
-
 		ByteBuffer vbb = ByteBuffer.allocateDirect(teapot_indices.length * 4);
 		vbb.order(ByteOrder.nativeOrder());
 		mVertexBuffer = vbb.asShortBuffer();
@@ -1895,70 +1892,6 @@ class Teapot {
 		gl.glRotatef(zrot, 0, 0, 1);
 		gl.glRotatef(90.0f, 0, 0, -1);
 
-		xrot += xspeed;
-		yrot += yspeed;
-		zrot += zspeed;
-
-		mTester.decreaseCounter();
-/*
-		switch (sensorMode) {
-		case TeapotES.ACCEL_ID:
-			_accelerometer[0] = sensorValues[0] * kFilteringFactor + _accelerometer[0] * (1.0f - kFilteringFactor);
-			_accelerometer[1] = sensorValues[1] * kFilteringFactor + _accelerometer[1] * (1.0f - kFilteringFactor);
-			_accelerometer[2] = sensorValues[2] * kFilteringFactor + _accelerometer[2] * (1.0f - kFilteringFactor);
-
-			float length = (float) Math.sqrt(_accelerometer[0] * _accelerometer[0] 
-			                               + _accelerometer[1] * _accelerometer[1]
-			                               + _accelerometer[2] * _accelerometer[2]);
-
-			float matrix[][] = new float[4][4];
-
-			matrix[3][3] = 1;
-			// Setup first matrix column as gravity vector
-			matrix[0][0] = _accelerometer[0] / length;
-			matrix[0][1] = _accelerometer[1] / length;
-			matrix[0][2] = _accelerometer[2] / length;
-
-			// Setup second matrix column as an arbitrary vector in the plane
-			// perpendicular to the gravity vector {Gx, Gy, Gz} defined by by the
-			// equation "Gx * x + Gy * y + Gz * z = 0" in which we arbitrarily set
-			// x=0 and y=1
-			matrix[1][0] = 0.0f;
-			matrix[1][1] = 1.0f;
-			matrix[1][2] = -_accelerometer[1] / _accelerometer[2];
-			length = (float) Math.sqrt(matrix[1][0] * matrix[1][0] + 
-									   matrix[1][1] * matrix[1][1] + 
-									   matrix[1][2] * matrix[1][2]);
-			matrix[1][0] /= length;
-			matrix[1][1] /= length;
-			matrix[1][2] /= length;
-
-			// Setup third matrix column as the cross product of the first two
-			matrix[2][0] = matrix[0][1] * matrix[1][2] - matrix[0][2] * matrix[1][1];
-			matrix[2][1] = matrix[1][0] * matrix[0][2] - matrix[1][2] * matrix[0][0];
-			matrix[2][2] = matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0];
-
-			m2 = new float[16];
-			for (int j = 0; j < 4; j++) {
-				for (int k = 0; k < 4; k++) {
-					m2[j * 4 + k] = matrix[j][k];
-				}
-			}
-
-			if (length >= 0.1)
-				gl.glMultMatrixf(m2, 0);
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-			gl.glRotatef(90.0f, 0, 0, -1);
-			break;
-		case TeapotES.COMPASS_ID: 
-			gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-			if (Math.abs(sensorValues[0]) > 1) {
-				Log.d("glesteapot", sensorValues[0]+" "+sensorValues[1]+" "+sensorValues[2]);
-                gl.glRotatef(sensorValues[1]+90, sensorValues[0], sensorValues[2], 0);
-			}
-			break;
-		}
-*/
 
 		while (i < num_teapot_indices) {
 			if (teapot_indices[i] == -1) {
@@ -1976,6 +1909,11 @@ class Teapot {
 		gl.glTranslatef(0.0f, -0.1f, -1.0f);
 		gl.glScalef(kTeapotScale, kTeapotScale, kTeapotScale);
 
+		xrot += xspeed;
+		yrot += yspeed;
+		zrot += zspeed;
+		gl.glFinish();
+		mTester.decreaseCounter();
 	}
 
 	private ShortBuffer mVertexBuffer;
