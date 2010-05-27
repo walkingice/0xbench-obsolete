@@ -27,7 +27,7 @@ public class TesterGC extends Tester{
 	}
 
 	protected int sleepBetweenRound() {
-	    return 200;
+	    return 0;
 	}
 
 	protected void oneRound() {

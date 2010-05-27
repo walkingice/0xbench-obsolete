@@ -35,7 +35,7 @@ public class TesterCanvas extends Tester {
     }
 
     public int sleepBetweenRound() {
-	return 15;
+	return 0;
     }
     public int sleepBeforeStart() {
 	return 1000;
@@ -74,7 +74,7 @@ public class TesterCanvas extends Tester {
 	public void onDraw(Canvas canvas) {
 	    super.onDraw(canvas);
 //	    int r = 0xFF & mRandom.nextInt();
-		int r = (0x00555555 | mRandom.nextInt() ) | Color.BLACK;
+		int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
 	    canvas.drawRGB(r, r, r);
 	    decreaseCounter();
 	}

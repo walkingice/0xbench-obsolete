@@ -128,16 +128,13 @@ public abstract class Tester extends Activity{
     }
 
     public void decreaseCounter() {
-	if (mNow == mRound)
-	{
+		/*
+	if (mNow == mRound) {
 		mTesterStart = SystemClock.uptimeMillis();
-		Log.e("bzlog", "set start: " + mTesterStart);
-	}
-	else if (mNow == 1)
-	{
+	} else if (mNow == 1) {
 		mTesterEnd = SystemClock.uptimeMillis();
-		Log.e("bzlog", "set end: " + mTesterEnd);
 	}
+	*/
 	mNow = mNow - 1;
 	mNextRound = true;
     }
@@ -182,17 +179,18 @@ public abstract class Tester extends Activity{
 	    try {
 		sleep(mSleepingStart);
 
-		sleepLoop();
-//		long start = SystemClock.uptimeMillis();
+//		sleepLoop();
+		long start = SystemClock.uptimeMillis();
 
 //		if (mSleepingTime == 0) {
 //		    nervousLoop();
 //		} else {
-//		    lazyLoop();
+		    lazyLoop();
 //		}
 
-//		long end = SystemClock.uptimeMillis();
-		finishTester(mTesterStart, mTesterEnd);
+		long end = SystemClock.uptimeMillis();
+		finishTester(start, end);
+//		finishTester(mTesterStart, mTesterEnd);
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }

@@ -25,7 +25,7 @@ public class DrawCircle extends Tester {
 	}
 
 	public int sleepBetweenRound() {
-	    return 15;
+	    return 0;
 	}
 
 	public void oneRound() {
