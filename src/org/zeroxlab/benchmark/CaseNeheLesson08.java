@@ -39,7 +39,7 @@ public class CaseNeheLesson08 extends Case {
 	int length = mResult.length;
 
 	for (int i = 0; i < length; i++) {
-	    float fps = mCaseRound / (mResult[i] / 1000); // milliseconds to seconds
+	    float fps = mCaseRound / (mResult[i] / 1000f); // milliseconds to seconds
 	    result += "Round " + i + ": fps = " + fps + "\n";
 	    total  += fps;
 	}

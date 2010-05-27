@@ -3,12 +3,6 @@ package org.itri.teapot;
 import org.zeroxlab.benchmark.Tester;
 
 import android.app.Activity;
-/*
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-*/
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,12 +27,12 @@ public class TeapotES extends Tester {
 
 	@Override
 	public int sleepBetweenRound() {
-	    return 15; // 15 ms
+	    return 1500; // 15 ms
 	}
 
 	@Override
 	protected void oneRound() {
-	    mGLSurfaceView.requestRender();
+//	    mGLSurfaceView.requestRender();
 	}
 	
 	public static final int ACCEL_ID = Menu.FIRST;

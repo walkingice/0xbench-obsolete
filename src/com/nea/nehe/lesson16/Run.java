@@ -30,12 +30,12 @@ public class Run extends Tester {
 
 	@Override
 	public int sleepBetweenRound() {
-	    return 15; // 15 ms
+	    return 1000; // let gl run by itself, check periodically
 	}
 
 	@Override
 	protected void oneRound() {
-	    lesson16.requestRender();
+//	    lesson16.requestRender();
 	}
 
 	/**

@@ -44,7 +44,7 @@ public class Kubench extends Tester implements GLSurfaceView.GLSurfaceViewClient
     }
 
     public int sleepBetweenRound() {
-	return 0;
+	return 1500;
     }
 
     public void oneRound() {

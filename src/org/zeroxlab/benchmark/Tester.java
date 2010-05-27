@@ -138,7 +138,6 @@ public abstract class Tester extends Activity{
 		mTesterEnd = SystemClock.uptimeMillis();
 		Log.e("bzlog", "set end: " + mTesterEnd);
 	}
-
 	mNow = mNow - 1;
 	mNextRound = true;
     }
@@ -172,14 +171,22 @@ public abstract class Tester extends Activity{
 	    }
 	}
 
+	private void sleepLoop() throws Exception {
+	    while (!isTesterFinished()) {
+		oneRound();
+		sleep(mSleepingTime);
+	    }
+	}
+
 	public void run() {
 	    try {
 		sleep(mSleepingStart);
 
+		sleepLoop();
 //		long start = SystemClock.uptimeMillis();
 
 //		if (mSleepingTime == 0) {
-		    nervousLoop();
+//		    nervousLoop();
 //		} else {
 //		    lazyLoop();
 //		}
