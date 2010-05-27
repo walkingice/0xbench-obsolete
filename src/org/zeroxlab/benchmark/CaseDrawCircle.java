@@ -46,7 +46,7 @@ public class CaseDrawCircle extends Case{
 	    total  += fps;
 	}
 
-	result += "Average: fps = " + (total/length) + "\n";
+	result += "Average: fps = " + ((float)total/length) + "\n";
 	return result;
     }
 }

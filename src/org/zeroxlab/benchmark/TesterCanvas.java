@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.os.*;
 
 import java.util.Random;
+import android.graphics.Color;
 
 public class TesterCanvas extends Tester {
     public final String TAG = "TesterCanvas";
@@ -72,7 +73,8 @@ public class TesterCanvas extends Tester {
 	@Override
 	public void onDraw(Canvas canvas) {
 	    super.onDraw(canvas);
-	    int r = 0xFF & mRandom.nextInt();
+//	    int r = 0xFF & mRandom.nextInt();
+		int r = (0x00555555 | mRandom.nextInt() ) | Color.BLACK;
 	    canvas.drawRGB(r, r, r);
 	    decreaseCounter();
 	}
