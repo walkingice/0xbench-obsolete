@@ -117,7 +117,6 @@ public abstract class Tester extends Activity{
      * @param intent The intent will return to Case
      */
     protected boolean saveResult(Intent intent) {
-	Log.e("bzlog", "start, end: " + mTesterStart + ", " + mTesterEnd);
 	long elapse = mTesterEnd - mTesterStart;
 	Case.putResult(intent, elapse);
 	return true;
@@ -157,7 +156,8 @@ public abstract class Tester extends Activity{
 		    mNextRound = false;
 		    oneRound();
 		} else {
-		    sleep(mSleepingTime);
+//		    sleep(mSleepingTime);
+		    sleep(0);
 		}
 	    }
 	}
@@ -179,18 +179,12 @@ public abstract class Tester extends Activity{
 	    try {
 		sleep(mSleepingStart);
 
-//		sleepLoop();
 		long start = SystemClock.uptimeMillis();
 
-//		if (mSleepingTime == 0) {
-//		    nervousLoop();
-//		} else {
-		    lazyLoop();
-//		}
+		lazyLoop();
 
 		long end = SystemClock.uptimeMillis();
 		finishTester(start, end);
-//		finishTester(mTesterStart, mTesterEnd);
 	    } catch (Exception e) {
 		e.printStackTrace();
 	    }

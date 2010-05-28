@@ -107,7 +107,7 @@ public class LinpackLoop {
 	mInfo.putDouble(TesterArithmetic.TIME, time_result);
 	mInfo.putDouble(TesterArithmetic.EPS, eps_result);
 
-    Log.e("bzlog", "Mflops/s: " + mflops_result +
+    Log.e("Benchmark", "Mflops/s: " + mflops_result +
 	    "  Time: " + time_result + " secs" +
 	    "  Norm Res: " + residn_result +
 	    "  Precision: " + eps_result);

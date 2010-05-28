@@ -98,11 +98,11 @@ public class Benchmark extends Activity implements View.OnClickListener {
     public void onClick(View v) {
 	if (v == mRun) {
 	    for (int i = 0; i < mCheckList.length; i++) {
-		if (mCheckList[i].isChecked()) {
-		    mCases.get(i).reset();
-		} else {
-		    mCases.get(i).clear();
-		}
+			if (mCheckList[i].isChecked()) {
+				mCases.get(i).reset();
+			} else {
+				mCases.get(i).clear();
+			}
 	    }
 	    runCase(mCases);
 	} else if (v == mShow) {
