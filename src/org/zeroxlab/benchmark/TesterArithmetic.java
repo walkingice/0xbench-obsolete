@@ -1,6 +1,6 @@
 package org.zeroxlab.benchmark;
 
-import org.zeroxlab.arithmetic.Linpack;
+import org.zeroxlab.arithmetic.LinpackLoop;
 
 import android.util.Log;
 import android.app.Activity;
@@ -32,7 +32,7 @@ public class TesterArithmetic extends Tester{
     }
 
     protected void oneRound() {
-	Linpack.main(mInfo[mNow - 1]);
+	LinpackLoop.main(mInfo[mNow - 1]);
 	decreaseCounter();
     }
 

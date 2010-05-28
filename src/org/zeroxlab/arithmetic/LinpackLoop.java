@@ -1,3 +1,9 @@
+package org.zeroxlab.arithmetic;
+
+import org.zeroxlab.benchmark.TesterArithmetic;
+import android.os.Bundle;
+import android.util.Log;
+
 /*
 
 Reformatted by Jonathan Hardwick (jch@cs.cmu.edu), 3/28/96
@@ -19,13 +25,17 @@ Translated to C by Bonnie Toy 5/88
 */
 
 
+import android.util.*;
 
 public class LinpackLoop {
 
-  public static void main (String argv[]) 
+  static Bundle mInfo;
+
+  public static String main(Bundle info)
   {
     LinpackLoop l = new LinpackLoop();
-    System.out.println(l.run_benchmark());
+    mInfo = info;
+    return l.run_benchmark();
   }
 
   double second_orig = -1;
@@ -91,6 +101,17 @@ public class LinpackLoop {
     residn_result = resid/( n*norma*normx*eps_result );
     time_result = total;
     mflops_result = ops/(1.0e6*total);
+
+	mInfo.putDouble(TesterArithmetic.MFLOPS, mflops_result);
+	mInfo.putDouble(TesterArithmetic.RESIDN, residn_result);
+	mInfo.putDouble(TesterArithmetic.TIME, time_result);
+	mInfo.putDouble(TesterArithmetic.EPS, eps_result);
+
+    Log.e("bzlog", "Mflops/s: " + mflops_result +
+	    "  Time: " + time_result + " secs" +
+	    "  Norm Res: " + residn_result +
+	    "  Precision: " + eps_result);
+
     return ("Mflops/s: " + mflops_result +
 	    "  Time: " + time_result + " secs" +
 	    "  Norm Res: " + residn_result +

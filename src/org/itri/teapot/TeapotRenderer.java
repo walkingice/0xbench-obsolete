@@ -1547,7 +1547,6 @@ public class TeapotRenderer implements GLSurfaceView.Renderer {
 		return configSpec;
 	}
 
-	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		int w = 0, h =0;
 		
