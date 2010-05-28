@@ -47,4 +47,24 @@ public class CaseNeheLesson16 extends Case {
 	result += "Average: fps = " + (total/length) + "\n";
 	return result;
     }
+
+    @Override
+    public String getXMLBenchmark() {
+	if (!couldFetchReport()) {
+	    return "";
+	}
+
+	String result = "";
+	int length = mResult.length;
+
+	result += "<scenario benchmark=\"GLFog\">";
+	for (int i = 0; i < length; i++) {
+	    float second = (mResult[i] / 1000f);
+	    float fps = (float)mCaseRound / second; // milliseconds to seconds
+	    result += fps + " ";
+	}
+	result += "</scenario>";
+
+	return result;
+    }
 }

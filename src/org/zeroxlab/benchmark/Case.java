@@ -224,4 +224,32 @@ public abstract class Case{
 	result += "Average:" + (total/length) + "\n";
 	return result;
     }
+
+    public String getXMLBenchmark() {
+
+	if (!couldFetchReport()) {
+	    return "";
+	}
+
+	String result = "";
+	long total = 0;
+	long max = mResult[0];
+	long min = mResult[0];
+	int length = mResult.length;
+	for (int i = 0; i < length; i++) {
+	    total  += mResult[i];
+		if (mResult[i] > max) {
+			max = mResult[i];
+		} else if (mResult[i] < min) {
+			min = mResult[i];
+		}
+	}
+
+	result += "<scenario benchmark=\"" + getTitle() + "\">";
+	result += min + " " + (total/length) + " " + max;
+	result += "</scenario>";
+
+	return result;
+    }
+
 }

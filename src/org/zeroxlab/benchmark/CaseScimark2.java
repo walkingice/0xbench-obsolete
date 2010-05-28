@@ -63,6 +63,12 @@ public class CaseScimark2 extends Case{
     }
 
     @Override
+    public String getXMLBenchmark() {
+	String result = TesterScimark2.bundleListToXML(mInfo);
+	return result;
+    }
+
+    @Override
     protected boolean saveResult(Intent intent, int index) {
 	Bundle info = intent.getBundleExtra(LIN_RESULT);
 	if (info == null) {

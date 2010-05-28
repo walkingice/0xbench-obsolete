@@ -63,6 +63,12 @@ public class CaseArithmetic extends Case{
     }
 
     @Override
+    public String getXMLBenchmark() {
+	String result = TesterArithmetic.bundleListToXML(mInfo);
+	return result;
+    }
+
+    @Override
     protected boolean saveResult(Intent intent, int index) {
 	Bundle info = intent.getBundleExtra(LIN_RESULT);
 	if (info == null) {

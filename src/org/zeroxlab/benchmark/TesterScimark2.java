@@ -120,4 +120,68 @@ public class TesterScimark2 extends Tester{
 	return result;
     }
 
+    public static String bundleListToXML(Bundle[] mInfo) {
+
+	int length = mInfo.length;
+	double composite_total     = 0.0;
+	double ftt_total           = 0.0;
+	double sor_total           = 0.0;
+	double montecarlo_total    = 0.0;
+	double sparsematmult_total = 0.0;
+	double lu_total            = 0.0;
+
+	for (int i = 0; i < length; i++) {
+	    Bundle info = mInfo[i];
+
+	    composite_total     += info.getDouble(COMPOSITE    );
+	    ftt_total           += info.getDouble(FTT          );
+	    sor_total           += info.getDouble(SOR          );
+	    montecarlo_total    += info.getDouble(MONTECARLO   );
+	    sparsematmult_total += info.getDouble(SPARSEMATMULT);
+	    lu_total            += info.getDouble(LU           );
+	}
+
+
+	String benchName = "Scimark2";
+
+	String result = "";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-COMPOSITE\"";
+	result += ">";
+	result += "" + (composite_total / length);
+	result += "</scenario>";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-FTT\"";
+	result += ">";
+	result += "" + (ftt_total / length);
+	result += "</scenario>";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-SOR\"";
+	result += ">";
+	result += "" + (sor_total / length);
+	result += "</scenario>";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-MonteCarlo\"";
+	result += ">";
+	result += "" + (montecarlo_total / length);
+	result += "</scenario>";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-SparseMatrixMult\"";
+	result += ">";
+	result += "" + (sparsematmult_total / length);
+	result += "</scenario>";
+
+	result += "<scenario";
+	result += " benchmark=\"" + benchName + "-LU\"";
+	result += ">";
+	result += "" + (lu_total / length);
+	result += "</scenario>";
+
+	return result;
+    }
 }

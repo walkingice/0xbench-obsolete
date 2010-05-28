@@ -19,9 +19,13 @@ class MicroBenchmark {
 		urlConnection.setDoOutput(true);
 
 		OutputStream post = urlConnection.getOutputStream();
+		Log.e("bzlog", xml);
 		post.write(xml.getBytes());
 
-		if (urlConnection.getResponseCode() == 200) {
+		int responseCode = urlConnection.getResponseCode();
+		Log.e("bzlog", ""+responseCode);
+
+		if (responseCode == 200) {
 			Log.e("bzlog", "View current and previous benchmark results online:");
 			BufferedReader in = new BufferedReader(
 				new InputStreamReader(urlConnection.getInputStream()));

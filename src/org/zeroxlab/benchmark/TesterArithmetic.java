@@ -111,4 +111,29 @@ public class TesterArithmetic extends Tester{
 	return result;
     }
 
+    public static String bundleListToXML(Bundle[] mInfo) {
+
+	String result = "";
+	double total = 0.0;
+	double max = mInfo[0].getDouble(MFLOPS, 0.0);
+	double min = mInfo[0].getDouble(MFLOPS, 0.0);
+	int length = mInfo.length;
+	for (int i = 0; i < length; i++) {
+		double mflops = mInfo[i].getDouble(MFLOPS, 0.0);
+	    total += mflops;
+		if (mflops > max) {
+			max = mflops;
+		} else if (mflops < min) {
+			min = mflops;
+		}
+	}
+
+	result += "<scenario benchmark=\"Linpack\">";
+	result += min + " " + (total/length) + " " + max;
+	result += "</scenario>";
+
+	return result;
+
+	}
+
 }

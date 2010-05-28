@@ -48,4 +48,24 @@ public class CaseCanvas extends Case{
 	result += "Average: fps = " + ((float)total/length) + "\n";
 	return result;
     }
+
+    @Override
+    public String getXMLBenchmark() {
+	if (!couldFetchReport()) {
+	    return "";
+	}
+
+	String result = "";
+	int length = mResult.length;
+
+	result += "<scenario benchmark=\"DrawCanvas\">";
+	for (int i = 0; i < length; i++) {
+	    float second = (mResult[i] / 1000f);
+	    float fps = (float)mCaseRound / second; // milliseconds to seconds
+	    result += fps + " ";
+	}
+	result += "</scenario>";
+
+	return result;
+    }
 }

@@ -12,6 +12,8 @@ import java.nio.*;
 import java.io.*;
 
 import java.util.LinkedList;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
@@ -21,6 +23,10 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     private final static String SDCARD      = "/sdcard";
     private final static String mOutputFile = "0xBenchmark";
+
+	private final static String postUrl = "http://microbenchmarks.appspot.com:80/run/";
+	private final static String apiKey = "02dc3521-1bc7-4244-89b6-ff152803d8c9";
+	private final static String benchmarkName = "0x_123123";
 
     private Button   mRun;
     private Button   mShow;
@@ -106,6 +112,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    }
 	    runCase(mCases);
 	} else if (v == mShow) {
+		uploadResult();
 	    String result = getResult();
 	    Log.i(TAG,"\n\n"+result+"\n\n");
 	    writeToSDCard(mOutputFile, result);
@@ -136,6 +143,29 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    }
 	}
     }
+
+	public void uploadResult() {
+	Date date = new Date();
+	//2010-05-28T17:40:25CST
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+
+	String xml = "";
+	xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+	xml += "<result";
+	xml += " apiKey=\"" + apiKey + "\"";
+	xml += " benchmark=\"" + benchmarkName + "\"";
+	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
+	xml += ">";
+
+	Case mycase;
+	for (int i = 0; i < mCases.size(); i++) {
+	    mycase = mCases.get(i);
+	    xml += mycase.getXMLBenchmark();
+	}
+
+	xml += "</result>";
+	MicroBenchmark.upload(xml, postUrl, apiKey, benchmarkName) ;
+	}
 
     public String getResult() {
 	String result = "";
