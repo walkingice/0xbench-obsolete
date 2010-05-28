@@ -39,6 +39,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	setContentView(R.layout.main);
 	mCases = new LinkedList<Case>();
 	Case arith  = new CaseArithmetic();
+	Case scimark2  = new CaseScimark2();
 	Case mycase = new CaseCanvas();
 	Case glcube = new CaseGLCube();
 	Case circle = new CaseDrawCircle();
@@ -47,6 +48,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case nehe16 = new CaseNeheLesson16();
 	Case teapot = new CaseTeapot();
 	mCases.add(arith);
+	mCases.add(scimark2);
 	mCases.add(mycase);
 	mCases.add(glcube);
 	mCases.add(nehe08);

@@ -2,6 +2,9 @@ package jnt.scimark2;
 
 import java.util.Properties;
 
+import org.zeroxlab.benchmark.TesterScimark2;
+import android.os.Bundle;
+
 /**
 	SciMark2: A Java numerical benchmark measuring performance
 	of computational kernels for FFTs, Monte Carlo simulation,
@@ -21,7 +24,7 @@ public class commandline
   */
 
 
-	public static void main(String args[])
+	public static String main(Bundle info)
 	{
 		// default to the (small) cache-contained version
 
@@ -32,35 +35,6 @@ public class commandline
 		int Sparse_size_M = Constants.SPARSE_SIZE_M;
 		int Sparse_size_nz = Constants.SPARSE_SIZE_nz;
 		int LU_size = Constants.LU_SIZE;
-
-		// look for runtime options
-
-        if (args.length > 0)
-        {
-
-			if (args[0].equalsIgnoreCase("-h") || 
-						args[0].equalsIgnoreCase("-help"))
-			{
-				System.out.println("Usage: [-large] [minimum_time]");
-				return;
-			}
-
-			int current_arg = 0;
-			if (args[current_arg].equalsIgnoreCase("-large"))
-			{
-				FFT_size = Constants.LG_FFT_SIZE;
-				SOR_size =  Constants.LG_SOR_SIZE;
-				Sparse_size_M = Constants.LG_SPARSE_SIZE_M;
-				Sparse_size_nz = Constants.LG_SPARSE_SIZE_nz;
-				LU_size = Constants.LG_LU_SIZE;
-
-				current_arg++;
-			}
-
-			if (args.length > current_arg)
-        		min_time = Double.valueOf(args[current_arg]).doubleValue();
-        }
-        
 
 		// run the benchmark
 
@@ -80,40 +54,41 @@ public class commandline
 
 	    // print out results
 
+
+
 		System.out.println();
 		System.out.println("SciMark 2.0a");
 		System.out.println();
+
 		System.out.println("Composite Score: " + res[0]);
+		info.putDouble(TesterScimark2.COMPOSITE, res[0]);
+
 		System.out.print("FFT ("+FFT_size+"): ");
 		if (res[1]==0.0)
 			System.out.println(" ERROR, INVALID NUMERICAL RESULT!");
 		else
 			System.out.println(res[1]);
+		info.putDouble(TesterScimark2.FTT, res[1]);
 
 		System.out.println("SOR ("+SOR_size+"x"+ SOR_size+"): "
 				+ "  " + res[2]);
+		info.putDouble(TesterScimark2.SOR, res[2]);
+
 		System.out.println("Monte Carlo : " + res[3]);
+		info.putDouble(TesterScimark2.MONTECARLO, res[3]);
+
 		System.out.println("Sparse matmult (N="+ Sparse_size_M+ 
 				", nz=" + Sparse_size_nz + "): " + res[4]);
+		info.putDouble(TesterScimark2.SPARSEMATMULT, res[4]);
+
 		System.out.print("LU (" + LU_size + "x" + LU_size + "): ");
 		if (res[5]==0.0)
 			System.out.println(" ERROR, INVALID NUMERICAL RESULT!");
 		else
 			System.out.println(res[5]);
+		info.putDouble(TesterScimark2.LU, res[5]);
 
-		// print out System info
-		System.out.println();
-		System.out.println("java.vendor: " + 
-				System.getProperty("java.vendor"));
-		System.out.println("java.version: " + 
-				System.getProperty("java.version"));
-		System.out.println("os.arch: " +
-				System.getProperty("os.arch"));
-		System.out.println("os.name: " +
-				System.getProperty("os.name"));
-		System.out.println("os.version: " +
-				System.getProperty("os.version"));
-
+		return "";
 
 	}
   
