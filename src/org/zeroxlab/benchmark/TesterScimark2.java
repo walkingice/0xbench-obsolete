@@ -110,12 +110,12 @@ public class TesterScimark2 extends Tester{
 
     public static String bundleToString(Bundle bundle) {
 	String result = "";
-	result += "\nComposite:" + bundle.getDouble(COMPOSITE, 0.0);
-	result += "\nFast Fourier Transform:" + bundle.getDouble(FTT, 0.0);
-	result += "\nJacobi Successive Over-relaxation:" + bundle.getDouble(SOR, 0.0);
-	result += "\nMonte Carlo integration:" + bundle.getDouble(MONTECARLO, 0.0);
-	result += "\nSparse matrix multiply:" + bundle.getDouble(SPARSEMATMULT, 0.0);
-	result += "\ndense LU matrix factorization:" + bundle.getDouble(LU, 0.0);
+	result += "\nComposite:\n  " + bundle.getDouble(COMPOSITE, 0.0);
+	result += "\nFast Fourier Transform:\n  " + bundle.getDouble(FTT, 0.0);
+	result += "\nJacobi Successive Over-relaxation:\n  " + bundle.getDouble(SOR, 0.0);
+	result += "\nMonte Carlo integration:\n  " + bundle.getDouble(MONTECARLO, 0.0);
+	result += "\nSparse matrix multiply:\n  " + bundle.getDouble(SPARSEMATMULT, 0.0);
+	result += "\ndense LU matrix factorization:\n  " + bundle.getDouble(LU, 0.0);
 
 	return result;
     }
