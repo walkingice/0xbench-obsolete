@@ -26,7 +26,7 @@ public class CaseArithmetic extends Case{
     }
 
     public String getTitle() {
-	return "Arithmetic";
+	return "Linpack";
     }
 
     public String getDescription() {
