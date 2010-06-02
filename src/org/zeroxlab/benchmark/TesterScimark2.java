@@ -145,42 +145,66 @@ public class TesterScimark2 extends Tester{
 	String benchName = "Scimark2";
 
 	String result = "";
+    
+    if(composite_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-COMPOSITE\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(COMPOSITE) + " ";
+        }
+        result += "</scenario>";
+    }
 
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-COMPOSITE\"";
-	result += ">";
-	result += "" + (composite_total / length);
-	result += "</scenario>";
+    if(ftt_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-FTT\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(FTT) + " ";
+        }
+        result += "</scenario>";
+    }
 
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-FTT\"";
-	result += ">";
-	result += "" + (ftt_total / length);
-	result += "</scenario>";
+    if(sor_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-SOR\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(SOR) + " ";
+        }
+        result += "</scenario>";
+    }
 
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-SOR\"";
-	result += ">";
-	result += "" + (sor_total / length);
-	result += "</scenario>";
+    if(montecarlo_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-MonteCarlo\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(MONTECARLO) + " ";
+        }
+        result += "</scenario>";
+    }
 
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-MonteCarlo\"";
-	result += ">";
-	result += "" + (montecarlo_total / length);
-	result += "</scenario>";
+    if(sparsematmult_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-SparseMatrixMult\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(SPARSEMATMULT) + " ";
+        }
+        result += "</scenario>";
+    }
 
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-SparseMatrixMult\"";
-	result += ">";
-	result += "" + (sparsematmult_total / length);
-	result += "</scenario>";
-
-	result += "<scenario";
-	result += " benchmark=\"" + benchName + "-LU\"";
-	result += ">";
-	result += "" + (lu_total / length);
-	result += "</scenario>";
+    if(lu_total != 0.0) {
+        result += "<scenario";
+        result += " benchmark=\"" + benchName + "-LU\"";
+        result += ">";
+        for (int i = 0; i < length; i++) {
+            result += "" + mInfo[i].getDouble(LU) + " ";
+        }
+        result += "</scenario>";
+    }
 
 	return result;
     }
