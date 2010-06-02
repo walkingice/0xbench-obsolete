@@ -24,8 +24,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private final static String SDCARD      = "/sdcard";
     private final static String mOutputFile = "0xBenchmark";
 
-	private final static String postUrl = "http://microbenchmarks.appspot.com:80/run/";
-	private final static String apiKey = "02dc3521-1bc7-4244-89b6-ff152803d8c9";
+	private final static String postUrl = "http://bzsandbox.appspot.com:80/run/";
+	private final static String apiKey = "0a57da89-5242-4059-92c2-fa7a7d3b3dd0";
 	private final static String benchmarkName = "0x_123123";
 
     private Button   mRun;

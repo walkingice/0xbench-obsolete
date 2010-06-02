@@ -115,7 +115,7 @@ public class TesterArithmetic extends Tester{
 
 	String result = "";
 	result += "<scenario benchmark=\"Linpack\">";
-	for (int i = 0; i < length; i++) {
+	for (int i = 0; i < mInfo.length; i++) {
 		double mflops = mInfo[i].getDouble(MFLOPS, 0.0);
 		result += "" + mflops + " ";
 	}
