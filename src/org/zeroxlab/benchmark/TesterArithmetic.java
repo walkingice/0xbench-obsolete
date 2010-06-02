@@ -114,26 +114,14 @@ public class TesterArithmetic extends Tester{
     public static String bundleListToXML(Bundle[] mInfo) {
 
 	String result = "";
-	double total = 0.0;
-	double max = mInfo[0].getDouble(MFLOPS, 0.0);
-	double min = mInfo[0].getDouble(MFLOPS, 0.0);
-	int length = mInfo.length;
+	result += "<scenario benchmark=\"Linpack\">";
 	for (int i = 0; i < length; i++) {
 		double mflops = mInfo[i].getDouble(MFLOPS, 0.0);
-	    total += mflops;
-		if (mflops > max) {
-			max = mflops;
-		} else if (mflops < min) {
-			min = mflops;
-		}
+		result += "" + mflops + " ";
 	}
-
-	result += "<scenario benchmark=\"Linpack\">";
-	result += min + " " + (total/length) + " " + max;
 	result += "</scenario>";
 
 	return result;
-
 	}
 
 }
