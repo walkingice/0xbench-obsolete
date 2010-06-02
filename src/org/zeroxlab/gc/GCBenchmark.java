@@ -148,6 +148,7 @@ public class GCBenchmark  {
 		tElapsed = tFinish-tStart;
 		PrintDiagnostics();
 		update("Completed in " + tElapsed + "ms.");
+        TesterGC.time = tElapsed;
 		//Debug.stopMethodTracing();
 	}
 }

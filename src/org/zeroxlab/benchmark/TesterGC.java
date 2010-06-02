@@ -14,6 +14,7 @@ public class TesterGC extends Tester{
 
 	private TextView mTextView1;
 
+    public static double time = 0.0;
 	public static Handler mHandler;
 	public static final int GUINOTIFIER = 0x1234;
 
@@ -38,6 +39,7 @@ public class TesterGC extends Tester{
 	@Override
 	protected boolean saveResult(Intent intent) {
 	    intent.putExtra(CaseGC.GCRESULT, GCBenchmark.out.toString());
+        intent.putExtra(CaseGC.TIME, time);
 	    return true;
 	}
 
