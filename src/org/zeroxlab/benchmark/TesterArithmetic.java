@@ -113,6 +113,14 @@ public class TesterArithmetic extends Tester{
 
     public static String bundleListToXML(Bundle[] mInfo) {
 
+    double total = 0.0;
+	for (int i = 0; i < mInfo.length; i++) {
+		double mflops = mInfo[i].getDouble(MFLOPS, 0.0);
+        total += mflops;
+	}
+    if (total == 0) {
+        return "";
+    }
 	String result = "";
 	result += "<scenario benchmark=\"Linpack\">";
 	for (int i = 0; i < mInfo.length; i++) {
