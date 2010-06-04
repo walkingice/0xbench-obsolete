@@ -54,8 +54,8 @@ public class CaseGC extends Case{
             return "";
         }
         String result = "";
-        result += "<scenario benchmark=\"GarbageCollection\">";
-        result += "" + time + "</scenario>";
+        result += "<scenario benchmark=\"GarbageCollection\" unit=\"runtime_ns\">";
+        result += "" + time/1000f + "</scenario>";
         return result;
     }
 

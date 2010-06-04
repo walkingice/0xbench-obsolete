@@ -59,7 +59,7 @@ public class CaseGLCube extends Case{
 	String result = "";
 	int length = mResult.length;
 
-	result += "<scenario benchmark=\"GLCube\">";
+	result += "<scenario benchmark=\"GLCube\" unit=\"3Dfps\">";
 	for (int i = 0; i < length; i++) {
 	    float second = (mResult[i] / 1000f);
 	    float fps = (float)mCaseRound / second; // milliseconds to seconds

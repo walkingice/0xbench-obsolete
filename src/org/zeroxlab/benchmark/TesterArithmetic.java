@@ -122,7 +122,7 @@ public class TesterArithmetic extends Tester{
         return "";
     }
 	String result = "";
-	result += "<scenario benchmark=\"Linpack\">";
+	result += "<scenario benchmark=\"Linpack\" unit=\"mflops\">";
 	for (int i = 0; i < mInfo.length; i++) {
 		double mflops = mInfo[i].getDouble(MFLOPS, 0.0);
 		result += "" + mflops + " ";

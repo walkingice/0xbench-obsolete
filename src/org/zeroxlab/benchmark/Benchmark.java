@@ -26,7 +26,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
 	private final static String postUrl = "http://bzsandbox.appspot.com:80/run/";
 	private final static String apiKey = "0a57da89-5242-4059-92c2-fa7a7d3b3dd0";
-	private final static String benchmarkName = "0xDemo";
+	private final static String benchmarkName = "0xDebug";
 
     private Button   mRun;
     private Button   mShow;

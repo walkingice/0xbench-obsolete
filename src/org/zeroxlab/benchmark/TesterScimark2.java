@@ -148,7 +148,7 @@ public class TesterScimark2 extends Tester{
     
     if(composite_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-COMPOSITE\"";
+        result += " benchmark=\"" + benchName + "-COMPOSITE\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(COMPOSITE) + " ";
@@ -158,7 +158,7 @@ public class TesterScimark2 extends Tester{
 
     if(ftt_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-FTT\"";
+        result += " benchmark=\"" + benchName + "-FTT\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(FTT) + " ";
@@ -168,7 +168,7 @@ public class TesterScimark2 extends Tester{
 
     if(sor_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-SOR\"";
+        result += " benchmark=\"" + benchName + "-SOR\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(SOR) + " ";
@@ -178,7 +178,7 @@ public class TesterScimark2 extends Tester{
 
     if(montecarlo_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-MonteCarlo\"";
+        result += " benchmark=\"" + benchName + "-MonteCarlo\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(MONTECARLO) + " ";
@@ -188,7 +188,7 @@ public class TesterScimark2 extends Tester{
 
     if(sparsematmult_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-SparseMatrixMult\"";
+        result += " benchmark=\"" + benchName + "-SparseMatrixMult\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(SPARSEMATMULT) + " ";
@@ -198,7 +198,7 @@ public class TesterScimark2 extends Tester{
 
     if(lu_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-LU\"";
+        result += " benchmark=\"" + benchName + "-LU\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
             result += "" + mInfo[i].getDouble(LU) + " ";

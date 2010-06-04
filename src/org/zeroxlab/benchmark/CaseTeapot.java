@@ -57,7 +57,7 @@ public class CaseTeapot extends Case {
 	String result = "";
 	int length = mResult.length;
 
-	result += "<scenario benchmark=\"GLTeapot\">";
+	result += "<scenario benchmark=\"GLTeapot\" unit=\"3Dfps\">";
 	for (int i = 0; i < length; i++) {
 	    float second = (mResult[i] / 1000f);
 	    float fps = (float)mCaseRound / second; // milliseconds to seconds

@@ -57,7 +57,7 @@ public class CaseNeheLesson08 extends Case {
 	String result = "";
 	int length = mResult.length;
 
-	result += "<scenario benchmark=\"GLBlending\">";
+	result += "<scenario benchmark=\"GLBlending\" unit=\"3Dfps\">";
 	for (int i = 0; i < length; i++) {
 	    float second = (mResult[i] / 1000f);
 	    float fps = (float)mCaseRound / second; // milliseconds to seconds
