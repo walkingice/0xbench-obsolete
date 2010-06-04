@@ -68,7 +68,7 @@ public class commandline
 			System.out.println(" ERROR, INVALID NUMERICAL RESULT!");
 		else
 			System.out.println(res[1]);
-		info.putDouble(TesterScimark2.FTT, res[1]);
+		info.putDouble(TesterScimark2.FFT, res[1]);
 
 		System.out.println("SOR ("+SOR_size+"x"+ SOR_size+"): "
 				+ "  " + res[2]);

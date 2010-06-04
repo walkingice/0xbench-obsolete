@@ -15,7 +15,7 @@ public class TesterScimark2 extends Tester{
     TextView mTextView;
     Bundle mInfo[];
     public final static String COMPOSITE    = "COMPOSITE";
-    public final static String FTT          = "FTT";
+    public final static String FFT          = "FTT";
     public final static String SOR          = "SOR";
     public final static String MONTECARLO   = "MONTECARLO";
     public final static String SPARSEMATMULT= "SPARSEMATMULT";
@@ -78,7 +78,7 @@ public class TesterScimark2 extends Tester{
 
 	int length = list.length;
 	double composite_total     = 0.0;
-	double ftt_total           = 0.0;
+	double fft_total           = 0.0;
 	double sor_total           = 0.0;
 	double montecarlo_total    = 0.0;
 	double sparsematmult_total = 0.0;
@@ -93,7 +93,7 @@ public class TesterScimark2 extends Tester{
 	    }
 
 	    composite_total     += info.getDouble(COMPOSITE    );
-	    ftt_total           += info.getDouble(FTT          );
+	    fft_total           += info.getDouble(FFT          );
 	    sor_total           += info.getDouble(SOR          );
 	    montecarlo_total    += info.getDouble(MONTECARLO   );
 	    sparsematmult_total += info.getDouble(SPARSEMATMULT);
@@ -101,7 +101,7 @@ public class TesterScimark2 extends Tester{
 	}
 
 	result.putDouble(COMPOSITE    , composite_total    / length);
-	result.putDouble(FTT          , ftt_total          / length);
+	result.putDouble(FFT          , fft_total          / length);
 	result.putDouble(SOR          , sor_total          / length);
 	result.putDouble(MONTECARLO   , montecarlo_total   / length);
 	result.putDouble(SPARSEMATMULT, sparsematmult_total/ length);
@@ -111,7 +111,7 @@ public class TesterScimark2 extends Tester{
     public static String bundleToString(Bundle bundle) {
 	String result = "";
 	result += "\nComposite:\n  " + bundle.getDouble(COMPOSITE, 0.0);
-	result += "\nFast Fourier Transform:\n  " + bundle.getDouble(FTT, 0.0);
+	result += "\nFast Fourier Transform:\n  " + bundle.getDouble(FFT, 0.0);
 	result += "\nJacobi Successive Over-relaxation:\n  " + bundle.getDouble(SOR, 0.0);
 	result += "\nMonte Carlo integration:\n  " + bundle.getDouble(MONTECARLO, 0.0);
 	result += "\nSparse matrix multiply:\n  " + bundle.getDouble(SPARSEMATMULT, 0.0);
@@ -124,7 +124,7 @@ public class TesterScimark2 extends Tester{
 
 	int length = mInfo.length;
 	double composite_total     = 0.0;
-	double ftt_total           = 0.0;
+	double fft_total           = 0.0;
 	double sor_total           = 0.0;
 	double montecarlo_total    = 0.0;
 	double sparsematmult_total = 0.0;
@@ -134,7 +134,7 @@ public class TesterScimark2 extends Tester{
 	    Bundle info = mInfo[i];
 
 	    composite_total     += info.getDouble(COMPOSITE    );
-	    ftt_total           += info.getDouble(FTT          );
+	    fft_total           += info.getDouble(FFT          );
 	    sor_total           += info.getDouble(SOR          );
 	    montecarlo_total    += info.getDouble(MONTECARLO   );
 	    sparsematmult_total += info.getDouble(SPARSEMATMULT);
@@ -156,12 +156,12 @@ public class TesterScimark2 extends Tester{
         result += "</scenario>";
     }
 
-    if(ftt_total != 0.0) {
+    if(fft_total != 0.0) {
         result += "<scenario";
-        result += " benchmark=\"" + benchName + "-FTT\" unit=\"mflops\"";
+        result += " benchmark=\"" + benchName + "-FFT\" unit=\"mflops\"";
         result += ">";
         for (int i = 0; i < length; i++) {
-            result += "" + mInfo[i].getDouble(FTT) + " ";
+            result += "" + mInfo[i].getDouble(FFT) + " ";
         }
         result += "</scenario>";
     }
