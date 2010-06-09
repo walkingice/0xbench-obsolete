@@ -82,6 +82,15 @@
 	</activity>
 
 	<activity
+	android:name="org.zeroxlab.benchmark.Upload"
+	android:screenOrientation="portrait"
+	>
+	<intent-filter>
+	<action android:name="android.intent.action.MAIN" />
+	</intent-filter>
+	</activity>
+
+	<activity
 	android:name="com.nea.nehe.lesson08.Run"
 	android:screenOrientation="portrait"
 	>

@@ -14,6 +14,7 @@ import java.io.*;
 import java.util.LinkedList;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.lang.StringBuffer;
 
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
@@ -24,12 +25,16 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private final static String SDCARD      = "/sdcard";
     private final static String mOutputFile = "0xBenchmark";
 
+    private static String mXMLResult;
+    private final static String mOutputXMLFile = "0xBenchmark.xml";
+/*
 	private final static String postUrl = "http://bzsandbox.appspot.com:80/run/";
 	private final static String apiKey = "0a57da89-5242-4059-92c2-fa7a7d3b3dd0";
 	private final static String benchmarkName = "0xDebug";
-
+*/
     private Button   mRun;
     private Button   mShow;
+    private Button   mUpload;
     private CheckBox mCheckList[];
     private TextView mDesc[];
     private TextView mBannerInfo;
@@ -72,6 +77,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	mShow = (Button)findViewById(R.id.btn_show);
 	mShow.setOnClickListener(this);
 
+	mUpload = (Button)findViewById(R.id.btn_upload);
+	mUpload.setOnClickListener(this);
+
 	mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
 	mBannerInfo = (TextView)findViewById(R.id.banner_info);
@@ -112,13 +120,21 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	    }
 	    runCase(mCases);
 	} else if (v == mShow) {
-		uploadResult();
 	    String result = getResult();
 	    Log.i(TAG,"\n\n"+result+"\n\n");
 	    writeToSDCard(mOutputFile, result);
 	    Intent intent = new Intent();
 	    intent.putExtra(Report.REPORT, result);
 	    intent.setClassName(Report.packageName(), Report.fullClassName());
+	    startActivity(intent);
+	} else if (v == mUpload) {
+		mXMLResult = getXMLResult();
+        writeToSDCard(mOutputXMLFile, mXMLResult);
+//        MicroBenchmark.upload(xml, postUrl, apiKey, benchmarkName) ;
+
+	    Intent intent = new Intent();
+	    intent.putExtra(Upload.XML, mXMLResult);
+	    intent.setClassName(Upload.packageName(), Upload.fullClassName());
 	    startActivity(intent);
 	}
     }
@@ -144,7 +160,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	}
     }
 
-	public void uploadResult() {
+	public String getXMLResult() {
 	Date date = new Date();
 	//2010-05-28T17:40:25CST
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
@@ -152,8 +168,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	String xml = "";
 	xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	xml += "<result";
-	xml += " apiKey=\"" + apiKey + "\"";
-	xml += " benchmark=\"" + benchmarkName + "\"";
+//	xml += " apiKey=\"" + apiKey + "\"";
+//	xml += " benchmark=\"" + benchmarkName + "\"";
 	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
 	xml += ">";
 
@@ -164,7 +180,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	}
 
 	xml += "</result>";
-	MicroBenchmark.upload(xml, postUrl, apiKey, benchmarkName) ;
+    return xml;
 	}
 
     public String getResult() {
