@@ -9,7 +9,12 @@ import android.content.Intent;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.Toast;
 import android.view.View;
+
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 
 public class Upload extends Activity implements View.OnClickListener {
 
@@ -45,6 +50,7 @@ public class Upload extends Activity implements View.OnClickListener {
 
     public void onClick(View v) {
     if (v == mSend) {
+        ProgressDialog dialog = ProgressDialog.show(this, "", "Uploading. Please wait...", false);
         String attr = "";
         attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
         attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
@@ -54,8 +60,31 @@ public class Upload extends Activity implements View.OnClickListener {
         Log.e("bzlog", _mXML.toString());
 
         mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
-        MicroBenchmark.upload(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString()) ;
+        try {
+            MicroBenchmark.upload(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString()) ;
+        } catch (RuntimeException e) {
+            Toast.makeText(this, "Failed: " + e.toString(), Toast.LENGTH_LONG).show();
+            dialog.dismiss();
+            alertOK("Failed: " + e.toString());
+            return;
+        }
+        dialog.dismiss();
+        alertOK("Upload Complete!");
+        Toast.makeText(this, "Upload Complete", Toast.LENGTH_LONG).show();
+        finish();
     }
+    }
+
+    private void alertOK(String msg) {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setMessage(msg)
+           .setCancelable(false)
+           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int id) {
+               }
+           });
+    AlertDialog alert = builder.create();
+    alert.show();
     }
 
     @Override

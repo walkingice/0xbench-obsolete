@@ -168,8 +168,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	String xml = "";
 	xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	xml += "<result";
-//	xml += " apiKey=\"" + apiKey + "\"";
-//	xml += " benchmark=\"" + benchmarkName + "\"";
 	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
 	xml += ">";
 

@@ -12,7 +12,7 @@ import android.util.Log;
 /* code adapted from Caliper Project */
 
 class MicroBenchmark {
-	public static String upload(String xml, String postUrl, String apiKey, String benchmarkName) {
+	public static void upload(String xml, String postUrl, String apiKey, String benchmarkName) {
     try {
 		URL url = new URL(postUrl + apiKey + "/" + benchmarkName);
 		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -25,23 +25,8 @@ class MicroBenchmark {
 		int responseCode = urlConnection.getResponseCode();
 		Log.e("bzlog", ""+responseCode);
 
-		if (responseCode == 200) {
-			Log.e("bzlog", "View current and previous benchmark results online:");
-			BufferedReader in = new BufferedReader(
-				new InputStreamReader(urlConnection.getInputStream()));
-			Log.e("bzlog", "  " + in.readLine());
-			return "";
-		}
-
-		Log.e("bzlog", "Posting to " + postUrl + " failed: "
-		  + urlConnection.getResponseMessage());
-		BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-		String line;
-		while ((line = reader.readLine()) != null) {
-			Log.e("bzlog", line);
-		}
-
-		return "";
+		if (responseCode != 200) 
+            throw new RuntimeException("Connection failed with response code " + responseCode);
     } catch (IOException e) {
 		throw new RuntimeException(e);
     }
