@@ -16,9 +16,12 @@ import android.os.Message;
 /* code adapted from Caliper Project */
 
 class MicroBenchmark extends Thread {
+    final static int FAILED = -1;
     final static int DONE = 0;
     final static int RUNNING = 1;
+
     final static String STATE = "STATE";
+    final static String MSG = "MSG";
 
     Handler mHandler;
 
@@ -35,15 +38,21 @@ class MicroBenchmark extends Thread {
     mHandler = h;
     }
 
-    private void updateState(int state) {
+    private void updateState(int state, String info) {
         Bundle b = new Bundle();
         b.putInt(STATE, state);
+        b.putString(MSG, info);
         Message msg = mHandler.obtainMessage();
         msg.setData(b);
         mHandler.sendMessage(msg);
 
         Log.e("bzlog", "set state: " + state);
     }
+
+    private void updateState(int state) {
+        updateState(state, "");
+    }
+
 
 	public void upload() {
     updateState(RUNNING);
@@ -60,12 +69,11 @@ class MicroBenchmark extends Thread {
 		Log.e("bzlog", ""+responseCode);
 
 		if (responseCode != 200) {
-            updateState(DONE);
-            throw new RuntimeException("Connection failed with response code " + responseCode);
+            updateState(FAILED, "Connection failed with response code " + responseCode);
+            return;
         }
     } catch (IOException e) {
-        updateState(DONE);
-		throw new RuntimeException(e);
+        updateState(FAILED, e.toString());
     }
     updateState(DONE);
 

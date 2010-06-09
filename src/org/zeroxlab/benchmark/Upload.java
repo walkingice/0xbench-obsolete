@@ -37,6 +37,7 @@ public class Upload extends Activity implements View.OnClickListener {
 
     String mURL;
     String mXML;
+    String mFailMsg;
 
     MicroBenchmark mb;
 
@@ -60,33 +61,34 @@ public class Upload extends Activity implements View.OnClickListener {
 
     public void onClick(View v) {
     if (v == mSend) {
-        try {
-            showDialog(0);
-            String attr = "";
-            attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
-            attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
-            StringBuffer _mXML = new StringBuffer(mXML);
-            int _index = _mXML.indexOf("result") + 6;
-            _mXML.insert(_index, attr);
-            Log.e("bzlog", _mXML.toString());
+        showDialog(0);
+        String attr = "";
+        attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
+        attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
+        StringBuffer _mXML = new StringBuffer(mXML);
+        int _index = _mXML.indexOf("result") + 6;
+        _mXML.insert(_index, attr);
+        Log.e("bzlog", _mXML.toString());
 
-            mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
-            mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
-            mb.start();
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed: " + e.toString(), Toast.LENGTH_LONG).show();
-            return;
-        }
-        Toast.makeText(this, "Upload Complete", Toast.LENGTH_LONG).show();
+        mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
+        mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
+        mb.start();
     }
     }
 
-    final Handler handler = new Handler() {
+    Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             int state = msg.getData().getInt(MicroBenchmark.STATE);
             Log.e("bzlog", "check: " + state);
-            if (state == MicroBenchmark.DONE) {
+            if (state != MicroBenchmark.RUNNING) {
                 dismissDialog(0);
+                if (state == MicroBenchmark.DONE) {
+                    showDialog(1);
+                }
+                else {
+                    showDialog(2);
+                }
+                Log.e("bzlog", msg.getData().getString(MicroBenchmark.MSG));
             }
         }
     };
@@ -97,6 +99,25 @@ public class Upload extends Activity implements View.OnClickListener {
             ProgressDialog dialog = new ProgressDialog(this);
             dialog.setMessage("Uploading, please wait...");
             return dialog;
+        case(1):
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Upload complete.")
+                   .setCancelable(false)
+                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                       }
+                   });
+            return builder.create();
+        case(2):
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(this);
+            builder2.setMessage("Upload failed.")
+                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                       }
+                   });
+            return builder2.create();
         default:
             return null;
     }
