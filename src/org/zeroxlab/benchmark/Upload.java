@@ -1,5 +1,7 @@
 package org.zeroxlab.benchmark;
 
+import org.zeroxlab.benchmark.MicroBenchmark;
+
 import android.util.Log;
 import android.content.SharedPreferences;
 import android.app.Activity;
@@ -12,9 +14,15 @@ import android.widget.Button;
 import android.widget.Toast;
 import android.view.View;
 
+import android.app.Dialog;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+
+import android.os.SystemClock;
+import android.os.Handler;
+import android.os.Bundle;
+import android.os.Message;
 
 public class Upload extends Activity implements View.OnClickListener {
 
@@ -29,6 +37,8 @@ public class Upload extends Activity implements View.OnClickListener {
 
     String mURL;
     String mXML;
+
+    MicroBenchmark mb;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -50,41 +60,48 @@ public class Upload extends Activity implements View.OnClickListener {
 
     public void onClick(View v) {
     if (v == mSend) {
-        ProgressDialog dialog = ProgressDialog.show(this, "", "Uploading. Please wait...", false);
-        String attr = "";
-        attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
-        attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
-        StringBuffer _mXML = new StringBuffer(mXML);
-        int _index = _mXML.indexOf("result") + 6;
-        _mXML.insert(_index, attr);
-        Log.e("bzlog", _mXML.toString());
-
-        mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
         try {
-            MicroBenchmark.upload(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString()) ;
-        } catch (RuntimeException e) {
+            showDialog(0);
+            String attr = "";
+            attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
+            attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
+            StringBuffer _mXML = new StringBuffer(mXML);
+            int _index = _mXML.indexOf("result") + 6;
+            _mXML.insert(_index, attr);
+            Log.e("bzlog", _mXML.toString());
+
+            mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
+            mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
+            mb.start();
+        } catch (Exception e) {
             Toast.makeText(this, "Failed: " + e.toString(), Toast.LENGTH_LONG).show();
-            dialog.dismiss();
-            alertOK("Failed: " + e.toString());
             return;
         }
-        dialog.dismiss();
-        alertOK("Upload Complete!");
         Toast.makeText(this, "Upload Complete", Toast.LENGTH_LONG).show();
-        finish();
     }
     }
 
-    private void alertOK(String msg) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setMessage(msg)
-           .setCancelable(false)
-           .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-               public void onClick(DialogInterface dialog, int id) {
-               }
-           });
-    AlertDialog alert = builder.create();
-    alert.show();
+    final Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            int state = msg.getData().getInt(MicroBenchmark.STATE);
+            Log.e("bzlog", "check: " + state);
+            if (state == MicroBenchmark.DONE) {
+                dismissDialog(0);
+            }
+        }
+    };
+
+    protected Dialog onCreateDialog(int id) {
+    switch(id) {
+        case(0):
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setMessage("Uploading, please wait...");
+            return dialog;
+        default:
+            return null;
+    }
+
+
     }
 
     @Override
