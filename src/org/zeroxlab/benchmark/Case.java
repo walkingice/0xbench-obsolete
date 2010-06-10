@@ -4,6 +4,8 @@ import android.util.Log;
 
 import android.os.SystemClock;
 
+import org.zeroxlab.benchmark.Scenario;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.BroadcastReceiver;
@@ -13,12 +15,14 @@ import android.widget.*;
 import android.view.*;
 import java.nio.*;
 
+import java.util.ArrayList;
+
 public abstract class Case{
     protected String TAG = "Case";
 
     protected String PACKAGE = Benchmark.PACKAGE;
     protected String TESTER;
-
+    
     /* If mRepeatMax = 3, mRepeatNow will count from 0 to 2*/
     private int mRepeatMax = 1;
     private int mRepeatNow;
@@ -50,6 +54,9 @@ public abstract class Case{
 
     abstract public String getDescription();
     abstract public String getTitle();
+
+    abstract public ArrayList<Scenario> getScenarios (); 
+
 
     public final static void putRound(Intent intent, int round) {
 	intent.putExtra(ROUND, round);
@@ -207,6 +214,7 @@ public abstract class Case{
 
 	return true;
     }
+
     public String getBenchmark() {
 
 	if (!couldFetchReport()) {

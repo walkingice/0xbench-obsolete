@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.*;
 import android.view.*;
 import java.nio.*;
+import java.util.ArrayList;
 
 public class CaseGC extends Case{
 
@@ -19,6 +20,11 @@ public class CaseGC extends Case{
     public static String GCRESULT = "GC_RESULT";
     public static String TIME = "GC_RUNTIME";
     public static double time = 0.0;
+
+    public static String mType = "Dalvik";
+    public static String mUnit = "msec";
+    public static String[] mTags = {};
+
     CaseGC() {
 	super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
     }
@@ -57,6 +63,18 @@ public class CaseGC extends Case{
         result += "<scenario benchmark=\"GarbageCollection\" unit=\"runtime_ns\">";
         result += "" + time/1000f + "</scenario>";
         return result;
+    }
+
+    @Override
+    public ArrayList<Scenario> getScenarios () {
+    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    s.mLog = getBenchmark();
+    s.mResults.add(time);
+    scenarios.add(s);
+
+    return scenarios;
     }
 
     @Override

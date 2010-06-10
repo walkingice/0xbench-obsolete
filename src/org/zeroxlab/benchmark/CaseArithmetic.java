@@ -1,5 +1,7 @@
 package org.zeroxlab.benchmark;
 
+import java.util.ArrayList;
+
 import android.util.Log;
 
 import android.os.SystemClock;
@@ -19,6 +21,10 @@ public class CaseArithmetic extends Case{
 
     public static int Repeat = 1;
     public static int Round  = 3;
+
+    public static String mType = "Numeric";
+    public static String mUnit = "mflops";
+    public static String[] mTags = {};
 
     CaseArithmetic() {
 	super("CaseArithmetic", "org.zeroxlab.benchmark.TesterArithmetic", Repeat, Round);
@@ -66,6 +72,20 @@ public class CaseArithmetic extends Case{
     public String getXMLBenchmark() {
 	String result = TesterArithmetic.bundleListToXML(mInfo);
 	return result;
+    }
+
+    @Override
+    public ArrayList<Scenario> getScenarios () {
+    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    s.mLog = getBenchmark();
+    for (int i=0; i<mInfo.length; i++) 
+        s.mResults.add(mInfo[i].getDouble(TesterArithmetic.MFLOPS));
+    
+    scenarios.add(s);
+
+    return scenarios;
     }
 
     @Override

@@ -11,10 +11,16 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 public class CaseNeheLesson08 extends Case {
 
     public static int mNeheRepeat = 2;
     public static int mNeheRound  = 1000;
+
+    public static String mType = "Render";
+    public static String mUnit = "3d-fps";
+    public static String[] mTags = {};
 
     CaseNeheLesson08() {
 	super("NeheLesson08", Run.FullName, mNeheRepeat, mNeheRound);
@@ -46,6 +52,21 @@ public class CaseNeheLesson08 extends Case {
 
 	result += "Average: fps = " + (total/length) + "\n";
 	return result;
+    }
+
+    @Override
+    public ArrayList<Scenario> getScenarios () {
+    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    s.mLog = getBenchmark();
+	for (int i = 0; i < mResult.length; i++) {
+	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);
+	    s.mResults.add(((Float)fps).doubleValue());
+	}
+
+    scenarios.add(s);
+    return scenarios;
     }
 
     @Override

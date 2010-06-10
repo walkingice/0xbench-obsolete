@@ -12,10 +12,16 @@ import android.os.Bundle;
 import android.widget.*;
 import android.view.*;
 import java.nio.*;
+import java.util.ArrayList;
 
 public class CaseCanvas extends Case{
 
     public static int CanvasRound = 300;
+
+    public static String mType = "Render";
+    public static String mUnit = "2d-fps";
+    public static String[] mTags = {};
+
     CaseCanvas() {
 	super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
     }
@@ -47,6 +53,22 @@ public class CaseCanvas extends Case{
 
 	result += "Average: fps = " + ((float)total/length) + "\n";
 	return result;
+    }
+
+    @Override
+    public ArrayList<Scenario> getScenarios () {
+    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    s.mLog = getBenchmark();
+	for (int i = 0; i < mResult.length; i++) {
+	    float second = (mResult[i] / 1000f);
+	    float fps = (float)mCaseRound / second;
+	    s.mResults.add(((Float)fps).doubleValue());
+	}
+
+    scenarios.add(s);
+    return scenarios;
     }
 
     @Override

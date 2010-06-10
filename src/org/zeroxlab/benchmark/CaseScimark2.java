@@ -10,6 +10,8 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+
 import org.zeroxlab.benchmark.TesterScimark2;
 
 public class CaseScimark2 extends Case{
@@ -19,6 +21,10 @@ public class CaseScimark2 extends Case{
 
     public static int Repeat = 1;
     public static int Round  = 1;
+
+    public static String mType = "Numeric";
+    public static String mUnit = "mflops";
+    public static String[] mTags = {};
 
     CaseScimark2() {
 	super("CaseScimark2", "org.zeroxlab.benchmark.TesterScimark2", Repeat, Round);
@@ -60,6 +66,31 @@ public class CaseScimark2 extends Case{
 	    result += "\n";
 	}
 	return result;
+    }
+
+    @Override
+    public ArrayList<Scenario> getScenarios () {
+    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+    ArrayList<String> subBenchmarks = new ArrayList<String>();
+    subBenchmarks.add(TesterScimark2.COMPOSITE    );
+    subBenchmarks.add(TesterScimark2.FFT          );
+    subBenchmarks.add(TesterScimark2.SOR          );
+    subBenchmarks.add(TesterScimark2.MONTECARLO   );
+    subBenchmarks.add(TesterScimark2.SPARSEMATMULT);
+    subBenchmarks.add(TesterScimark2.LU           );
+
+    for (int i=0; i<subBenchmarks.size(); i++) {
+        String benchName = subBenchmarks.get(i);
+        Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags, mUnit);
+
+        for(int j=0; j<mInfo.length; j++) 
+            s.mResults.add(mInfo[i].getDouble(benchName));
+
+        scenarios.add(s);
+    }
+
+    return scenarios;
     }
 
     @Override
