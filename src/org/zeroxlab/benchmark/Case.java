@@ -247,8 +247,13 @@ public abstract class Case{
         if (s == null)
             continue;
         result += "<scenario benchmark=\"" + s.mName.replace(" ", "") + "\" unit=\"" + s.mUnit + "\">";
-        for (Double value: s.mResults)
+        Double total = 0.0;
+        for (Double value: s.mResults) {
             result += value + " ";
+            total += value;
+        }
+        if (total == 0)
+            return "";
         result += "</scenario>";
     }
 	return result;
