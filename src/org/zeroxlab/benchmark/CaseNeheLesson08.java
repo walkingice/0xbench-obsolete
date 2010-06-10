@@ -69,23 +69,4 @@ public class CaseNeheLesson08 extends Case {
     return scenarios;
     }
 
-    @Override
-    public String getXMLBenchmark() {
-	if (!couldFetchReport()) {
-	    return "";
-	}
-
-	String result = "";
-	int length = mResult.length;
-
-	result += "<scenario benchmark=\"GLBlending\" unit=\"3Dfps\">";
-	for (int i = 0; i < length; i++) {
-	    float second = (mResult[i] / 1000f);
-	    float fps = (float)mCaseRound / second; // milliseconds to seconds
-	    result += fps + " ";
-	}
-	result += "</scenario>";
-
-	return result;
-    }
 }

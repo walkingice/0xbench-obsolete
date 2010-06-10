@@ -240,13 +240,17 @@ public abstract class Case{
 	}
 
 	String result = "";
-	result += "<scenario benchmark=\"" + getTitle() + "\">";
-	int length = mResult.length;
-	for (int i = 0; i < length; i++) {
-        result += "" + mResult[i] + " ";
-	}
-	result += "</scenario>";
 
+    ArrayList<Scenario> scenarios = getScenarios();
+
+    for (Scenario s: scenarios) {
+        if (s == null)
+            continue;
+        result += "<scenario benchmark=\"" + s.mName.replace(" ", "") + "\" unit=\"" + s.mUnit + "\">";
+        for (Double value: s.mResults)
+            result += value + " ";
+        result += "</scenario>";
+    }
 	return result;
     }
 

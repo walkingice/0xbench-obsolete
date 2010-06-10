@@ -71,24 +71,4 @@ public class CaseDrawCircle extends Case{
     return scenarios;
     }
 
-    @Override
-    public String getXMLBenchmark() {
-	if (!couldFetchReport()) {
-	    return "";
-	}
-
-	String result = "";
-	long total = 0;
-	int length = mResult.length;
-
-	result += "<scenario benchmark=\"Draw Circle\" unit=\"2Dfps\">";
-	for (int i = 0; i < length; i++) {
-	    float second = (mResult[i] / 1000f);
-	    float fps = (float)mCaseRound / second; // milliseconds to seconds
-        result += "" + fps + " ";
-	}
-	result += "</scenario>";
-
-	return result;
-    }
 }

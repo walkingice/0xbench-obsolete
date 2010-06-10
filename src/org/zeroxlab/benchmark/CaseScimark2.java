@@ -85,18 +85,12 @@ public class CaseScimark2 extends Case{
         Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags, mUnit);
 
         for(int j=0; j<mInfo.length; j++) 
-            s.mResults.add(mInfo[i].getDouble(benchName));
+            s.mResults.add(mInfo[j].getDouble(benchName));
 
         scenarios.add(s);
     }
 
     return scenarios;
-    }
-
-    @Override
-    public String getXMLBenchmark() {
-	String result = TesterScimark2.bundleListToXML(mInfo);
-	return result;
     }
 
     @Override

@@ -20,6 +20,7 @@ class Scenario {
     mUnit = unit;
 
     mTime = new Date();
+    mResults = new ArrayList<Double>();
     }
 }
 

@@ -69,20 +69,14 @@ public class CaseArithmetic extends Case{
     }
 
     @Override
-    public String getXMLBenchmark() {
-	String result = TesterArithmetic.bundleListToXML(mInfo);
-	return result;
-    }
-
-    @Override
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
     Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
     s.mLog = getBenchmark();
-    for (int i=0; i<mInfo.length; i++) 
+    for (int i=0; i<mInfo.length; i++)
         s.mResults.add(mInfo[i].getDouble(TesterArithmetic.MFLOPS));
-    
+
     scenarios.add(s);
 
     return scenarios;

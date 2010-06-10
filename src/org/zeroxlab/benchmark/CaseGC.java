@@ -55,17 +55,6 @@ public class CaseGC extends Case{
     }
 
     @Override
-    public String getXMLBenchmark() {
-        if (time == 0.0) {
-            return "";
-        }
-        String result = "";
-        result += "<scenario benchmark=\"GarbageCollection\" unit=\"runtime_ns\">";
-        result += "" + time/1000f + "</scenario>";
-        return result;
-    }
-
-    @Override
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
