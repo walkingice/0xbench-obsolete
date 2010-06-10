@@ -115,12 +115,12 @@ public class Benchmark extends Activity implements View.OnClickListener {
             while(!isFinish()) {
                 SystemClock.sleep(1000);
             }
-            Log.i(TAG,"\n\n"+result+"\n\n");
-            mXMLResult = getXMLResult();
-            writeToSDCard(mOutputXMLFile, mXMLResult);
-            Log.i(TAG,"\n\n"+result+"\n\n");
+
             String result = getResult();
             writeToSDCard(mOutputFile, result);
+            
+            mXMLResult = getXMLResult();
+            writeToSDCard(mOutputXMLFile, mXMLResult);
 
             onClick(mShow);
             mTouchable = true;
