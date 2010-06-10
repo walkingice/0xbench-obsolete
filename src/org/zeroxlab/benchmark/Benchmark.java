@@ -16,6 +16,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
 
+import android.os.SystemClock;
+import android.app.ProgressDialog;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
@@ -27,11 +30,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     private static String mXMLResult;
     private final static String mOutputXMLFile = "0xBenchmark.xml";
-/*
-	private final static String postUrl = "http://bzsandbox.appspot.com:80/run/";
-	private final static String apiKey = "0a57da89-5242-4059-92c2-fa7a7d3b3dd0";
-	private final static String benchmarkName = "0xDebug";
-*/
+
     private Button   mRun;
     private Button   mShow;
     private Button   mUpload;
@@ -78,6 +77,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         initAuto();
     }
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (mTouchable)
@@ -98,8 +98,45 @@ public class Benchmark extends Activity implements View.OnClickListener {
     }
 
     private void initAuto() {
-        //TODO
+    for (int i=0; i<mCheckList.length; i++) {
+        mCheckList[i].setChecked(true);
+    }
+    
+    final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
+    new Thread() {
+        public void run() {
+            SystemClock.sleep(5000);
+            dialog.dismiss();
+            onClick(mRun);
+        }
+    }.start();
+    new Thread() {
+        public void run() {
+            while(!isFinish()) {
+                SystemClock.sleep(1000);
+            }
+            Log.i(TAG,"\n\n"+result+"\n\n");
+            mXMLResult = getXMLResult();
+            writeToSDCard(mOutputXMLFile, mXMLResult);
+            Log.i(TAG,"\n\n"+result+"\n\n");
+            String result = getResult();
+            writeToSDCard(mOutputFile, result);
 
+            onClick(mShow);
+            mTouchable = true;
+        }
+    }.start();
+    }
+
+    public boolean isFinish() {
+    for (int i = 0; i < mCheckList.length; i++) {
+        if (mCheckList[i].isChecked()) {
+            if (! mCases.get(i).isFinish()) {
+                return false;
+            }
+        }
+    }
+    return true;
     }
 
     private void initViews() {
@@ -162,7 +199,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	} else if (v == mUpload) {
 		mXMLResult = getXMLResult();
         writeToSDCard(mOutputXMLFile, mXMLResult);
-//        MicroBenchmark.upload(xml, postUrl, apiKey, benchmarkName) ;
 
 	    Intent intent = new Intent();
 	    intent.putExtra(Upload.XML, mXMLResult);
@@ -224,7 +260,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
 	return result;
     }
-
+    
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	if (data == null) {
 	    Log.i(TAG,"oooops....Intent is null");
