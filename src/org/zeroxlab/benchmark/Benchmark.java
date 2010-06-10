@@ -43,6 +43,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private LinearLayout mLinearLayout;
 
     LinkedList<Case> mCases;
+    boolean mTouchable = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,37 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	mCases.add(circle);
 	mCases.add(gc);
 	initViews();
+
+    Intent intent = getIntent();
+    if (intent.getBooleanExtra("AUTO", false)) {
+        ImageView head = (ImageView)findViewById(R.id.banner_img);
+        head.setImageResource(R.drawable.icon_auto);
+        mTouchable = false;
+        initAuto();
+    }
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (mTouchable)
+            super.dispatchTouchEvent(event);
+        return true;
+    }
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        if (mTouchable)
+            super.dispatchKeyEvent(event);
+        return true;
+    }
+    @Override
+    public boolean dispatchTrackballEvent(MotionEvent event) {
+        if (mTouchable)
+            super.dispatchTrackballEvent(event);
+        return true;
+    }
+
+    private void initAuto() {
+        //TODO
+
     }
 
     private void initViews() {
