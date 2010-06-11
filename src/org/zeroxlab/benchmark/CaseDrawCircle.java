@@ -18,12 +18,10 @@ public class CaseDrawCircle extends Case{
 
     public static int CircleRound = 300;
 
-    public static String mType = "Render";
-    public static String mUnit = "2d-fps";
-    public static String[] mTags = {};
-
     CaseDrawCircle() {
 	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, CircleRound);
+    mType = "Render";
+    mUnit = "2d-fps";
     }
 
     public String getTitle() {

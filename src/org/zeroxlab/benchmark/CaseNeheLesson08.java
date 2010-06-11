@@ -18,12 +18,11 @@ public class CaseNeheLesson08 extends Case {
     public static int mNeheRepeat = 2;
     public static int mNeheRound  = 1000;
 
-    public static String mType = "Render";
-    public static String mUnit = "3d-fps";
-    public static String[] mTags = {};
-
     CaseNeheLesson08() {
 	super("NeheLesson08", Run.FullName, mNeheRepeat, mNeheRound);
+
+    mType = "Render";
+    mUnit = "3d-fps";
     }
 
     public String getTitle() {

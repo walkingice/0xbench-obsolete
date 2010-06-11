@@ -18,12 +18,12 @@ public class CaseCanvas extends Case{
 
     public static int CanvasRound = 300;
 
-    public static String mType = "Render";
-    public static String mUnit = "2d-fps";
-    public static String[] mTags = {};
-
     CaseCanvas() {
 	super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
+
+    mType = "Render";
+    mUnit = "2d-fps";
+
     }
 
     public String getTitle() {

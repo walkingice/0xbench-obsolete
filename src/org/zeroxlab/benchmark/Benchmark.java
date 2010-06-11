@@ -12,6 +12,7 @@ import java.nio.*;
 import java.io.*;
 
 import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
@@ -97,30 +98,58 @@ public class Benchmark extends Activity implements View.OnClickListener {
         return true;
     }
 
-    private void initAuto() {
+    private void _checkTagCase(String [] Tags) {
+    Arrays.sort(Tags);
+    Log.e("bzlog", "inTagCase: " + Tags.toString());
     for (int i=0; i<mCheckList.length; i++) {
-        mCheckList[i].setChecked(true);
+        String [] caseTags = mCases.get(i).mTags;
+        for (String t: caseTags) {
+            int search = Arrays.binarySearch(Tags, t);
+            if ( search  >= 0) 
+                mCheckList[i].setChecked(true);
+        }
     }
+    }
+
+    private void _checkCatCase(String [] Cats) {
+    Arrays.sort(Cats);
+    Log.e("bzlog", "inCatCase: " + Cats.toString());
+    for (int i=0; i<mCheckList.length; i++) {
+        int search = Arrays.binarySearch(Cats, mCases.get(i).mType);
+        Log.e("bzlog", "\tsearch: " + search + ", " + mCases.get(i).mType);
+        if ( search  >= 0) 
+            mCheckList[i].setChecked(true);
+    }
+    }
+
+    private void _checkAllCase(boolean check) {
+    for (int i=0; i<mCheckList.length; i++) 
+        mCheckList[i].setChecked(check);
+    }
+
+    private void initAuto() {
+    Intent intent = getIntent();
+    String TAG = intent.getStringExtra("TAG");
+    String CAT = intent.getStringExtra("CAT");
+
+    Log.e("bzlog", "TAG/CAT: " + TAG + "/" + CAT);
+
+    _checkAllCase(false);
+    if (TAG == null && CAT == null)
+        _checkAllCase(true);
+    else if (TAG != null)
+        _checkTagCase(TAG.split(" *, *"));
+    else if (CAT != null)
+        _checkCatCase(CAT.split(" *, *"));
     
     final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
     new Thread() {
         public void run() {
-            SystemClock.sleep(5000);
+            SystemClock.sleep(1000);
             dialog.dismiss();
             onClick(mRun);
         }
     }.start();
-    }
-
-    public boolean isFinish() {
-    for (int i = 0; i < mCheckList.length; i++) {
-        if (mCheckList[i].isChecked()) {
-            if (! mCases.get(i).isFinish()) {
-                return false;
-            }
-        }
-    }
-    return true;
     }
 
     private void initViews() {

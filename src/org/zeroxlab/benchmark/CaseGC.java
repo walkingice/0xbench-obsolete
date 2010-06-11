@@ -21,12 +21,11 @@ public class CaseGC extends Case{
     public static String TIME = "GC_RUNTIME";
     public static double time = 0.0;
 
-    public static String mType = "Dalvik";
-    public static String mUnit = "msec";
-    public static String[] mTags = {};
-
     CaseGC() {
 	super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
+
+    mType = "Dalvik";
+    mUnit = "msec";
     }
 
     public String getTitle() {

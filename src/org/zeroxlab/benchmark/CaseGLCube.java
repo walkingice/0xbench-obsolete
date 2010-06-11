@@ -20,12 +20,11 @@ public class CaseGLCube extends Case{
 
     public static int CubeRound = 1000;
 
-    public static String mType = "Render";
-    public static String mUnit = "3d-fps";
-    public static String[] mTags = {};
-
     CaseGLCube() {
 	super("CaseGLCube", Kubench.getFullClassName(), 3, CubeRound);
+
+    mType = "Render";
+    mUnit = "3d-fps";
     }
 
     public String getTitle() {

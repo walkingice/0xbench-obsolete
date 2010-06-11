@@ -22,12 +22,11 @@ public class CaseScimark2 extends Case{
     public static int Repeat = 1;
     public static int Round  = 1;
 
-    public static String mType = "Numeric";
-    public static String mUnit = "mflops";
-    public static String[] mTags = {};
-
     CaseScimark2() {
 	super("CaseScimark2", "org.zeroxlab.benchmark.TesterScimark2", Repeat, Round);
+
+    mType = "Numeric";
+    mUnit = "mflops";
 	generateInfo();
     }
 

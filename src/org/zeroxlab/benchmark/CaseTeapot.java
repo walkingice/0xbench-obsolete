@@ -17,12 +17,10 @@ public class CaseTeapot extends Case {
     public static int mTeapotRepeat = 2;
     public static int mTeapotRound  = 1000;
 
-    public static String mType = "Render";
-    public static String mUnit = "3d-fps";
-    public static String[] mTags = {};
-
     CaseTeapot() {
 	super("Teapot", TeapotES.FullName, mTeapotRepeat, mTeapotRound);
+    mType = "Render";
+    mUnit = "3d-fps";
     }
 
     public String getTitle() {
