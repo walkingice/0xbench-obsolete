@@ -51,7 +51,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	mCases = new LinkedList<Case>();
 	Case arith  = new CaseArithmetic();
 	Case scimark2  = new CaseScimark2();
-	Case mycase = new CaseCanvas();
+	Case canvas = new CaseCanvas();
 	Case glcube = new CaseGLCube();
 	Case circle = new CaseDrawCircle();
 	Case gc     = new CaseGC();
@@ -60,13 +60,13 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case teapot = new CaseTeapot();
 	mCases.add(arith);
 	mCases.add(scimark2);
-	mCases.add(mycase);
+	mCases.add(gc);
+	mCases.add(canvas);
+	mCases.add(circle);
 	mCases.add(glcube);
 	mCases.add(nehe08);
 	mCases.add(nehe16);
 	mCases.add(teapot);
-	mCases.add(circle);
-	mCases.add(gc);
 	initViews();
 
     Intent intent = getIntent();
@@ -108,22 +108,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
             SystemClock.sleep(5000);
             dialog.dismiss();
             onClick(mRun);
-        }
-    }.start();
-    new Thread() {
-        public void run() {
-            while(!isFinish()) {
-                SystemClock.sleep(1000);
-            }
-
-            String result = getResult();
-            writeToSDCard(mOutputFile, result);
-            
-            mXMLResult = getXMLResult();
-            writeToSDCard(mOutputXMLFile, mXMLResult);
-
-            onClick(mShow);
-            mTouchable = true;
         }
     }.start();
     }
@@ -220,6 +204,14 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
 	if (finish) {
 	    mBannerInfo.setText("Benchmark finished. click show to read report");
+        String result = getResult();
+        writeToSDCard(mOutputFile, result);
+
+        mXMLResult = getXMLResult();
+        writeToSDCard(mOutputXMLFile, mXMLResult);
+
+        onClick(mShow);
+        mTouchable = true;
 	} else {
 	    Intent intent = pointer.generateIntent();
 	    if (intent != null) {
