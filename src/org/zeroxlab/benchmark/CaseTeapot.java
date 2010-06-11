@@ -21,6 +21,12 @@ public class CaseTeapot extends Case {
 	super("Teapot", TeapotES.FullName, mTeapotRepeat, mTeapotRound);
     mType = "Render";
     mUnit = "3d-fps";
+    String [] _tmp = {
+        "3d",
+        "opengl",
+        "render",
+    };
+    mTags = _tmp;
     }
 
     public String getTitle() {

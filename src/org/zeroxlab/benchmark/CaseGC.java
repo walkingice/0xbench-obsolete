@@ -26,6 +26,11 @@ public class CaseGC extends Case{
 
     mType = "Dalvik";
     mUnit = "msec";
+    String [] _tmp = {
+        "dalvik",
+        "garbagecollection",
+    };
+    mTags = _tmp;
     }
 
     public String getTitle() {

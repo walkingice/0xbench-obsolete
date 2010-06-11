@@ -22,6 +22,13 @@ public class CaseDrawCircle extends Case{
 	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, CircleRound);
     mType = "Render";
     mUnit = "2d-fps";
+    String [] _tmp = {
+        "2d",
+        "render",
+        "skia",
+        "view",
+    };
+    mTags = _tmp;
     }
 
     public String getTitle() {

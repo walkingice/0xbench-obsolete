@@ -135,21 +135,22 @@ public class Benchmark extends Activity implements View.OnClickListener {
     Log.e("bzlog", "TAG/CAT: " + TAG + "/" + CAT);
 
     _checkAllCase(false);
+    if (TAG != null)
+        _checkTagCase( TAG.split(",") );
+    if (CAT != null)
+        _checkCatCase( CAT.split(",") );
     if (TAG == null && CAT == null)
         _checkAllCase(true);
-    else if (TAG != null)
-        _checkTagCase(TAG.split(" *, *"));
-    else if (CAT != null)
-        _checkCatCase(CAT.split(" *, *"));
     
     final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
     new Thread() {
         public void run() {
             SystemClock.sleep(1000);
             dialog.dismiss();
-            onClick(mRun);
+//            onClick(mRun);
         }
     }.start();
+    mTouchable = true;
     }
 
     private void initViews() {

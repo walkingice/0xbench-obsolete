@@ -27,6 +27,11 @@ public class CaseArithmetic extends Case{
 
     mType = "Numeric";
     mUnit = "mflops";
+    String [] _tmp = {
+        "numeric",
+        "mflops",
+    };
+    mTags = _tmp;
 
 	generateInfo();
     }

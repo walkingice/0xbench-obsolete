@@ -25,6 +25,13 @@ public class CaseGLCube extends Case{
 
     mType = "Render";
     mUnit = "3d-fps";
+    String [] _tmp = {
+        "3d",
+        "opengl",
+        "render",
+        "apidemo",
+    };
+    mTags = _tmp;
     }
 
     public String getTitle() {

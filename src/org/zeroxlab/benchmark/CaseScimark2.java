@@ -27,6 +27,13 @@ public class CaseScimark2 extends Case{
 
     mType = "Numeric";
     mUnit = "mflops";
+    String [] _tmp = {
+        "mflops",
+        "numeric",
+        "scientific",
+    };
+    mTags = _tmp;
+
 	generateInfo();
     }
 

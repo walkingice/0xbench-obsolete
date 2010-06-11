@@ -22,6 +22,15 @@ public class CaseNeheLesson16 extends Case {
 
     mType = "Render";
     mUnit = "3d-fps";
+    String [] _tmp = {
+        "3d",
+        "opengl",
+        "nehe",
+        "glfog",
+        "gltexture",
+        "render",
+    };
+    mTags = _tmp;
     }
 
     public String getTitle() {

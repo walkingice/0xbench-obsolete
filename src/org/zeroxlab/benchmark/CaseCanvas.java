@@ -23,6 +23,12 @@ public class CaseCanvas extends Case{
 
     mType = "Render";
     mUnit = "2d-fps";
+    String [] _tmp = {
+        "2d",
+        "render",
+        "view",
+    };
+    mTags = _tmp;
 
     }
 
