@@ -250,7 +250,14 @@ public abstract class Case{
     for (Scenario s: scenarios) {
         if (s == null)
             continue;
-        result += "<scenario benchmark=\"" + s.mName.replace(" ", "") + "\" unit=\"" + s.mUnit + "\">";
+        result += "<scenario";
+        result += " benchmark=\"" + s.mName.replace(" ", "") + "\"";
+        result += " unit=\"" + s.mUnit + "\"";
+        result += " tags=\"";
+        for (String tag: s.mTags) 
+            result += tag + ",";
+        result += "\"";
+        result += ">";
         Double total = 0.0;
         for (Double value: s.mResults) {
             result += value + " ";
@@ -262,5 +269,5 @@ public abstract class Case{
     }
 	return result;
     }
-
 }
+
