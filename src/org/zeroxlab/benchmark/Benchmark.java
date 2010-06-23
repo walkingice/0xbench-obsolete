@@ -300,20 +300,29 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	runCase(mCases);
     }
 
-    private void writeToSDCard(String filename, String output) {
+    private boolean writeToSDCard(String filename, String output) {
 	File file = new File(SDCARD, filename);
+
+    if ( !file.canWrite() ) {
+        Log.i(TAG, "Permission denied, maybe SDCARD mounted to PC?");
+        return false;
+    }
+
 	if (file.exists()) {
 	    Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
 	    file.delete();
 	}
 
 	try {
-	    file.createNewFile();
-	    FileOutputStream fos = new FileOutputStream(file);
-	    fos.write(output.getBytes());
-	    fos.flush();
+        file.createNewFile();
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(output.getBytes());
+        fos.flush();
 	} catch (Exception e) {
+        Log.i(TAG, "Write Failed.");
 	    e.printStackTrace();
+        return false;
 	}
+    return true;
     }
 }
