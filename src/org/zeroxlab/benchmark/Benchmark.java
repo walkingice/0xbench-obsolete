@@ -5,6 +5,7 @@ import android.util.Log;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.os.Bundle;
+import android.os.*;
 import android.widget.*;
 import android.view.*;
 import android.content.*;
@@ -81,21 +82,18 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mTouchable)
-            super.dispatchTouchEvent(event);
-        return true;
+    if (mTouchable) super.dispatchTouchEvent(event);
+    return true;
     }
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (mTouchable)
-            super.dispatchKeyEvent(event);
-        return true;
+    if (mTouchable) super.dispatchKeyEvent(event);
+    return true;
     }
     @Override
     public boolean dispatchTrackballEvent(MotionEvent event) {
-        if (mTouchable)
-            super.dispatchTrackballEvent(event);
-        return true;
+    if (mTouchable) super.dispatchTrackballEvent(event);
+    return true;
     }
 
     private void _checkTagCase(String [] Tags) {
@@ -259,6 +257,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 	xml += "<result";
 	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
+    xml += " manufacturer=\"" + Build.MANUFACTURER.replace(' ', '_') + "\"";
+    xml += " model=\"" + Build.MODEL.replace(' ', '_') + "\"";
+    xml += " buildTimestamp=\"" + sdf.format(new Date(Build.TIME)) + "\"";
 	xml += ">";
 
 	Case mycase;
