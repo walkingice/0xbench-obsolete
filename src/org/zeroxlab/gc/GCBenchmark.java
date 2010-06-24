@@ -64,9 +64,9 @@ public class GCBenchmark  {
 		long lFreeMemory = Runtime.getRuntime().freeMemory();
 		long lTotalMemory = Runtime.getRuntime().totalMemory();
 
-		update("Total memory available="
+		update("*Total memory:"
 				+ lTotalMemory + " bytes");
-		update("Free memory=" + lFreeMemory + " bytes");
+		update("*Free  memory:" + lFreeMemory + " bytes\n");
 	}
 
 	static void TimeConstruction(int depth) {
@@ -75,7 +75,7 @@ public class GCBenchmark  {
 		int 	iNumIters = NumIters(depth);
 		Node	tempTree;
 
-		update("Creating " + iNumIters +
+		update("Create " + iNumIters +
 				" trees of depth " + depth);
 		tStart = System.currentTimeMillis();
 		for (int i = 0; i < iNumIters; ++i) {
@@ -84,7 +84,7 @@ public class GCBenchmark  {
 			tempTree = null;
 		}
 		tFinish = System.currentTimeMillis();
-		update("Top down construction took "
+		update("- Top down: "
 				+ (tFinish - tStart) + "msecs");
 		tStart = System.currentTimeMillis();
 		for (int i = 0; i < iNumIters; ++i) {
@@ -92,7 +92,7 @@ public class GCBenchmark  {
 			tempTree = null;
 		}
 		tFinish = System.currentTimeMillis();
-		update("Bottom up construction took "
+		update("- Bottom up: "
 				+ (tFinish - tStart) + "msecs");
 
 	}
@@ -106,9 +106,9 @@ public class GCBenchmark  {
 		long	tElapsed;
 
 		//	Debug.startMethodTracing("gcbench");
-		update("Garbage Collector Test");
+		// update("Garbage Collector Test");
 		update(
-				"Stretching memory with a binary tree of depth "
+				"Stretching memory:\n    binary tree of depth "
 				+ kStretchTreeDepth);
 		PrintDiagnostics();
 		tStart = System.currentTimeMillis();
@@ -119,14 +119,14 @@ public class GCBenchmark  {
 
 		// Create a long lived object
 		update(
-				"Creating a long-lived binary tree of depth " +
+				"Creating:\n    long-lived binary tree of depth " +
 				kLongLivedTreeDepth);
 		longLivedTree = new Node();
 		Populate(kLongLivedTreeDepth, longLivedTree);
 
 		// Create long-lived array, filling half of it
 		update(
-				"Creating a long-lived array of "
+				"    long-lived array of "
 				+ kArraySize + " doubles");
 		double array[] = new double[kArraySize];
 		for (int i = 0; i < kArraySize/2; ++i) {
