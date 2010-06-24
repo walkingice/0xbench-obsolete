@@ -66,6 +66,10 @@ public class CaseScimark2 extends Case{
 
     @Override
     public String getBenchmark() {
+	if (!couldFetchReport()) {
+	    return "No benchmark report";
+	}
+
 	String result = "\n";
 	for (int i = 0; i < mInfo.length; i++) {
 	    result += TesterScimark2.bundleToString(mInfo[i]);

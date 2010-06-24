@@ -55,6 +55,11 @@ public class CaseGC extends Case{
 
     @Override
     public String getBenchmark() {
+
+	if (!couldFetchReport()) {
+	    return "No benchmark report";
+	}
+
 	return mStringBuf;
     }
 

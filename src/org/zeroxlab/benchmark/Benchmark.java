@@ -56,19 +56,23 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case canvas = new CaseCanvas();
 	Case glcube = new CaseGLCube();
 	Case circle = new CaseDrawCircle();
-	Case gc     = new CaseGC();
 	Case nehe08 = new CaseNeheLesson08();
 	Case nehe16 = new CaseNeheLesson16();
 	Case teapot = new CaseTeapot();
+	Case gc     = new CaseGC();
+    // mflops
 	mCases.add(arith);
 	mCases.add(scimark2);
-	mCases.add(gc);
+    // 2d
 	mCases.add(canvas);
 	mCases.add(circle);
+    // 3d
 	mCases.add(glcube);
 	mCases.add(nehe08);
 	mCases.add(nehe16);
 	mCases.add(teapot);
+    // vm
+	mCases.add(gc);
 	initViews();
 
     Intent intent = getIntent();
@@ -277,9 +281,13 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case mycase;
 	for (int i = 0; i < mCases.size(); i++) {
 	    mycase = mCases.get(i);
+        if ( !mycase.couldFetchReport() ) continue;
+        result += "============================================================\n";
 	    result += mycase.getTitle() + "\n";
-	    result += mycase.getBenchmark()+"\n";
+        result += "------------------------------------------------------------\n";
+	    result += mycase.getBenchmark().trim() + "\n";
 	}
+    result += "============================================================\n";
 
 	return result;
     }
