@@ -82,7 +82,13 @@ public class Benchmark extends Activity implements View.OnClickListener {
         mTouchable = false;
         initAuto();
     }
+
+    printHello();
     }
+    static {
+    System.loadLibrary("hello");
+    }
+    private native void printHello();
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
