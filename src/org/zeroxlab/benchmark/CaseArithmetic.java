@@ -25,7 +25,6 @@ public class CaseArithmetic extends Case{
     CaseArithmetic() {
 	super("CaseArithmetic", "org.zeroxlab.benchmark.TesterArithmetic", Repeat, Round);
 
-    mType = "Numeric";
     mUnit = "mflops";
     String [] _tmp = {
         "numeric",
@@ -77,7 +76,7 @@ public class CaseArithmetic extends Case{
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mTags, mUnit);
     s.mLog = getBenchmark();
     for (int i=0; i<mInfo.length; i++)
         s.mResults.add(mInfo[i].getDouble(TesterArithmetic.MFLOPS));

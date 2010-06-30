@@ -35,7 +35,6 @@ public abstract class Case{
     private final static String ROUND  = "ROUND";
     protected int mCaseRound = 30;
 
-    public String mType = "";
     public String mUnit = "";
     public String[] mTags = {};
 

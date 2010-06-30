@@ -24,7 +24,6 @@ public class CaseGC extends Case{
     CaseGC() {
 	super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
 
-    mType = "Dalvik";
     mUnit = "msec";
     String [] _tmp = {
         "dalvik",
@@ -67,7 +66,7 @@ public class CaseGC extends Case{
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mTags, mUnit);
     s.mLog = getBenchmark();
     s.mResults.add(time);
     scenarios.add(s);

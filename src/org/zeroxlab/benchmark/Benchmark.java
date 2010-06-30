@@ -117,8 +117,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
     Arrays.sort(Cats);
     Log.e("bzlog", "inCatCase: " + Cats.toString());
     for (int i=0; i<mCheckList.length; i++) {
-        int search = Arrays.binarySearch(Cats, mCases.get(i).mType);
-        Log.e("bzlog", "\tsearch: " + search + ", " + mCases.get(i).mType);
+        int search = Arrays.binarySearch(Cats, mCases.get(i).mUnit);
+        Log.e("bzlog", "\tsearch: " + search + ", " + mCases.get(i).mUnit);
         if ( search  >= 0) 
             mCheckList[i].setChecked(true);
     }

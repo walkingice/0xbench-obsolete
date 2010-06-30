@@ -19,7 +19,6 @@ public class CaseTeapot extends Case {
 
     CaseTeapot() {
 	super("Teapot", TeapotES.FullName, mTeapotRepeat, mTeapotRound);
-    mType = "Render";
     mUnit = "3d-fps";
     String [] _tmp = {
         "3d",
@@ -61,7 +60,7 @@ public class CaseTeapot extends Case {
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mTags, mUnit);
     s.mLog = getBenchmark();
 	for (int i = 0; i < mResult.length; i++) {
 	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);
