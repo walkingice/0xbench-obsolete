@@ -18,6 +18,9 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.lang.StringBuffer;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 import android.os.SystemClock;
 import android.app.ProgressDialog;
 
@@ -102,7 +105,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     private void _checkTagCase(String [] Tags) {
     Arrays.sort(Tags);
-    Log.e("bzlog", "inTagCase: " + Tags.toString());
     for (int i=0; i<mCheckList.length; i++) {
         String [] caseTags = mCases.get(i).mTags;
         for (String t: caseTags) {
@@ -115,10 +117,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     private void _checkCatCase(String [] Cats) {
     Arrays.sort(Cats);
-    Log.e("bzlog", "inCatCase: " + Cats.toString());
     for (int i=0; i<mCheckList.length; i++) {
         int search = Arrays.binarySearch(Cats, mCases.get(i).mUnit);
-        Log.e("bzlog", "\tsearch: " + search + ", " + mCases.get(i).mUnit);
         if ( search  >= 0) 
             mCheckList[i].setChecked(true);
     }
@@ -134,7 +134,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
     String TAG = intent.getStringExtra("TAG");
     String CAT = intent.getStringExtra("CAT");
 
-    Log.e("bzlog", "TAG/CAT: " + TAG + "/" + CAT);
 
     _checkAllCase(false);
     if (TAG != null)
@@ -262,8 +261,52 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	xml += "<result";
 	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
     xml += " manufacturer=\"" + Build.MANUFACTURER.replace(' ', '_') + "\"";
-    xml += " model=\"" + Build.MODEL.replace(' ', '_') + "\"";
+    xml += " model=\"" + Build.MODEL.replace(' ', '_') + ":" + Build.DISPLAY + "\"";
     xml += " buildTimestamp=\"" + sdf.format(new Date(Build.TIME)) + "\"";
+
+    try { // read kernel version
+        BufferedReader procVersion = new BufferedReader( new FileReader("/proc/version") );
+        StringBuffer sbuff = new StringBuffer();
+        String tmp;
+        while ( (tmp = procVersion.readLine()) != null)
+            sbuff.append(tmp);
+        procVersion.close();
+        tmp = sbuff.toString().replace("[\n\r]+", " ").replace(" +", ".");
+        xml += " version=\"" + tmp + "\"";
+    } catch (IOException e){
+        Log.e(TAG, "opening /proc/version failed: " + e.toString());
+    }
+
+    try { // read and parse cpu info
+        BufferedReader procVersion = new BufferedReader( new FileReader("/proc/cpuinfo") );
+        StringBuffer sbuff = new StringBuffer();
+        String tmp;
+        while ( (tmp = procVersion.readLine()) != null)
+            sbuff.append(tmp + "\n");
+        procVersion.close();
+
+        tmp = sbuff.toString();
+
+        sbuff = new StringBuffer();
+
+        Pattern p1 = Pattern.compile("(Processor\\s*:\\s*(.*)\\s*[\n\r]+)");
+        Matcher m1 = p1.matcher(tmp);
+        if (m1.find()) sbuff.append(m1.group(2));
+
+        Pattern p2 = Pattern.compile("(Hardware\\s*:\\s*(.*)\\s*[\n\r]+)");
+        Matcher m2 = p2.matcher(tmp);
+        if (m2.find()) sbuff.append(":"+m2.group(2));
+
+        Pattern p3 = Pattern.compile("(Revision\\s*:\\s*(.*)\\s*[\n\r]+)");
+        Matcher m3 = p3.matcher(tmp);
+        if (m3.find()) sbuff.append(":"+m3.group(2));
+
+        Log.e(TAG, sbuff.toString());
+        xml += " cpu=\"" + sbuff.toString() + "\"";
+    } catch (IOException e){
+        Log.e(TAG, "opening /proc/version failed: " + e.toString());
+    }
+
 	xml += ">";
 
 	Case mycase;
