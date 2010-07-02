@@ -15,6 +15,9 @@
 <string name="default_email">bizkit.tw@gmail.com</string>
 <string name="default_api">0a57da89-5242-4059-92c2-fa7a7d3b3dd0</string>
 
+<string name="contribute">Contribute data to 0xlab</string>
+<string name="contributeAppSpot">bzsandbox</string>
+
 <!-- its not typo -->
 <string name="banner_info_text">Hell World!</string>
 </resources>

@@ -11,8 +11,12 @@ import android.content.Intent;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 import android.view.View;
+
+import android.text.TextWatcher;
+import android.text.Editable;
 
 import android.app.Dialog;
 import android.app.AlertDialog;
@@ -34,6 +38,7 @@ public class Upload extends Activity implements View.OnClickListener {
     EditText mEmail;
     EditText mAPIKey;
     Button mSend;
+    CheckBox mContribute;
 
     String mURL;
     String mXML;
@@ -46,10 +51,34 @@ public class Upload extends Activity implements View.OnClickListener {
 	super.onCreate(bundle);
 	setContentView(R.layout.upload);
 
+    mContribute = (CheckBox)findViewById(R.id.contribute);
+    mContribute.setChecked(true);
+    mContribute.setClickable(false);
+
     mBenchName = (EditText)findViewById(R.id.benchName);
-    mAppSpot   = (EditText)findViewById(R.id.appSpot);
     mEmail     = (EditText)findViewById(R.id.email);
     mAPIKey    = (EditText)findViewById(R.id.api);
+
+    mAppSpot   = (EditText)findViewById(R.id.appSpot);
+    mAppSpot.addTextChangedListener(new TextWatcher() { 
+        public void  afterTextChanged (Editable s) {
+           Log.e(TAG, "in: " + R.string.contributeAppSpot + " ? " + mAppSpot.getText().toString().toLowerCase());
+           if(mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.contributeAppSpot))){
+               mContribute.setChecked(true);
+               mContribute.setClickable(false);
+               Log.e(TAG, "lock checkbox");
+           } else {
+               mContribute.setClickable(true);
+               Log.e(TAG, "unlock checkbox");
+           }
+        } 
+        public void beforeTextChanged(java.lang.CharSequence s,int a,int b,int c) {
+        }
+        public void onTextChanged(java.lang.CharSequence s,int a,int b,int c) {
+        }
+    });
+
+
 
     mSend      = (Button)findViewById(R.id.send);
     mSend.setOnClickListener(this);
@@ -73,6 +102,9 @@ public class Upload extends Activity implements View.OnClickListener {
         mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
         mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
         mb.start();
+        if(mContribute.isChecked() && !mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.contributeAppSpot))) {
+            // up load to contribute
+        }
     }
     }
 
