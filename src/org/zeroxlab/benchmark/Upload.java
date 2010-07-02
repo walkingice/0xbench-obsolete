@@ -129,6 +129,7 @@ public class Upload extends Activity implements View.OnClickListener {
             Log.e("bzlog", "check: " + state);
             if (state != MicroBenchmark.RUNNING) {
                 dismissDialog(0);
+                removeDialog(0);
                 if (state == MicroBenchmark.DONE) {
                     showDialog(1);
                 }
