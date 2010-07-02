@@ -62,8 +62,7 @@ public class Upload extends Activity implements View.OnClickListener {
     mAppSpot   = (EditText)findViewById(R.id.appSpot);
     mAppSpot.addTextChangedListener(new TextWatcher() { 
         public void  afterTextChanged (Editable s) {
-           Log.e(TAG, "in: " + R.string.contributeAppSpot + " ? " + mAppSpot.getText().toString().toLowerCase());
-           if(mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.contributeAppSpot))){
+           if(mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.default_appspot))){
                mContribute.setChecked(true);
                mContribute.setClickable(false);
                Log.e(TAG, "lock checkbox");
@@ -90,20 +89,36 @@ public class Upload extends Activity implements View.OnClickListener {
 
     public void onClick(View v) {
     if (v == mSend) {
+        StringBuffer _mXML;
+        int _index;
+        String attr;
+
         showDialog(0);
-        String attr = "";
+        attr = "";
         attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
         attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
-        StringBuffer _mXML = new StringBuffer(mXML);
-        int _index = _mXML.indexOf("result") + 6;
+        _mXML = new StringBuffer(mXML);
+        _index = _mXML.indexOf("result") + 6;
         _mXML.insert(_index, attr);
         Log.e("bzlog", _mXML.toString());
 
         mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
         mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
         mb.start();
-        if(mContribute.isChecked() && !mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.contributeAppSpot))) {
+        if(mContribute.isChecked() && !mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.default_appspot))) {
             // up load to contribute
+            showDialog(0);
+            attr = "";
+            attr += " apiKey=\"" + getString(R.string.default_api) + "\"";
+            attr += " benchmark=\"" + getString(R.string.default_benchname) + "\"";
+            _mXML = new StringBuffer(mXML);
+            _index = _mXML.indexOf("result") + 6;
+            _mXML.insert(_index, attr);
+            Log.e("bzlog", _mXML.toString());
+
+            mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
+            mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
+            mb.start();
         }
     }
     }
