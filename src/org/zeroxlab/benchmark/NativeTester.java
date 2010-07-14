@@ -28,8 +28,8 @@ public abstract class NativeTester extends Tester {
     private Process P;
 
     public final String TAG = "NativeTester";
-    public final int UNFINISHED = -999;
     public final String PING_MSG = "PING";
+    public final String ENV_VAR = "ZXBENCH_PORT";
 
     public final int CHECK_FREQ = 500;
     public final int IDLE_KILL = 1000 * 60;
@@ -71,6 +71,7 @@ public abstract class NativeTester extends Tester {
     }
 
     protected abstract String getCommand();
+
     @Override
     protected int sleepBeforeStart() {
         return 0;
@@ -107,7 +108,7 @@ public abstract class NativeTester extends Tester {
         mBindPort = mServerSocket.getLocalPort();
 
         String[] envp = {
-            "ZXBENCH_PORT="+mBindPort,
+            ENV_VAR + "=" + mBindPort,
         };
         try {
             P = mRuntime.exec(getCommand(), envp);
@@ -163,21 +164,8 @@ public abstract class NativeTester extends Tester {
         decreaseCounter();
     }
 
-    public boolean isFinish() {
-        try {
-            P.exitValue();
-        } catch (IllegalThreadStateException e) {
-            return false;
-        }
-        return true;
-    }
-
-    public int exitValue() {
-        try {
-            return P.exitValue();
-        } catch (IllegalThreadStateException e) {
-            return UNFINISHED;
-        }
+    public int exitValue() throws IllegalThreadStateException {
+        return P.exitValue();
     }
 
     public void kill() {
