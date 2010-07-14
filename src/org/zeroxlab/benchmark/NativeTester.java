@@ -5,6 +5,9 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+import java.net.Socket;
+import java.net.ServerSocket;
+
 import android.app.Activity;
 import android.util.Log;
 import android.os.Bundle;
@@ -33,6 +36,11 @@ public abstract class NativeTester extends Tester {
 
     private StringBuffer stdOut = new StringBuffer("stdout:\n");
     private StringBuffer stdErr = new StringBuffer("stderr:\n");
+
+    private ServerSocket mServerSocket;
+    private Socket mClientSocket = null;
+    private int mBindPort = -1;
+    private BufferedReader xmlOutReader;
 
     NativeTester() {
         mRuntime = Runtime.getRuntime();
@@ -67,12 +75,39 @@ public abstract class NativeTester extends Tester {
 
     public void oneRound() {
         try {
-            P = mRuntime.exec(getCommand());
+            mServerSocket = new ServerSocket(0);
+        } catch (IOException e) {
+            Log.d(TAG, "cannot create ServerSocket. " + e.toString());
+            interruptTester();
+        } 
+
+        mBindPort = mServerSocket.getLocalPort();
+
+        String[] envp = {
+            "ZXBENCH_PORT="+mBindPort,
+        };
+        try {
+            P = mRuntime.exec(getCommand(), envp);
         } catch (Exception e) {
-            Log.e(TAG, "Cannot execute");
+            Log.e(TAG, "Cannot execute command: " + getCommand() + ". " + e.toString());
             mNow = 0;
-            finish();
+            interruptTester();
         }
+
+        try {
+            mClientSocket = mServerSocket.accept();
+        } catch (IOException e) {
+            Log.e(TAG, "cannot acception incoming connection. " + e.toString());
+            interruptTester();
+        }
+
+        try {
+            xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
+        } catch (IOException e) {
+            Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
+            interruptTester();
+        }
+
         stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
         stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
 
@@ -90,6 +125,16 @@ public abstract class NativeTester extends Tester {
         }
         Log.i(TAG, "stdout: " + stdOut );
         Log.i(TAG, "stderr: " + stdErr );
+
+        try {
+            String line;
+            while ( (line = xmlOutReader.readLine()) != null ) {
+                Log.i(TAG, "XML: " + line);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "error reading xml from buffer. " + e.toString());
+        }
+
         SystemClock.sleep(5000); //remove me
         decreaseCounter();
     }
@@ -138,6 +183,7 @@ public abstract class NativeTester extends Tester {
                     mHandler.sendMessage(m);
                 }
             } catch (IOException e) {
+                Log.e(TAG, "update buffer failed. " + e.toString());
             }
         }
 

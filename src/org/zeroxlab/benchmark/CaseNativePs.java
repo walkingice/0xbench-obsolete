@@ -38,7 +38,7 @@ public class CaseNativePs extends Case{
     }
 
     public String getDescription() {
-	return "test.";
+	return "A test for native benchmarks. (Executes `ping google` command as seperate process, and displays stdout, stderr on display.)";
     }
 
     private void generateInfo() {

@@ -15,7 +15,7 @@ public class NativeTesterPs extends NativeTester {
         return "Native PS";
     };
     protected String getCommand() {
-        return "/system/bin/ps";
+        return "/system/bin/ping www.google.com.tw";
     }
     
 }
