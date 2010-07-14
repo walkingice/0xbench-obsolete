@@ -130,7 +130,7 @@ public abstract class NativeTester extends Tester {
         public void run() {
             String line;
             try {
-                while ( (line = stdOutReader.readLine()) != null ) {
+                while ( (line = is.readLine()) != null ) {
                     mLastRead = SystemClock.uptimeMillis();
                     mBuffer.append(line + '\n');
                     Message m = new Message();
