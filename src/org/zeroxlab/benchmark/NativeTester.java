@@ -1,9 +1,12 @@
 package org.zeroxlab.benchmark;
 
 import java.lang.Runtime;
+import java.lang.IllegalThreadStateException;
+
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.Math;
 
 import java.net.Socket;
 import java.net.ServerSocket;
@@ -24,8 +27,12 @@ public abstract class NativeTester extends Tester {
     private Runtime mRuntime;
     private Process P;
 
-    public String TAG = "NativeTester";
-    public int UNFINISHED = -999;
+    public final String TAG = "NativeTester";
+    public final int UNFINISHED = -999;
+    public final String PING_MSG = "PING";
+
+    public final int CHECK_FREQ = 500;
+    public final int IDLE_KILL = 1000 * 60;
 
     public String mCommand;
     public Handler mHandler;
@@ -73,6 +80,22 @@ public abstract class NativeTester extends Tester {
         return 0;
     };
 
+    private void reportOutputs() {
+        Log.i(TAG, "stdout: " + stdOut );
+        Log.i(TAG, "stderr: " + stdErr );
+
+        try {
+            String line;
+            while ( (line = xmlOutReader.readLine()) != null ) {
+                Log.i(TAG, "XML: " + line);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "error reading xml from buffer. " + e.toString());
+        }
+
+        SystemClock.sleep(5000); //remove me
+    }
+
     public void oneRound() {
         try {
             mServerSocket = new ServerSocket(0);
@@ -91,6 +114,7 @@ public abstract class NativeTester extends Tester {
         } catch (Exception e) {
             Log.e(TAG, "Cannot execute command: " + getCommand() + ". " + e.toString());
             mNow = 0;
+            P.destroy();
             interruptTester();
         }
 
@@ -98,6 +122,7 @@ public abstract class NativeTester extends Tester {
             mClientSocket = mServerSocket.accept();
         } catch (IOException e) {
             Log.e(TAG, "cannot acception incoming connection. " + e.toString());
+            P.destroy();
             interruptTester();
         }
 
@@ -105,6 +130,7 @@ public abstract class NativeTester extends Tester {
             xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
         } catch (IOException e) {
             Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
+            P.destroy();
             interruptTester();
         }
 
@@ -117,25 +143,23 @@ public abstract class NativeTester extends Tester {
         stdErrThread.start();
 
         // wait here
-        try {
-            P.waitFor();
-        } catch (InterruptedException e) {
-            Log.d(TAG, "caller inturrupted");
-            interruptTester();
-        }
-        Log.i(TAG, "stdout: " + stdOut );
-        Log.i(TAG, "stderr: " + stdErr );
-
-        try {
-            String line;
-            while ( (line = xmlOutReader.readLine()) != null ) {
-                Log.i(TAG, "XML: " + line);
+        while (true) {
+            try {
+                P.exitValue();
+            } catch (IllegalThreadStateException e) {
+                if ( Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()) > IDLE_KILL ) {
+                    Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
+                    reportOutputs();
+                    P.destroy();
+                    interruptTester();
+                }
+                SystemClock.sleep(CHECK_FREQ);
+                continue;
             }
-        } catch (IOException e) {
-            Log.e(TAG, "error reading xml from buffer. " + e.toString());
+            break;
         }
 
-        SystemClock.sleep(5000); //remove me
+        reportOutputs();
         decreaseCounter();
     }
 
@@ -177,6 +201,8 @@ public abstract class NativeTester extends Tester {
             try {
                 while ( (line = is.readLine()) != null ) {
                     mLastRead = SystemClock.uptimeMillis();
+                    if(line.equals(PING_MSG))
+                        continue;
                     mBuffer.append(line + '\n');
                     Message m = new Message();
                     m.what = GUINOTIFIER;
