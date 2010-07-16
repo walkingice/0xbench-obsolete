@@ -22,7 +22,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-#define MESSAGE         "Yow!!! Are we having fun yet?!?"
+#define MESSAGE         "SOCKET!!\n"
 #define SERVERHOST      "localhost"
 uint16_t PORT = -1;
 

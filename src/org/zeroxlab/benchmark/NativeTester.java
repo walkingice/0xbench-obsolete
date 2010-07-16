@@ -136,25 +136,9 @@ public abstract class NativeTester extends Tester {
         stdErrThread.start();
         socketThread.start();
 
-        // wait here
-        while (true) {
-            try {
-                P.exitValue();
-            } catch (IllegalThreadStateException e) {
-                if ( Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()) > IDLE_KILL ) {
-                    Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
-                    reportOutputs();
-                    P.destroy();
-                    interruptTester();
-                }
-                SystemClock.sleep(CHECK_FREQ);
-                continue;
-            }
-            break;
-        }
+        ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
+        monitor.start();
 
-        reportOutputs();
-        decreaseCounter();
     }
 
     public int exitValue() throws IllegalThreadStateException {
@@ -163,6 +147,37 @@ public abstract class NativeTester extends Tester {
 
     public void kill() {
         P.destroy();
+    }
+
+    class ProcessMonitor extends Thread {
+        updateBuffer stdOutThread;
+        updateBuffer stdErrThread;
+        updateBuffer sckOutThread;
+        ProcessMonitor (updateBuffer stdOutThread, updateBuffer stdErrThread, updateBuffer sckOutThread) {
+            this.stdOutThread = stdOutThread;
+            this.stdErrThread = stdErrThread;
+            this.sckOutThread = sckOutThread;
+        }
+        public void run() {
+            while (true) {
+                try {
+                    P.exitValue();
+                } catch (IllegalThreadStateException e) {
+                    if ( Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) > IDLE_KILL ) {
+                        Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
+                        reportOutputs();
+                        P.destroy();
+                        interruptTester();
+                    }
+                    SystemClock.sleep(CHECK_FREQ);
+                    continue;
+                }
+                break;
+            }
+
+            reportOutputs();
+            decreaseCounter();
+        }
     }
 
     class updateBuffer extends Thread {
