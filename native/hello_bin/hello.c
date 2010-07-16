@@ -22,7 +22,7 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 
-#define MESSAGE         "Yow!!! Are we having fun yet?!?\n"
+#define MESSAGE         "Yow!!! Are we having fun yet?!?"
 #define SERVERHOST      "localhost"
 uint16_t PORT = -1;
 
@@ -55,18 +55,18 @@ int make_socket()
 
     /* Disable Nagle buffering algo */
     int flag = 1;
-    setsockopt(sock, SOL_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));  
+    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));  
 
-   struct sockaddr_in servername;
-   /* Connect to the server. */
-   init_sockaddr (&servername, SERVERHOST, PORT);
-   if ( 0 > connect(sock, (struct sockaddr *) &servername, sizeof (servername)) ) {
-       fprintf (stderr, "cannot connect to server.");
-       fflush(stderr);
-       exit (EXIT_FAILURE);
-   }
-
-   return sock;
+    struct sockaddr_in servername;
+    /* Connect to the server. */
+    init_sockaddr (&servername, SERVERHOST, PORT);
+    if ( 0 > connect(sock, (struct sockaddr *) &servername, sizeof (servername)) ) {
+        fprintf (stderr, "cannot connect to server.");
+        fflush(stderr);
+        exit (EXIT_FAILURE);
+    }
+    
+    return sock;
 }
 
 void write_to_server (int socket)
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
     int sock = make_socket();
 
     int i;
-    for (i=0; i<60; i++) {
+    for (i=0; i<20; i++) {
         fprintf(stdout, "stdout %d\n", i);
         fflush(stdout);
         fprintf(stderr, "srderr %d\n", i);
