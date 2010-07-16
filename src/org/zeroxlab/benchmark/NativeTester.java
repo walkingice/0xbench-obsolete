@@ -41,9 +41,9 @@ public abstract class NativeTester extends Tester {
     private BufferedReader stdOutReader;
     private BufferedReader stdErrReader;
 
-    private StringBuffer stdOut = new StringBuffer("\nstdout:\n");
-    private StringBuffer stdErr = new StringBuffer("\nstderr:\n");
-    private StringBuffer sckOut = new StringBuffer("\nsckout:\n");
+    private StringBuffer stdOut = new StringBuffer("\n-----> stdout:\n");
+    private StringBuffer stdErr = new StringBuffer("\n-----> stderr:\n");
+    private StringBuffer sckOut = new StringBuffer("\n-----> sckout:\n");
 
     private ServerSocket mServerSocket;
     private Socket mClientSocket = null;
@@ -193,15 +193,16 @@ public abstract class NativeTester extends Tester {
         }
 
         public void run() {
-            char[] c = new char[1];
+            char[] c = new char[24];
+            int count;
             try {
-                while ( is.read(c,0,1) >= 0 ) {
+                while ( (count = is.read(c,0,24)) >= 0 ) {
                     mLastRead = SystemClock.uptimeMillis();
-                    mBuffer.append(c[0]);
+                    mBuffer.append(c, 0, count);
                     Message m = new Message();
                     m.what = GUINOTIFIER;
                     mHandler.sendMessage(m);
-                    SystemClock.sleep(10);
+                    SystemClock.sleep(100);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "update buffer failed. " + e.toString());
