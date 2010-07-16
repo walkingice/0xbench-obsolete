@@ -31,7 +31,7 @@ public abstract class NativeTester extends Tester {
     public final String PING_MSG = "PING";
     public final String ENV_VAR = "ZXBENCH_PORT";
 
-    public final int CHECK_FREQ = 500;
+    public final int CHECK_FREQ = 1000;
     public final int IDLE_KILL = 1000 * 60;
 
     public String mCommand;
@@ -43,6 +43,7 @@ public abstract class NativeTester extends Tester {
 
     private StringBuffer stdOut = new StringBuffer("stdout:\n");
     private StringBuffer stdErr = new StringBuffer("stderr:\n");
+    private StringBuffer sckOut = new StringBuffer("sckout:\n");
 
     private ServerSocket mServerSocket;
     private Socket mClientSocket = null;
@@ -63,7 +64,7 @@ public abstract class NativeTester extends Tester {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case GUINOTIFIER:
-                        mTextView.setText(stdErr.toString() + stdOut.toString());
+                        mTextView.setText(sckOut.toString() + stdOut.toString() + stdErr.toString());
                         break;
                 }
             }
@@ -82,19 +83,9 @@ public abstract class NativeTester extends Tester {
     };
 
     private void reportOutputs() {
-        Log.i(TAG, "stdout: " + stdOut );
-        Log.i(TAG, "stderr: " + stdErr );
-
-        try {
-            String line;
-            while ( (line = xmlOutReader.readLine()) != null ) {
-                Log.i(TAG, "XML: " + line);
-            }
-        } catch (IOException e) {
-            Log.e(TAG, "error reading xml from buffer. " + e.toString());
-        }
-
-        SystemClock.sleep(5000); //remove me
+        Log.i(TAG, stdOut.toString() );
+        Log.i(TAG, stdErr.toString() );
+        Log.i(TAG, sckOut.toString() );
     }
 
     public void oneRound() {
@@ -140,8 +131,10 @@ public abstract class NativeTester extends Tester {
 
         updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
         updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
+        updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
         stdOutThread.start();
         stdErrThread.start();
+        socketThread.start();
 
         // wait here
         while (true) {
