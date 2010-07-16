@@ -74,6 +74,7 @@ class MicroBenchmark extends Thread {
         }
     } catch (IOException e) {
         updateState(FAILED, e.toString());
+        return;
     }
     updateState(DONE);
 

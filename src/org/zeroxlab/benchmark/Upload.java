@@ -128,8 +128,11 @@ public class Upload extends Activity implements View.OnClickListener {
             int state = msg.getData().getInt(MicroBenchmark.STATE);
             Log.e("bzlog", "check: " + state);
             if (state != MicroBenchmark.RUNNING) {
-                dismissDialog(0);
-                removeDialog(0);
+                try {
+                    dismissDialog(0);
+                    removeDialog(0);
+                } catch (Exception e) {
+                }
                 if (state == MicroBenchmark.DONE) {
                     showDialog(1);
                 }
