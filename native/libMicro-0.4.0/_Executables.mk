@@ -30,7 +30,6 @@
 
 
 EXEs=				\
-		atomic		\
 		bind		\
 		cachetocache	\
 		cascade_mutex	\
