@@ -1,10 +1,13 @@
 LOCAL_PATH:= $(call my-dir)
+
 include $(CLEAR_VARS)
+LOCAL_SRC_FILES:= libmicro.c libmicro_main.c benchmark_init.c benchmark_fini.c benchmark_finirun.c benchmark_initrun.c benchmark_initbatch.c benchmark_finibatch.c benchmark_initworker.c benchmark_finiworker.c benchmark_optswitch.c benchmark_result.c 
+LOCAL_MODULE:= libmicro
+include $(BUILD_STATIC_LIBRARY)
 
-LOCAL_CFLAGS:= -D_REENTRANT -D_REENTRANT -lpthread -lm
+include $(CLEAR_VARS)
+include $(LOCAL_PATH)/_Executables.mk
 
-LOCAL_SRC_FILES:= getpid.c libmicro.c libmicro_main.c  benchmark_fini.c benchmark_initrun.c benchmark_finirun.c benchmark_initbatch.c benchmark_finibatch.c benchmark_initworker.c benchmark_finiworker.c benchmark_optswitch.c benchmark_result.c 
-LOCAL_MODULE:= getpid
-LOCAL_MODULE_TAGS := optional
+$(foreach TARGET_MODULE, $(EXEs), $(eval include $(LOCAL_PATH)/_Android.mk))
 
-include $(BUILD_EXECUTABLE)
+
