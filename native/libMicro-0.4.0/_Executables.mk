@@ -81,8 +81,6 @@ EXEs=				\
 		realpath	\
 		recurse		\
 		select		\
-		semop		\
-		setcontext	\
 		setsockopt	\
 		sigaction	\
 		siglongjmp	\
