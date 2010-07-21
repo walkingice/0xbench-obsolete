@@ -32,7 +32,6 @@
 EXEs=				\
 		bind		\
 		cascade_mutex	\
-		cascade_cond	\
 		cascade_lockf	\
 		cascade_fcntl	\
 		cascade_flock	\
