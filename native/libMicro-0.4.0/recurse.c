@@ -56,6 +56,18 @@ recurse1(int x, int y, char *s)
 }
 
 int
+recurse2(int x, int y, char *s)
+{
+	char			str[32];
+
+	if (x < y) {
+		return (recurse1(x + 1, y, str));
+	}
+
+	return (x);
+}
+
+int
 benchmark_init()
 {
 	lm_tsdsize = 0;
