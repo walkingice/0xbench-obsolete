@@ -31,7 +31,6 @@
 
 EXEs=				\
 		bind		\
-		cachetocache	\
 		cascade_mutex	\
 		cascade_cond	\
 		cascade_lockf	\
