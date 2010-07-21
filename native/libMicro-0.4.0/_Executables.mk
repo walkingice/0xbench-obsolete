@@ -46,7 +46,6 @@ EXEs=				\
 		fcntl_ndelay	\
 		file_lock	\
 		fork		\
-		getcontext	\
 		getenv		\
 		gettimeofday	\
 		getpeername	\
