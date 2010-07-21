@@ -35,7 +35,6 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/ipc.h>
-#include <sys/sem.h>
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <ctype.h>
@@ -858,9 +857,6 @@ barrier_create(int hwm, int datasize)
 
 	(void) pthread_mutexattr_init(&attr);
 	(void) pthread_mutexattr_setpshared(&attr, PTHREAD_PROCESS_SHARED);
-
-	(void) pthread_condattr_init(&cattr);
-	(void) pthread_condattr_setpshared(&cattr, PTHREAD_PROCESS_SHARED);
 
 	(void) pthread_mutex_init(&b->ba_lock, &attr);
 	(void) pthread_cond_init(&b->ba_cv, &cattr);
