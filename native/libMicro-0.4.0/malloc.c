@@ -77,7 +77,8 @@ benchmark_optswitch(int opt, char *optarg)
 		break;
 	case 's':
 		opts[optscnt] = sizetoint(optarg);
-		optscnt = ++optscnt & (31);
+		optscnt = optscnt + 1;
+		optscnt = optscnt & (31);
 		break;
 	default:
 		return (-1);
