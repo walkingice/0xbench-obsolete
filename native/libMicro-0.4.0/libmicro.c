@@ -146,6 +146,7 @@ static void 		compute_stats(barrier_t *);
 #define SERVERHOST      "localhost"
 uint16_t PORT = -1;
 int SOCK = -1;
+int socket_on = 0;
 
 void init_sockaddr (struct sockaddr_in *name, const char *hostname, uint16_t port)
 {
@@ -164,8 +165,6 @@ void init_sockaddr (struct sockaddr_in *name, const char *hostname, uint16_t por
 
 int make_socket()
 {
-    PORT = atoi(getenv("ZXBENCH_PORT"));
-
     int sock = socket (PF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         fprintf(stderr, "cannot create socket.\n");
@@ -197,7 +196,6 @@ int make_socket()
 int
 actual_main(int argc, char *argv[])
 {
-    printf("in actual_main\n");
 	int			i;
 	int			opt;
 	extern char		*optarg;
@@ -213,6 +211,11 @@ actual_main(int argc, char *argv[])
 	}
 	lm_hz = strtoll(getenv("LIBMICRO_HZ"), NULL, 10);
 #endif
+    char *port = getenv("ZXBENCH_PORT");
+    if (port != NULL){
+        PORT = atoi(port);
+        socket_on = 1;
+    }
 
 	lm_argc = argc;
 	lm_argv = argv;
@@ -413,8 +416,9 @@ actual_main(int argc, char *argv[])
 	(void) fflush(stdout);
 	(void) fflush(stderr);
 
-    // TODO Probably should open socket here
-    SOCK = make_socket();
+    // open socket here
+    if(socket_on ==1)
+        SOCK = make_socket();
 
 	/* when we started and when to stop */
 
@@ -435,10 +439,14 @@ actual_main(int argc, char *argv[])
 			case 0:
 				pindex = i;
 				worker_process();
+                if(socket_on ==1)
+                    close(SOCK);
 				exit(0);
 				break;
 			case -1:
 				perror("fork");
+                if(socket_on ==1)
+                    close(SOCK);
 				exit(1);
 				break;
 			default:
@@ -505,6 +513,8 @@ actual_main(int argc, char *argv[])
 		    1.e9);
 		(void) fflush(stderr);
 	}
+    if(socket_on ==1)
+        close(SOCK);
 	return (0);
 }
 
@@ -744,6 +754,11 @@ update_stats(barrier_t *b, result_t *r)
 		b->ba_data[b->ba_batches % b->ba_datasize] =
 		    nsecs_per_call;
         //TODO sock here
+        if(socket_on == 1) {
+            char message[64];
+            sprintf(message, "%s\t%f\n", lm_optN, nsecs_per_call);
+            write (SOCK, message, strlen(message));
+        }
 
 		b->ba_batches++;
 	}

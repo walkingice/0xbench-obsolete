@@ -40,6 +40,5 @@ extern int actual_main(int, char **);
 int
 main(int argc, char *argv[])
 {
-    printf("in actual_main\n");
 	return (actual_main(argc, argv));
 }

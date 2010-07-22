@@ -113,6 +113,12 @@ public abstract class NativeTester extends Tester {
                 interruptTester();
             }
             Log.i(TAG, "command executed");
+            stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
+            stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
+            updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
+            updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
+            stdOutThread.start();
+            stdErrThread.start();
 
             try {
                 mClientSocket = mServerSocket.accept();
@@ -132,14 +138,7 @@ public abstract class NativeTester extends Tester {
             }
             Log.i(TAG, "stream created");
 
-            stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
-            stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
-
-            updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
-            updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
             updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
-            stdOutThread.start();
-            stdErrThread.start();
             socketThread.start();
 
             ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
@@ -173,9 +172,10 @@ public abstract class NativeTester extends Tester {
             this.sckOutThread = sckOutThread;
         }
         public void run() {
+            int value = -1024;
             while (true) {
                 try {
-                    P.exitValue();
+                    value = P.exitValue();
                 } catch (IllegalThreadStateException e) {
                     if ( Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) > IDLE_KILL ) {
                         Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
@@ -186,6 +186,7 @@ public abstract class NativeTester extends Tester {
                     SystemClock.sleep(CHECK_FREQ);
                     continue;
                 }
+                Log.i(TAG, "Process exited with value = " + value);
                 break;
             }
 

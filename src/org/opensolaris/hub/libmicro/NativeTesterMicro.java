@@ -21,7 +21,6 @@ public class NativeTesterMicro extends NativeTester {
             Path + "log " + Opts + " -N log  -I 20",
             Path + "exp " + Opts + " -N exp  -I 20",
             Path + "lrand48 " + Opts + " -N lrand48",
-            "sleep 60",
         };
         return _tmp;
     }

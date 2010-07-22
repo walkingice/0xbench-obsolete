@@ -31,7 +31,7 @@
 
 EXEs=				\
 		getpid		\
-#		bind		\
+		bind		\
 		cascade_mutex	\
 		cascade_fcntl	\
 		cascade_flock	\
