@@ -647,7 +647,7 @@ void
 print_stats(barrier_t *b)
 {
 	(void) printf("#\n");
-	(void) printf("# STATISTICS         %12s          %12s\n",
+	(void) printf("# STATISTICS         %7s          %7s\n",
 	    "usecs/call (raw)",
 	    "usecs/call (outliers removed)");
 
@@ -656,45 +656,45 @@ print_stats(barrier_t *b)
 		return;
 	}
 
-	(void) printf("#                    min %12.5f            %12.5f\n",
+	(void) printf("            min %7.3f        %7.3f\n",
 	    b->ba_raw.st_min,
 	    b->ba_corrected.st_min);
 
-	(void) printf("#                    max %12.5f            %12.5f\n",
+	(void) printf("            max %7.3f        %7.3f\n",
 	    b->ba_raw.st_max,
 	    b->ba_corrected.st_max);
-	(void) printf("#                   mean %12.5f            %12.5f\n",
+	(void) printf("           mean %7.3f        %7.3f\n",
 	    b->ba_raw.st_mean,
 	    b->ba_corrected.st_mean);
-	(void) printf("#                 median %12.5f            %12.5f\n",
+	(void) printf("         median %7.3f        %7.3f\n",
 	    b->ba_raw.st_median,
 	    b->ba_corrected.st_median);
-	(void) printf("#                 stddev %12.5f            %12.5f\n",
+	(void) printf("         stddev %7.3f        %7.3f\n",
 	    b->ba_raw.st_stddev,
 	    b->ba_corrected.st_stddev);
-	(void) printf("#         standard error %12.5f            %12.5f\n",
+	(void) printf(" standard error %7.3f        %7.3f\n",
 	    b->ba_raw.st_stderr,
 	    b->ba_corrected.st_stderr);
-	(void) printf("#   99%% confidence level %12.5f            %12.5f\n",
+	(void) printf(" 99%% conf level %7.3f        %7.3f\n",
 	    b->ba_raw.st_99confidence,
 	    b->ba_corrected.st_99confidence);
-	(void) printf("#                   skew %12.5f            %12.5f\n",
+	(void) printf("           skew %7.3f        %7.3f\n",
 	    b->ba_raw.st_skew,
 	    b->ba_corrected.st_skew);
-	(void) printf("#               kurtosis %12.5f            %12.5f\n",
+	(void) printf("       kurtosis %7.3f        %7.3f\n",
 	    b->ba_raw.st_kurtosis,
 	    b->ba_corrected.st_kurtosis);
 
-	(void) printf("#       time correlation %12.5f            %12.5f\n",
+	(void) printf("  T correlation %7.3f        %7.3f\n",
 	    b->ba_raw.st_timecorr,
 	    b->ba_corrected.st_timecorr);
 	(void) printf("#\n");
 
-	(void) printf("#           elasped time %12.5f\n", (b->ba_endtime -
+	(void) printf("#           elasped time %7.3f\n", (b->ba_endtime -
 	    b->ba_starttime) / 1.0e9);
-	(void) printf("#      number of samples %12d\n",   b->ba_batches);
-	(void) printf("#     number of outliers %12d\n", b->ba_outliers);
-	(void) printf("#      getnsecs overhead %12d\n", (int)nsecs_overhead);
+	(void) printf("#      number of samples %7d\n",   b->ba_batches);
+	(void) printf("#     number of outliers %7d\n", b->ba_outliers);
+	(void) printf("#      getnsecs overhead %7d\n", (int)nsecs_overhead);
 
 	(void) printf("#\n");
 	(void) printf("# DISTRIBUTION\n");
@@ -1178,9 +1178,9 @@ print_bar(long count, long total)
 	int			i;
 
 	(void) putchar_unlocked(count ? '*' : ' ');
-	for (i = 1; i < (32 * count) / total; i++)
+	for (i = 1; i < (12 * count) / total; i++)
 		(void) putchar_unlocked('*');
-	for (; i < 32; i++)
+	for (; i < 12; i++)
 		(void) putchar_unlocked(' ');
 }
 
@@ -1287,16 +1287,16 @@ print_histo(barrier_t *b)
 
 	/* print the buckets */
 	for (i = 0; i <= last; i++) {
-		(void) printf("#       %12lld %12.5f |", histo[i].count,
+		(void) printf("%7lld %7.3f |", histo[i].count,
 		    (min + scale * (double)i / (HISTOSIZE - 1)));
 
 		print_bar(histo[i].count, maxcount);
 
 		if (histo[i].count > 0)
-			(void) printf("%12.5f\n",
+			(void) printf("%7.3f\n",
 			    histo[i].sum / histo[i].count);
 		else
-			(void) printf("%12s\n", "-");
+			(void) printf("%7s\n", "-");
 	}
 
 	/* find the mean of values beyond the 95th percentile */
@@ -1308,20 +1308,20 @@ print_histo(barrier_t *b)
 	}
 
 	/* print the >95% bucket summary */
-	(void) printf("#\n");
-	(void) printf("#       %12lld %12s |", count, "> 95%");
+	(void) printf("\n");
+	(void) printf("%7lld %7s |", count, "> 95%");
 	print_bar(count, maxcount);
 	if (count > 0)
-		(void) printf("%12.5f\n", sum / count);
+		(void) printf("%7.3f\n", sum / count);
 	else
-		(void) printf("%12s\n", "-");
-	(void) printf("#\n");
-	(void) printf("#       %12s %12.5f\n", "mean of 95%", m95);
-	(void) printf("#       %12s %12.5f\n", "95th %ile", p95);
+		(void) printf("%7s\n", "-");
+	(void) printf("\n");
+	(void) printf("%7s %7.3f\n", "mean of 95%", m95);
+	(void) printf("%7s %7.3f\n", "95th %ile", p95);
 
 	/* quantify any buffer overflow */
 	if (b->ba_batches > b->ba_datasize)
-		(void) printf("#       %12s %12d\n", "data dropped",
+		(void) printf("%7s %7d\n", "data dropped",
 		    b->ba_batches - b->ba_datasize);
 }
 

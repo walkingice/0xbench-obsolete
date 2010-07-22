@@ -83,7 +83,7 @@ public class NativeCaseMicro  extends Case {
     protected boolean saveResult(Intent intent, int index) {
 	Bundle info = intent.getBundleExtra(LIN_RESULT);
 	if (info == null) {
-	    Log.i(TAG, "Weird! cannot find Scimark2Info");
+	    Log.i(TAG, "Weird! cannot find LibMicroInfo");
 	    return false;
 	} else {
 	    mInfo[index] = info;

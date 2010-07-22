@@ -19,10 +19,15 @@ import android.os.Handler;
 import android.os.Message;
 import android.content.Intent;
 import android.widget.TextView;
+import android.widget.ScrollView;
+
+import android.content.pm.ActivityInfo;
+
 
 public abstract class NativeTester extends Tester {
 
     private TextView mTextView;
+    private ScrollView mScrollView;
     
     private Runtime mRuntime;
     private Process P;
@@ -41,9 +46,9 @@ public abstract class NativeTester extends Tester {
     private BufferedReader stdOutReader;
     private BufferedReader stdErrReader;
 
-    private StringBuffer stdOut = new StringBuffer("\n-----> stdout:\n");
-    private StringBuffer stdErr = new StringBuffer("\n-----> stderr:\n");
-    private StringBuffer sckOut = new StringBuffer("\n-----> sckout:\n");
+    private StringBuilder stdOut = new StringBuilder("\n-----> stdout:\n");
+    private StringBuilder stdErr = new StringBuilder("\n-----> stderr:\n");
+    private StringBuilder sckOut = new StringBuilder("\n-----> sckout:\n");
 
     private ServerSocket mServerSocket;
     private Socket mClientSocket = null;
@@ -59,12 +64,18 @@ public abstract class NativeTester extends Tester {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gc);
         mTextView = (TextView) findViewById(R.id.myTextView1);
+        mScrollView = (ScrollView) findViewById(R.id.myScrollView);
 
         mHandler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case GUINOTIFIER:
-                        mTextView.setText(sckOut.toString() + stdOut.toString() + stdErr.toString());
+                        mTextView.setText(stdErr.toString() + stdOut.toString()); // + sckOut.toString());
+                        mScrollView.post(new Runnable() { 
+                            public void run() { 
+                                mScrollView.fullScroll(ScrollView.FOCUS_DOWN); 
+                            } 
+                        }); 
                         break;
                 }
             }
@@ -91,67 +102,8 @@ public abstract class NativeTester extends Tester {
     }
 
     public void oneRound() {
-        for(String command: getCommands()) {
-            try {
-                mServerSocket = new ServerSocket(0);
-            } catch (IOException e) {
-                Log.e(TAG, "cannot create ServerSocket. " + e.toString());
-                interruptTester();
-            } 
-            Log.i(TAG, "server socket created");
-
-            mBindPort = mServerSocket.getLocalPort();
-
-            String[] envp = {
-                ENV_VAR + "=" + mBindPort,
-            };
-            try {
-                P = mRuntime.exec(command, envp);
-            } catch (Exception e) {
-                Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
-                mNow = 0;
-                interruptTester();
-            }
-            Log.i(TAG, "command executed");
-            stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
-            stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
-            updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
-            updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
-            stdOutThread.start();
-            stdErrThread.start();
-
-            try {
-                mClientSocket = mServerSocket.accept();
-            } catch (IOException e) {
-                Log.e(TAG, "cannot acception incoming connection. " + e.toString());
-                P.destroy();
-                interruptTester();
-            }
-            Log.i(TAG, "connection accepted");
-
-            try {
-                xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
-            } catch (IOException e) {
-                Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
-                P.destroy();
-                interruptTester();
-            }
-            Log.i(TAG, "stream created");
-
-            updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
-            socketThread.start();
-
-            ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
-            monitor.start();
-            try {
-                monitor.join();
-            } catch (InterruptedException e) {
-                Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
-                P.destroy();
-                interruptTester();
-            }
-        }
-
+        ProcessRunner runner = new ProcessRunner();
+        runner.start();
     }
 
     public int exitValue() throws IllegalThreadStateException {
@@ -160,6 +112,78 @@ public abstract class NativeTester extends Tester {
 
     public void kill() {
         P.destroy();
+    }
+
+    class ProcessRunner extends Thread {
+        public void run() {
+            for(String command: getCommands()) {
+                Log.i(TAG, "------------------------ process " + command + " start ------------------------ ");
+                try {
+                    mServerSocket = new ServerSocket(0);
+                } catch (IOException e) {
+                    Log.e(TAG, "cannot create ServerSocket. " + e.toString());
+                    interruptTester();
+                } 
+                Log.i(TAG, "server socket created");
+
+                mBindPort = mServerSocket.getLocalPort();
+
+                String[] envp = {
+                    ENV_VAR + "=" + mBindPort,
+                };
+                try {
+                    P = mRuntime.exec(command, envp);
+                } catch (Exception e) {
+                    Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
+                    mNow = 0;
+                    interruptTester();
+                }
+                Log.i(TAG, "command executed");
+                stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
+                stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
+                updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
+                updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
+                stdOutThread.start();
+                stdErrThread.start();
+
+                try {
+                    mClientSocket = mServerSocket.accept();
+                } catch (IOException e) {
+                    Log.e(TAG, "cannot acception incoming connection. " + e.toString());
+                    P.destroy();
+                    interruptTester();
+                }
+                Log.i(TAG, "connection accepted");
+
+                try {
+                    xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
+                } catch (IOException e) {
+                    Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
+                    P.destroy();
+                    interruptTester();
+                }
+                Log.i(TAG, "stream created");
+
+                updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
+                socketThread.start();
+
+                ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
+                monitor.start();
+                try {
+                    monitor.join();
+                } catch (InterruptedException e) {
+                    Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
+                    P.destroy();
+                    interruptTester();
+                }
+                reportOutputs();
+                stdOut = new StringBuilder("\n-----> stdout:\n");
+                stdErr = new StringBuilder("\n-----> stderr:\n");
+                Log.i(TAG, "------------------------ process " + command + " finish ------------------------ ");
+            }
+            decreaseCounter();
+            Log.i(TAG, "counter decreased by 1 to " + mNow);
+        }
     }
 
     class ProcessMonitor extends Thread {
@@ -187,21 +211,34 @@ public abstract class NativeTester extends Tester {
                     continue;
                 }
                 Log.i(TAG, "Process exited with value = " + value);
+                try {
+                    sckOutThread.join();
+                } catch (InterruptedException e) {
+                    Log.w(TAG, "socket update thread cannot join");
+                }
+                try {
+                    stdOutThread.join();
+                } catch (InterruptedException e) {
+                    Log.w(TAG, "stdout update thread cannot join");
+                }
+                try {
+                    stdErrThread.join();
+                } catch (InterruptedException e) {
+                    Log.w(TAG, "stderr update thread cannot join");
+                }
                 break;
             }
 
-            reportOutputs();
-            decreaseCounter();
         }
     }
 
     class updateBuffer extends Thread {
         long mLastRead;
         BufferedReader is;
-        StringBuffer mBuffer;
+        StringBuilder mBuffer;
         final int UNREAD = -1;
 
-        updateBuffer(BufferedReader is, StringBuffer targetBuffer) {
+        updateBuffer(BufferedReader is, StringBuilder targetBuffer) {
             this.is = is;
             mBuffer = targetBuffer;
             mLastRead = UNREAD;
