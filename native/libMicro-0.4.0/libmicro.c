@@ -58,6 +58,11 @@
 
 #include "libmicro.h"
 
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <netinet/tcp.h>
+
 
 /*
  * user visible globals
@@ -137,6 +142,53 @@ static long long	nsecs_resolution;
 static long long	get_nsecs_overhead();
 static int		crunch_stats(double *, int, stats_t *);
 static void 		compute_stats(barrier_t *);
+
+#define SERVERHOST      "localhost"
+uint16_t PORT = -1;
+int SOCK = -1;
+
+void init_sockaddr (struct sockaddr_in *name, const char *hostname, uint16_t port)
+{
+    struct hostent *hostinfo;
+ 
+    name->sin_family = AF_INET;
+    name->sin_port = htons (port);
+    hostinfo = gethostbyname (hostname);
+    if (hostinfo == NULL) {
+        fprintf (stderr, "Unknown host %s.\n", hostname);
+        fflush(stderr);
+        exit (EXIT_FAILURE);
+    }
+    name->sin_addr = *(struct in_addr *) hostinfo->h_addr;
+}
+
+int make_socket()
+{
+    PORT = atoi(getenv("ZXBENCH_PORT"));
+
+    int sock = socket (PF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        fprintf(stderr, "cannot create socket.\n");
+        fflush(stderr);
+        exit(EXIT_FAILURE);
+    }
+
+    /* Disable Nagle buffering algo */
+    int flag = 1;
+    setsockopt(sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(int));  
+
+    struct sockaddr_in servername;
+    /* Connect to the server. */
+    init_sockaddr (&servername, SERVERHOST, PORT);
+    if ( 0 > connect(sock, (struct sockaddr *) &servername, sizeof (servername)) ) {
+        fprintf (stderr, "cannot connect to server.");
+        fflush(stderr);
+        exit (EXIT_FAILURE);
+    }
+    
+    return sock;
+}
+
 /*
  * main routine; renamed in this file to allow linking with other
  * files
@@ -145,6 +197,7 @@ static void 		compute_stats(barrier_t *);
 int
 actual_main(int argc, char *argv[])
 {
+    printf("in actual_main\n");
 	int			i;
 	int			opt;
 	extern char		*optarg;
@@ -359,6 +412,9 @@ actual_main(int argc, char *argv[])
 	/* need this here so that parent and children can call exit() */
 	(void) fflush(stdout);
 	(void) fflush(stderr);
+
+    // TODO Probably should open socket here
+    SOCK = make_socket();
 
 	/* when we started and when to stop */
 
@@ -687,6 +743,7 @@ update_stats(barrier_t *b, result_t *r)
 
 		b->ba_data[b->ba_batches % b->ba_datasize] =
 		    nsecs_per_call;
+        //TODO sock here
 
 		b->ba_batches++;
 	}

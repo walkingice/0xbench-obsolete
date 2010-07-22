@@ -30,7 +30,8 @@
 
 
 EXEs=				\
-		bind		\
+		getpid		\
+#		bind		\
 		cascade_mutex	\
 		cascade_fcntl	\
 		cascade_flock	\
@@ -49,7 +50,6 @@ EXEs=				\
 		getenv		\
 		gettimeofday	\
 		getpeername	\
-		getpid		\
 		getrusage	\
 		getsockname	\
 		isatty		\

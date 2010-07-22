@@ -3,7 +3,7 @@ package org.zeroxlab.benchmark;
 import java.util.Date;
 import java.util.ArrayList;
 
-class Scenario {
+public class Scenario {
     String mName;
     String mUnit;
     String mType;

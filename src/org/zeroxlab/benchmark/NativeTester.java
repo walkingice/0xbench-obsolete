@@ -50,7 +50,7 @@ public abstract class NativeTester extends Tester {
     private int mBindPort = -1;
     private BufferedReader xmlOutReader;
 
-    NativeTester() {
+    public NativeTester() {
         mRuntime = Runtime.getRuntime();
     }
 
@@ -69,9 +69,11 @@ public abstract class NativeTester extends Tester {
                 }
             }
         };
+
+        startTester();
     }
 
-    protected abstract String getCommand();
+    protected abstract String[] getCommands();
 
     @Override
     protected int sleepBeforeStart() {
@@ -89,55 +91,67 @@ public abstract class NativeTester extends Tester {
     }
 
     public void oneRound() {
-        try {
-            mServerSocket = new ServerSocket(0);
-        } catch (IOException e) {
-            Log.d(TAG, "cannot create ServerSocket. " + e.toString());
-            interruptTester();
-        } 
+        for(String command: getCommands()) {
+            try {
+                mServerSocket = new ServerSocket(0);
+            } catch (IOException e) {
+                Log.e(TAG, "cannot create ServerSocket. " + e.toString());
+                interruptTester();
+            } 
+            Log.i(TAG, "server socket created");
 
-        mBindPort = mServerSocket.getLocalPort();
+            mBindPort = mServerSocket.getLocalPort();
 
-        String[] envp = {
-            ENV_VAR + "=" + mBindPort,
-        };
-        try {
-            P = mRuntime.exec(getCommand(), envp);
-        } catch (Exception e) {
-            Log.e(TAG, "Cannot execute command: " + getCommand() + ". " + e.toString());
-            mNow = 0;
-            P.destroy();
-            interruptTester();
+            String[] envp = {
+                ENV_VAR + "=" + mBindPort,
+            };
+            try {
+                P = mRuntime.exec(command, envp);
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
+                mNow = 0;
+                interruptTester();
+            }
+            Log.i(TAG, "command executed");
+
+            try {
+                mClientSocket = mServerSocket.accept();
+            } catch (IOException e) {
+                Log.e(TAG, "cannot acception incoming connection. " + e.toString());
+                P.destroy();
+                interruptTester();
+            }
+            Log.i(TAG, "connection accepted");
+
+            try {
+                xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
+            } catch (IOException e) {
+                Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
+                P.destroy();
+                interruptTester();
+            }
+            Log.i(TAG, "stream created");
+
+            stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
+            stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
+
+            updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
+            updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
+            updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
+            stdOutThread.start();
+            stdErrThread.start();
+            socketThread.start();
+
+            ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
+            monitor.start();
+            try {
+                monitor.join();
+            } catch (InterruptedException e) {
+                Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
+                P.destroy();
+                interruptTester();
+            }
         }
-
-        try {
-            mClientSocket = mServerSocket.accept();
-        } catch (IOException e) {
-            Log.e(TAG, "cannot acception incoming connection. " + e.toString());
-            P.destroy();
-            interruptTester();
-        }
-
-        try {
-            xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
-        } catch (IOException e) {
-            Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
-            P.destroy();
-            interruptTester();
-        }
-
-        stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
-        stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
-
-        updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
-        updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
-        updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
-        stdOutThread.start();
-        stdErrThread.start();
-        socketThread.start();
-
-        ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
-        monitor.start();
 
     }
 

@@ -21,6 +21,8 @@ import java.lang.StringBuffer;
 import android.os.SystemClock;
 import android.app.ProgressDialog;
 
+import org.opensolaris.hub.libmicro.*;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
@@ -61,6 +63,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case teapot = new CaseTeapot();
 	Case gc     = new CaseGC();
 
+    mCases.add(new NativeCaseMicro());
     mCases.add(new CaseNativePs());
     // mflops
 	mCases.add(arith);
@@ -157,7 +160,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         public void run() {
             SystemClock.sleep(1000);
             dialog.dismiss();
-//            onClick(mRun);
+            onClick(mRun);
         }
     }.start();
     mTouchable = true;
