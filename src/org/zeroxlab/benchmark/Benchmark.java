@@ -64,7 +64,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case gc     = new CaseGC();
 
     mCases.add(new NativeCaseMicro());
-    mCases.add(new CaseNativePs());
     // mflops
 	mCases.add(arith);
 	mCases.add(scimark2);
