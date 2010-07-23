@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.Math;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.net.Socket;
 import java.net.ServerSocket;
@@ -30,7 +32,7 @@ public abstract class NativeTester extends Tester {
     private ScrollView mScrollView;
     
     private Runtime mRuntime;
-    private Process P;
+    private Process mProcess;
 
     public final String TAG = "NativeTester";
     public final String PING_MSG = "PING";
@@ -43,17 +45,21 @@ public abstract class NativeTester extends Tester {
     public Handler mHandler;
     public static final int GUINOTIFIER = 0x1234;
 
+    public Map<String, String> mStdOuts = new HashMap<String, String>();
+    public Map<String, String> mStdErrs = new HashMap<String, String>();
+    public Map<String, String> mSockets = new HashMap<String, String>();
+
     private BufferedReader stdOutReader;
     private BufferedReader stdErrReader;
+    private BufferedReader sckOutReader;
 
-    private StringBuilder stdOut = new StringBuilder("\n-----> stdout:\n");
-    private StringBuilder stdErr = new StringBuilder("\n-----> stderr:\n");
-    private StringBuilder sckOut = new StringBuilder("\n-----> sckout:\n");
+    private StringBuilder stdOut = new StringBuilder();
+    private StringBuilder stdErr = new StringBuilder();
+    private StringBuilder sckOut = new StringBuilder();
 
     private ServerSocket mServerSocket;
     private Socket mClientSocket = null;
     private int mBindPort = -1;
-    private BufferedReader xmlOutReader;
 
     public NativeTester() {
         mRuntime = Runtime.getRuntime();
@@ -70,7 +76,7 @@ public abstract class NativeTester extends Tester {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case GUINOTIFIER:
-                        mTextView.setText(stdErr.toString() + stdOut.toString()); // + sckOut.toString());
+                        mTextView.setText("stderr -->\n" + stdErr.toString() + "\nstdout -->\n" + stdOut.toString());
                         mScrollView.post(new Runnable() { 
                             public void run() { 
                                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN); 
@@ -102,16 +108,15 @@ public abstract class NativeTester extends Tester {
     }
 
     public void oneRound() {
-        ProcessRunner runner = new ProcessRunner();
-        runner.start();
+        new ProcessRunner().start();
     }
 
     public int exitValue() throws IllegalThreadStateException {
-        return P.exitValue();
+        return mProcess.exitValue();
     }
 
     public void kill() {
-        P.destroy();
+        mProcess.destroy();
     }
 
     class ProcessRunner extends Thread {
@@ -132,15 +137,15 @@ public abstract class NativeTester extends Tester {
                     ENV_VAR + "=" + mBindPort,
                 };
                 try {
-                    P = mRuntime.exec(command, envp);
+                    mProcess = mRuntime.exec(command, envp);
                 } catch (Exception e) {
                     Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
                     mNow = 0;
                     interruptTester();
                 }
                 Log.i(TAG, "command executed");
-                stdOutReader = new BufferedReader(new InputStreamReader(P.getInputStream()));
-                stdErrReader = new BufferedReader(new InputStreamReader(P.getErrorStream()));
+                stdOutReader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));
+                stdErrReader = new BufferedReader(new InputStreamReader(mProcess.getErrorStream()));
                 updateBuffer stdOutThread = new updateBuffer(stdOutReader, stdOut);
                 updateBuffer stdErrThread = new updateBuffer(stdErrReader, stdErr);
                 stdOutThread.start();
@@ -150,21 +155,21 @@ public abstract class NativeTester extends Tester {
                     mClientSocket = mServerSocket.accept();
                 } catch (IOException e) {
                     Log.e(TAG, "cannot acception incoming connection. " + e.toString());
-                    P.destroy();
+                    mProcess.destroy();
                     interruptTester();
                 }
                 Log.i(TAG, "connection accepted");
 
                 try {
-                    xmlOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
+                    sckOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
                 } catch (IOException e) {
                     Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
-                    P.destroy();
+                    mProcess.destroy();
                     interruptTester();
                 }
                 Log.i(TAG, "stream created");
 
-                updateBuffer socketThread = new updateBuffer(xmlOutReader, sckOut);
+                updateBuffer socketThread = new updateBuffer(sckOutReader, sckOut);
                 socketThread.start();
 
                 ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
@@ -173,12 +178,16 @@ public abstract class NativeTester extends Tester {
                     monitor.join();
                 } catch (InterruptedException e) {
                     Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
-                    P.destroy();
+                    mProcess.destroy();
                     interruptTester();
                 }
                 reportOutputs();
-                stdOut = new StringBuilder("\n-----> stdout:\n");
-                stdErr = new StringBuilder("\n-----> stderr:\n");
+                mStdOuts.put(command, stdOut.toString());
+                mStdErrs.put(command, stdErr.toString());
+                mSockets.put(command, sckOut.toString());
+                stdOut = new StringBuilder();
+                stdErr = new StringBuilder();
+                sckOut = new StringBuilder();
                 Log.i(TAG, "------------------------ process " + command + " finish ------------------------ ");
             }
             decreaseCounter();
@@ -199,12 +208,12 @@ public abstract class NativeTester extends Tester {
             int value = -1024;
             while (true) {
                 try {
-                    value = P.exitValue();
+                    value = mProcess.exitValue();
                 } catch (IllegalThreadStateException e) {
                     if ( Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) > IDLE_KILL ) {
                         Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
                         reportOutputs();
-                        P.destroy();
+                        mProcess.destroy();
                         interruptTester();
                     }
                     SystemClock.sleep(CHECK_FREQ);
@@ -245,10 +254,10 @@ public abstract class NativeTester extends Tester {
         }
 
         public void run() {
-            char[] c = new char[24];
+            char[] c = new char[36];
             int count;
             try {
-                while ( (count = is.read(c,0,24)) >= 0 ) {
+                while ( (count = is.read(c,0,36)) >= 0 ) {
                     mLastRead = SystemClock.uptimeMillis();
                     mBuffer.append(c, 0, count);
                     Message m = new Message();
