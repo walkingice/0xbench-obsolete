@@ -153,13 +153,21 @@ public class Benchmark extends Activity implements View.OnClickListener {
         _checkCatCase( CAT.split(",") );
     if (TAG == null && CAT == null)
         _checkAllCase(true);
+    final Handler h = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x1234)
+                onClick(mRun);
+        }
+    };
     
     final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
     new Thread() {
         public void run() {
             SystemClock.sleep(1000);
             dialog.dismiss();
-            onClick(mRun);
+            Message m = new Message();
+            m.what = 0x1234;
+            h.sendMessage(m);
         }
     }.start();
     mTouchable = true;

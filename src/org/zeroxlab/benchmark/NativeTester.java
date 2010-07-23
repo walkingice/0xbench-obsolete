@@ -92,6 +92,8 @@ public abstract class NativeTester extends Tester {
 
     protected abstract String[] getCommands();
 
+    protected abstract boolean saveResult(Intent intent);
+
     @Override
     protected int sleepBeforeStart() {
         return 0;

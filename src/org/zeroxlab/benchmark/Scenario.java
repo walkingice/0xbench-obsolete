@@ -10,10 +10,10 @@ public class Scenario {
     String [] mTags;
     Date mTime;
 
-    ArrayList<Double> mResults;
+    public ArrayList<Double> mResults;
     String mLog;
 
-    Scenario(String name, String type, String [] tags, String unit) {
+    public Scenario(String name, String type, String [] tags, String unit) {
     mName = name;
     mType = type;
     mTags = tags;

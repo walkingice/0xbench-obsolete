@@ -14,6 +14,8 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import org.opensolaris.hub.libmicro.NativeTesterMicro;
+
 public class NativeCaseMicro  extends Case {
 
     public static String LIN_RESULT = "LIN_RESULT";
@@ -25,10 +27,10 @@ public class NativeCaseMicro  extends Case {
     public NativeCaseMicro() {
 	super("NativeCaseMicro", "org.opensolaris.hub.libmicro.NativeTesterMicro", Repeat, Round);
 
-    mType = "Test";
-    mUnit = "text";
+    mType = "Syscall";
+    mUnit = "syscall-nsec";
     String [] _tmp = {
-        "test",
+        "syscall", 
     };
     mTags = _tmp;
 
@@ -68,20 +70,32 @@ public class NativeCaseMicro  extends Case {
 	    return "No benchmark report";
 	}
 
-	String result = "\n";
-	return result;
+    return "";
+//	return mInfo[0].getString(NativeTesterMicro.REPORT);
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
+    Bundle bundle = mInfo[0]; // only 1 run
+    for(String command: NativeTesterMicro.COMMANDS) {
+        String name = bundle.getString(command+"S");
+        float [] results = bundle.getFloatArray(command+"FA");
+        Scenario s = new Scenario(name, mType, mTags, mUnit);
+        for(float result: results) 
+            s.mResults.add(new Double(result));
+        scenarios.add(s);
+
+    }
+
+    Log.e("TRACE", "end of getScenarios");
     return scenarios;
     }
 
     @Override
     protected boolean saveResult(Intent intent, int index) {
-	Bundle info = intent.getBundleExtra(LIN_RESULT);
+	Bundle info = intent.getBundleExtra(NativeTesterMicro.RESULT);
 	if (info == null) {
 	    Log.i(TAG, "Weird! cannot find LibMicroInfo");
 	    return false;

@@ -267,6 +267,7 @@ public abstract class Case{
             return "";
         result += "</scenario>";
     }
+    Log.e("TRACE", "end of get xml bench");
 	return result;
     }
 }
