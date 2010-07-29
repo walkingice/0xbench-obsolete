@@ -1,8 +1,8 @@
 package jnt.scimark2;
 
 /* Random.java based on Java Numerical Toolkit (JNT) Random.UniformSequence
-	class.  We do not use Java's own java.util.Random so that we can compare
-	results with equivalent C and Fortran coces.
+    class.  We do not use Java's own java.util.Random so that we can compare
+    results with equivalent C and Fortran coces.
 */
 
 public class Random {
@@ -123,17 +123,17 @@ public class Random {
     m[j] = k;
 
     if (i == 0) 
-		i = 16;
-	else i--;
+        i = 16;
+    else i--;
 
     if (j == 0) 
-		j = 16 ;
-	else j--;
+        j = 16 ;
+    else j--;
 
     if (haveRange) 
-		return  left +  dm1 * (double) k * width;
-	else
-		return dm1 * (double) k;
+        return  left +  dm1 * (double) k * width;
+    else
+        return dm1 * (double) k;
 
   } 
 
@@ -141,96 +141,91 @@ public class Random {
    Returns the next N random numbers in the sequence, as
    a vector.
 */
-  public final synchronized void nextDoubles (double x[]) 
-  {
+  public final synchronized void nextDoubles (double x[]) {
 
-	int N = x.length;
-	int remainder = N & 3;		// N mod 4
+    int N = x.length;
+    int remainder = N & 3;        // N mod 4
 
-	if (haveRange)
-	{
-		for (int count=0; count<N; count++)
-		{
-     		int k = m[i] - m[j];
+    if (haveRange) {
+        for (int count=0; count<N; count++) {
+             int k = m[i] - m[j];
 
-     		if (i == 0) i = 16;
-	 			else i--;
-				
-     		if (k < 0) k += m1;
-     		m[j] = k;
+             if (i == 0) i = 16;
+                 else i--;
+                
+             if (k < 0) k += m1;
+             m[j] = k;
 
-     		if (j == 0) j = 16;
-	 			else j--;
+             if (j == 0) j = 16;
+                 else j--;
 
-     		x[count] = left + dm1 * (double) k * width;
-		}
-	
-	}
-	else
-	{
+             x[count] = left + dm1 * (double) k * width;
+        }
+    
+    }
+    else
+    {
 
-		for (int count=0; count<remainder; count++)
-		{
-     		int k = m[i] - m[j];
+        for (int count=0; count<remainder; count++) {
+             int k = m[i] - m[j];
 
-     		if (i == 0) i = 16;
-	 			else i--;
+             if (i == 0) i = 16;
+                 else i--;
 
-     		if (k < 0) k += m1;
-     		m[j] = k;
+             if (k < 0) k += m1;
+             m[j] = k;
 
-     		if (j == 0) j = 16;
-	 			else j--;
+             if (j == 0) j = 16;
+                 else j--;
 
 
-     		x[count] = dm1 * (double) k;
-		}
+             x[count] = dm1 * (double) k;
+        }
 
-		for (int count=remainder; count<N; count+=4)
-		{
-     		int k = m[i] - m[j];
-     		if (i == 0) i = 16;
-	 			else i--;
-     		if (k < 0) k += m1;
-     		m[j] = k;
-     		if (j == 0) j = 16;
-	 			else j--;
-     		x[count] = dm1 * (double) k;
-
-
-     		k = m[i] - m[j];
-     		if (i == 0) i = 16;
-	 			else i--;
-     		if (k < 0) k += m1;
-     		m[j] = k;
-     		if (j == 0) j = 16;
-	 			else j--;
-     		x[count+1] = dm1 * (double) k;
+        for (int count=remainder; count<N; count+=4) {
+             int k = m[i] - m[j];
+             if (i == 0) i = 16;
+                 else i--;
+             if (k < 0) k += m1;
+             m[j] = k;
+             if (j == 0) j = 16;
+                 else j--;
+             x[count] = dm1 * (double) k;
 
 
-     		k = m[i] - m[j];
-     		if (i == 0) i = 16;
-	 			else i--;
-     		if (k < 0) k += m1;
-     		m[j] = k;
-     		if (j == 0) j = 16;
-	 			else j--;
-     		x[count+2] = dm1 * (double) k;
+             k = m[i] - m[j];
+             if (i == 0) i = 16;
+                 else i--;
+             if (k < 0) k += m1;
+             m[j] = k;
+             if (j == 0) j = 16;
+                 else j--;
+             x[count+1] = dm1 * (double) k;
 
 
-     		k = m[i] - m[j];
-     		if (i == 0) i = 16;
-	 			else i--;
-     		if (k < 0) k += m1;
-     		m[j] = k;
-     		if (j == 0) j = 16;
-	 			else j--;
-     		x[count+3] = dm1 * (double) k;
-		}
-	}
+             k = m[i] - m[j];
+             if (i == 0) i = 16;
+                 else i--;
+             if (k < 0) k += m1;
+             m[j] = k;
+             if (j == 0) j = 16;
+                 else j--;
+             x[count+2] = dm1 * (double) k;
+
+
+             k = m[i] - m[j];
+             if (i == 0) i = 16;
+                 else i--;
+             if (k < 0) k += m1;
+             m[j] = k;
+             if (j == 0) j = 16;
+                 else j--;
+             x[count+3] = dm1 * (double) k;
+        }
+    }
   }
 
-		
+        
    
 
 
@@ -253,12 +248,11 @@ public class Random {
     k1 = 9069 / m2;
     j0 = jseed % m2;
     j1 = jseed / m2;
-    for (iloop = 0; iloop < 17; ++iloop) 
-	{
-		jseed = j0 * k0;
-		j1 = (jseed / m2 + j0 * k1 + j1 * k0) % (m2 / 2);
-		j0 = jseed % m2;
-		m[iloop] = j0 + m2 * j1;
+    for (iloop = 0; iloop < 17; ++iloop) {
+        jseed = j0 * k0;
+        j1 = (jseed / m2 + j0 * k1 + j1 * k0) % (m2 / 2);
+        j0 = jseed % m2;
+        m[iloop] = j0 + m2 * j1;
     }
     i = 4;
     j = 16;

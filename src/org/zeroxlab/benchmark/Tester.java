@@ -36,54 +36,54 @@ public abstract class Tester extends Activity{
     protected boolean mDropTrackballEvent = true;
 
     protected void onCreate(Bundle bundle) {
-	super.onCreate(bundle);
-	TAG = getTag();
+        super.onCreate(bundle);
+        TAG = getTag();
 
-	Intent intent = getIntent();
-	if (intent != null) {
-	    mRound     = Case.getRound(intent);
-	    mSourceTag = Case.getSource(intent);
-	    mIndex     = Case.getIndex(intent);
-	} else {
-	    mRound = 80;
-	    mIndex = -1;
-	}
-	mNow   = mRound;
+        Intent intent = getIntent();
+        if (intent != null) {
+            mRound     = Case.getRound(intent);
+            mSourceTag = Case.getSource(intent);
+            mIndex     = Case.getIndex(intent);
+        } else {
+            mRound = 80;
+            mIndex = -1;
+        }
+        mNow   = mRound;
     }
 
     @Override
     protected void onPause() {
-	super.onPause();
-	interruptTester();
+        super.onPause();
+        interruptTester();
     }
 
     /* drop the annoying event */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-	if (mDropTouchEvent) {
-	    return false;
-	} else {
-	    return super.dispatchTouchEvent(ev);
-	}
+        if (mDropTouchEvent) {
+            return false;
+        } else {
+            return super.dispatchTouchEvent(ev);
+        }
     }
 
     @Override
     public boolean dispatchTrackballEvent(MotionEvent ev) {
-	if (mDropTrackballEvent) {
-	    return false;
-	} else {
-	    return super.dispatchTouchEvent(ev);
-	}
+        if (mDropTrackballEvent) {
+            return false;
+        } else {
+            return super.dispatchTouchEvent(ev);
+        }
     }
 
     protected void startTester() {
-	TesterThread thread = new TesterThread(sleepBeforeStart(), sleepBetweenRound());
-	thread.start();
+        TesterThread thread = new TesterThread(sleepBeforeStart(), sleepBetweenRound());
+        thread.start();
     }
 
     public void interruptTester() {
-	mNow = 0;
-	finish();
+        mNow = 0;
+        finish();
     }
 
     /**
@@ -93,20 +93,20 @@ public abstract class Tester extends Activity{
      * @param end The ending time of testing round
      */
     public void finishTester(long start, long end) {
-	mTesterStart = start;
-	mTesterEnd   = end;
-	Intent intent = new Intent();
-	if (mSourceTag == null || mSourceTag.equals("")) {
-	    Case.putSource(intent, "unknown");
-	} else {
-	    Case.putSource(intent, mSourceTag);
-	}
+        mTesterStart = start;
+        mTesterEnd   = end;
+        Intent intent = new Intent();
+        if (mSourceTag == null || mSourceTag.equals("")) {
+            Case.putSource(intent, "unknown");
+        } else {
+            Case.putSource(intent, mSourceTag);
+        }
 
-	Case.putIndex(intent, mIndex);
-	saveResult(intent);
+        Case.putIndex(intent, mIndex);
+        saveResult(intent);
 
-	setResult(0, intent);
-	finish();
+        setResult(0, intent);
+        finish();
     }
 
     /**
@@ -117,79 +117,79 @@ public abstract class Tester extends Activity{
      * @param intent The intent will return to Case
      */
     protected boolean saveResult(Intent intent) {
-	long elapse = mTesterEnd - mTesterStart;
-	Case.putResult(intent, elapse);
-	return true;
+        long elapse = mTesterEnd - mTesterStart;
+        Case.putResult(intent, elapse);
+        return true;
     }
 
     public void resetCounter() {
-	mNow = mRound;
+        mNow = mRound;
     }
 
     public void decreaseCounter() {
-		/*
-	if (mNow == mRound) {
-		mTesterStart = SystemClock.uptimeMillis();
-	} else if (mNow == 1) {
-		mTesterEnd = SystemClock.uptimeMillis();
-	}
-	*/
-	mNow = mNow - 1;
-	mNextRound = true;
+        /*
+        if (mNow == mRound) {
+            mTesterStart = SystemClock.uptimeMillis();
+        } else if (mNow == 1) {
+            mTesterEnd = SystemClock.uptimeMillis();
+        }
+        */
+        mNow = mNow - 1;
+        mNextRound = true;
     }
 
     public boolean isTesterFinished() {
-	return (mNow <= 0);
+        return (mNow <= 0);
     }
 
     class TesterThread extends Thread {
-	int mSleepingStart;
-	int mSleepingTime;
-	TesterThread(int sleepStart, int sleepPeriod) {
-	    mSleepingStart = sleepStart;
-	    mSleepingTime  = sleepPeriod;
-	}
+        int mSleepingStart;
+        int mSleepingTime;
+        TesterThread(int sleepStart, int sleepPeriod) {
+            mSleepingStart = sleepStart;
+            mSleepingTime  = sleepPeriod;
+        }
 
-	private void lazyLoop() throws Exception {
-	    while (!isTesterFinished()) {
-		if (mNextRound) {
-		    mNextRound = false;
-		    oneRound();
-		} else {
-//		    sleep(mSleepingTime);
-		    sleep(0);
-		}
-	    }
-	}
+        private void lazyLoop() throws Exception {
+            while (!isTesterFinished()) {
+            if (mNextRound) {
+                mNextRound = false;
+                oneRound();
+            } else {
+    //            sleep(mSleepingTime);
+                sleep(0);
+            }
+            }
+        }
 
-	private void nervousLoop() throws Exception {
-	    while (!isTesterFinished()) {
-		oneRound();
-	    }
-	}
+        private void nervousLoop() throws Exception {
+            while (!isTesterFinished()) {
+            oneRound();
+            }
+        }
 
-	private void sleepLoop() throws Exception {
-	    while (!isTesterFinished()) {
-		oneRound();
-		sleep(mSleepingTime);
-	    }
-	}
+        private void sleepLoop() throws Exception {
+            while (!isTesterFinished()) {
+            oneRound();
+            sleep(mSleepingTime);
+            }
+        }
 
-	public void run() {
-	    try {
-		sleep(mSleepingStart);
+        public void run() {
+            try {
+            sleep(mSleepingStart);
 
-		long start = SystemClock.uptimeMillis();
+            long start = SystemClock.uptimeMillis();
 
-		lazyLoop();
+            lazyLoop();
 
-		long end = SystemClock.uptimeMillis();
-		finishTester(start, end);
-	    } catch (Exception e) {
-		e.printStackTrace();
-	    }
+            long end = SystemClock.uptimeMillis();
+            finishTester(start, end);
+            } catch (Exception e) {
+            e.printStackTrace();
+            }
 
-	}
+        }
     }
 
 }

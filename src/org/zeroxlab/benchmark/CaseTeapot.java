@@ -18,57 +18,57 @@ public class CaseTeapot extends Case {
     public static int mTeapotRound  = 1000;
 
     CaseTeapot() {
-	super("Teapot", TeapotES.FullName, mTeapotRepeat, mTeapotRound);
-    mType = "3d-fps";
-    String [] _tmp = {
-        "3d",
-        "opengl",
-        "render",
-    };
-    mTags = _tmp;
+        super("Teapot", TeapotES.FullName, mTeapotRepeat, mTeapotRound);
+        mType = "3d-fps";
+        String [] _tmp = {
+            "3d",
+            "opengl",
+            "render",
+        };
+        mTags = _tmp;
     }
 
     public String getTitle() {
-	return "Flying Teapot";
+        return "Flying Teapot";
     }
 
     public String getDescription() {
-	return "A flying standard Utah Teapot";
+        return "A flying standard Utah Teapot";
     }
 
     @Override
     public String getBenchmark() {
-	if (!couldFetchReport()) {
-	    return "Teapot has no report";
-	}
+        if (!couldFetchReport()) {
+            return "Teapot has no report";
+        }
 
-	String result = "";
-	float total = 0;
-	int length = mResult.length;
+        String result = "";
+        float total = 0;
+        int length = mResult.length;
 
-	for (int i = 0; i < length; i++) {
-	    float fps = mCaseRound / (mResult[i] / 1000f); // milliseconds to seconds
-	    result += "Round " + i + ": fps = " + fps + "\n";
-	    total  += fps;
-	}
+        for (int i = 0; i < length; i++) {
+            float fps = mCaseRound / (mResult[i] / 1000f); // milliseconds to seconds
+            result += "Round " + i + ": fps = " + fps + "\n";
+            total  += fps;
+        }
 
-	result += "Average: fps = " + (total/length) + "\n";
-	return result;
+        result += "Average: fps = " + (total/length) + "\n";
+        return result;
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags);
-    s.mLog = getBenchmark();
-	for (int i = 0; i < mResult.length; i++) {
-	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);
-	    s.mResults.add(((Float)fps).doubleValue());
-	}
+        Scenario s = new Scenario(getTitle(), mType, mTags);
+        s.mLog = getBenchmark();
+        for (int i = 0; i < mResult.length; i++) {
+            float fps = (float)mCaseRound /  (mResult[i] / 1000f);
+            s.mResults.add(((Float)fps).doubleValue());
+        }
 
-    scenarios.add(s);
-    return scenarios;
+        scenarios.add(s);
+        return scenarios;
     }
 
 }

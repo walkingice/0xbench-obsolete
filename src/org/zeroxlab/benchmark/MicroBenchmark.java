@@ -22,6 +22,7 @@ class MicroBenchmark extends Thread {
 
     final static String STATE = "STATE";
     final static String MSG = "MSG";
+    final static String TAG = "MicroBenchmarkThread";
 
     Handler mHandler;
 
@@ -30,12 +31,12 @@ class MicroBenchmark extends Thread {
     String apiKey;
     String benchmarkName;
 
-	MicroBenchmark(String _xml, String _postUrl, String _apiKey, String _benchmarkName, Handler h) {
-    xml = _xml;
-    postUrl = _postUrl;
-    apiKey = _apiKey;
-    benchmarkName = _benchmarkName;
-    mHandler = h;
+    MicroBenchmark(String _xml, String _postUrl, String _apiKey, String _benchmarkName, Handler h) {
+        xml = _xml;
+        postUrl = _postUrl;
+        apiKey = _apiKey;
+        benchmarkName = _benchmarkName;
+        mHandler = h;
     }
 
     private void updateState(int state, String info) {
@@ -46,7 +47,7 @@ class MicroBenchmark extends Thread {
         msg.setData(b);
         mHandler.sendMessage(msg);
 
-        Log.e("bzlog", "set state: " + state);
+        Log.e(TAG, "set state: " + state);
     }
 
     private void updateState(int state) {
@@ -54,31 +55,31 @@ class MicroBenchmark extends Thread {
     }
 
 
-	public void upload() {
-    updateState(RUNNING);
-    try {
-		URL url = new URL(postUrl + apiKey + "/" + benchmarkName);
-		HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-		urlConnection.setDoOutput(true);
+    public void upload() {
+        updateState(RUNNING);
+        try {
+            URL url = new URL(postUrl + apiKey + "/" + benchmarkName);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setDoOutput(true);
 
-		OutputStream post = urlConnection.getOutputStream();
-		Log.e("bzlog", xml);
-		post.write(xml.getBytes());
+            OutputStream post = urlConnection.getOutputStream();
+            Log.e(TAG, xml);
+            post.write(xml.getBytes());
 
-		int responseCode = urlConnection.getResponseCode();
-		Log.e("bzlog", ""+responseCode);
+            int responseCode = urlConnection.getResponseCode();
+            Log.e(TAG, ""+responseCode);
 
-		if (responseCode != 200) {
-            updateState(FAILED, "Connection failed with response code " + responseCode);
+            if (responseCode != 200) {
+                updateState(FAILED, "Connection failed with response code " + responseCode);
+                return;
+            }
+        } catch (IOException e) {
+            updateState(FAILED, e.toString());
             return;
         }
-    } catch (IOException e) {
-        updateState(FAILED, e.toString());
-        return;
-    }
-    updateState(DONE);
+        updateState(DONE);
 
-	}
+    }
 
     public void run() {
     upload();

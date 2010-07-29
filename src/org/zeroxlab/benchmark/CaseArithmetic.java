@@ -23,79 +23,79 @@ public class CaseArithmetic extends Case{
     public static int Round  = 3;
 
     CaseArithmetic() {
-	super("CaseArithmetic", "org.zeroxlab.benchmark.TesterArithmetic", Repeat, Round);
+        super("CaseArithmetic", "org.zeroxlab.benchmark.TesterArithmetic", Repeat, Round);
 
-    mType = "mflops";
-    String [] _tmp = {
-        "numeric",
-        "mflops",
-    };
-    mTags = _tmp;
+        mType = "mflops";
+        String [] _tmp = {
+            "numeric",
+            "mflops",
+        };
+        mTags = _tmp;
 
-	generateInfo();
+        generateInfo();
     }
 
     public String getTitle() {
-	return "Linpack";
+        return "Linpack";
     }
 
     public String getDescription() {
-	return "The Linpack Benchmark is a numerically intensive test that has been used for years to measure the floating point performance of computers.";
+        return "The Linpack Benchmark is a numerically intensive test that has been used for years to measure the floating point performance of computers.";
     }
 
     private void generateInfo() {
-	mInfo = new Bundle[Repeat];
-	for (int i = 0; i < mInfo.length; i++) {
-	    mInfo[i] = new Bundle();
-	}
+        mInfo = new Bundle[Repeat];
+        for (int i = 0; i < mInfo.length; i++) {
+            mInfo[i] = new Bundle();
+        }
     }
 
     @Override
     public void clear() {
-	super.clear();
-	generateInfo();
+        super.clear();
+        generateInfo();
     }
 
     @Override
     public void reset() {
-	super.reset();
-	generateInfo();
+        super.reset();
+        generateInfo();
     }
 
     @Override
     public String getBenchmark() {
-	String result = "\n";
-	for (int i = 0; i < mInfo.length; i++) {
-	    result += TesterArithmetic.bundleToString(mInfo[i]);
-	    result += "\n";
-	}
-	return result;
+        String result = "\n";
+        for (int i = 0; i < mInfo.length; i++) {
+            result += TesterArithmetic.bundleToString(mInfo[i]);
+            result += "\n";
+        }
+        return result;
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags);
-    s.mLog = getBenchmark();
-    for (int i=0; i<mInfo.length; i++)
-        s.mResults.add(mInfo[i].getDouble(TesterArithmetic.MFLOPS));
+        Scenario s = new Scenario(getTitle(), mType, mTags);
+        s.mLog = getBenchmark();
+        for (int i=0; i<mInfo.length; i++)
+            s.mResults.add(mInfo[i].getDouble(TesterArithmetic.MFLOPS));
 
-    scenarios.add(s);
+        scenarios.add(s);
 
-    return scenarios;
+        return scenarios;
     }
 
     @Override
     protected boolean saveResult(Intent intent, int index) {
-	Bundle info = intent.getBundleExtra(LIN_RESULT);
-	if (info == null) {
-	    Log.i(TAG, "Weird! cannot find LinpackInfo");
-	    return false;
-	} else {
-	    mInfo[index] = info;
-	}
+        Bundle info = intent.getBundleExtra(LIN_RESULT);
+        if (info == null) {
+            Log.i(TAG, "Weird! cannot find LinpackInfo");
+            return false;
+        } else {
+            mInfo[index] = info;
+        }
 
-	return true;
+        return true;
     }
 }

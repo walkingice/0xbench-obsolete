@@ -53,346 +53,349 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-	super.onCreate(savedInstanceState);
-	setContentView(R.layout.main);
-	mCases = new LinkedList<Case>();
-	Case arith  = new CaseArithmetic();
-	Case scimark2  = new CaseScimark2();
-	Case canvas = new CaseCanvas();
-	Case glcube = new CaseGLCube();
-	Case circle = new CaseDrawCircle();
-	Case nehe08 = new CaseNeheLesson08();
-	Case nehe16 = new CaseNeheLesson16();
-	Case teapot = new CaseTeapot();
-	Case gc     = new CaseGC();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
+        mCases = new LinkedList<Case>();
+        Case arith  = new CaseArithmetic();
+        Case scimark2  = new CaseScimark2();
+        Case canvas = new CaseCanvas();
+        Case glcube = new CaseGLCube();
+        Case circle = new CaseDrawCircle();
+        Case nehe08 = new CaseNeheLesson08();
+        Case nehe16 = new CaseNeheLesson16();
+        Case teapot = new CaseTeapot();
+        Case gc     = new CaseGC();
 
-    mCases.add(new NativeCaseMicro());
-    // mflops
-	mCases.add(arith);
-	mCases.add(scimark2);
-    // 2d
-	mCases.add(canvas);
-	mCases.add(circle);
-    // 3d
-	mCases.add(glcube);
-	mCases.add(nehe08);
-	mCases.add(nehe16);
-	mCases.add(teapot);
-    // vm
-	mCases.add(gc);
-	initViews();
+        mCases.add(new NativeCaseMicro());
+        // mflops
+        mCases.add(arith);
+        mCases.add(scimark2);
+        // 2d
+        mCases.add(canvas);
+        mCases.add(circle);
+        // 3d
+        mCases.add(glcube);
+        mCases.add(nehe08);
+        mCases.add(nehe16);
+        mCases.add(teapot);
+        // vm
+        mCases.add(gc);
+        initViews();
 
-    Intent intent = getIntent();
-    if (intent.getBooleanExtra("AUTO", false)) {
-        ImageView head = (ImageView)findViewById(R.id.banner_img);
-        head.setImageResource(R.drawable.icon_auto);
-        mTouchable = false;
-        initAuto();
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra("AUTO", false)) {
+            ImageView head = (ImageView)findViewById(R.id.banner_img);
+            head.setImageResource(R.drawable.icon_auto);
+            mTouchable = false;
+            initAuto();
+        }
+
+        printHello();
     }
 
-    printHello();
-    }
     static {
-    System.loadLibrary("hello");
+        System.loadLibrary("hello");
     }
     private native void printHello();
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-    if (mTouchable) super.dispatchTouchEvent(event);
-    return true;
+        if (mTouchable) super.dispatchTouchEvent(event);
+        return true;
     }
+
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-    if (mTouchable) super.dispatchKeyEvent(event);
-    return true;
+        if (mTouchable) super.dispatchKeyEvent(event);
+        return true;
     }
+
     @Override
     public boolean dispatchTrackballEvent(MotionEvent event) {
-    if (mTouchable) super.dispatchTrackballEvent(event);
-    return true;
+        if (mTouchable) super.dispatchTrackballEvent(event);
+        return true;
     }
 
     private void _checkTagCase(String [] Tags) {
-    Arrays.sort(Tags);
-    for (int i=0; i<mCheckList.length; i++) {
-        String [] caseTags = mCases.get(i).mTags;
-        for (String t: caseTags) {
-            int search = Arrays.binarySearch(Tags, t);
+        Arrays.sort(Tags);
+        for (int i=0; i<mCheckList.length; i++) {
+            String [] caseTags = mCases.get(i).mTags;
+            for (String t: caseTags) {
+                int search = Arrays.binarySearch(Tags, t);
+                if ( search  >= 0) 
+                    mCheckList[i].setChecked(true);
+            }
+        }
+    }
+
+    private void _checkCatCase(String [] Cats) {
+        Arrays.sort(Cats);
+        for (int i=0; i<mCheckList.length; i++) {
+            int search = Arrays.binarySearch(Cats, mCases.get(i).mType);
             if ( search  >= 0) 
                 mCheckList[i].setChecked(true);
         }
     }
-    }
-
-    private void _checkCatCase(String [] Cats) {
-    Arrays.sort(Cats);
-    for (int i=0; i<mCheckList.length; i++) {
-        int search = Arrays.binarySearch(Cats, mCases.get(i).mType);
-        if ( search  >= 0) 
-            mCheckList[i].setChecked(true);
-    }
-    }
 
     private void _checkAllCase(boolean check) {
-    for (int i=0; i<mCheckList.length; i++) 
-        mCheckList[i].setChecked(check);
+        for (int i=0; i<mCheckList.length; i++) 
+            mCheckList[i].setChecked(check);
     }
 
     private void initAuto() {
-    Intent intent = getIntent();
-    String TAG = intent.getStringExtra("TAG");
-    String CAT = intent.getStringExtra("CAT");
+        Intent intent = getIntent();
+        String TAG = intent.getStringExtra("TAG");
+        String CAT = intent.getStringExtra("CAT");
 
 
-    _checkAllCase(false);
-    if (TAG != null)
-        _checkTagCase( TAG.split(",") );
-    if (CAT != null)
-        _checkCatCase( CAT.split(",") );
-    if (TAG == null && CAT == null)
-        _checkAllCase(true);
-    final Handler h = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == 0x1234)
-                onClick(mRun);
-        }
+        _checkAllCase(false);
+        if (TAG != null)
+            _checkTagCase( TAG.split(",") );
+        if (CAT != null)
+            _checkCatCase( CAT.split(",") );
+        if (TAG == null && CAT == null)
+            _checkAllCase(true);
+        final Handler h = new Handler() {
+            public void handleMessage(Message msg) {
+                if (msg.what == 0x1234)
+                    onClick(mRun);
+            }
     };
     
     final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
     new Thread() {
-        public void run() {
-            SystemClock.sleep(1000);
-            dialog.dismiss();
-            Message m = new Message();
-            m.what = 0x1234;
-            h.sendMessage(m);
-        }
-    }.start();
-    mTouchable = true;
+            public void run() {
+                SystemClock.sleep(1000);
+                dialog.dismiss();
+                Message m = new Message();
+                m.what = 0x1234;
+                h.sendMessage(m);
+            }
+        }.start();
+        mTouchable = true;
     }
 
     private void initViews() {
-	mRun = (Button)findViewById(R.id.btn_run);
-	mRun.setOnClickListener(this);
+        mRun = (Button)findViewById(R.id.btn_run);
+        mRun.setOnClickListener(this);
 
-	mShow = (Button)findViewById(R.id.btn_show);
-	mShow.setOnClickListener(this);
+        mShow = (Button)findViewById(R.id.btn_show);
+        mShow.setOnClickListener(this);
 
-	mUpload = (Button)findViewById(R.id.btn_upload);
-	mUpload.setOnClickListener(this);
+        mUpload = (Button)findViewById(R.id.btn_upload);
+        mUpload.setOnClickListener(this);
 
-	mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
+        mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
-	mBannerInfo = (TextView)findViewById(R.id.banner_info);
-	mBannerInfo.setText("Hello!\nSelect benchmark targets and click Run.");
+        mBannerInfo = (TextView)findViewById(R.id.banner_info);
+        mBannerInfo.setText("Hello!\nSelect benchmark targets and click Run.");
 
-	int length = mCases.size();
-	mCheckList = new CheckBox[length];
-	mDesc      = new TextView[length];
-	boolean gray = true;
-	for (int i = 0; i < length; i++) {
-	    mCheckList[i] = new CheckBox(this);
-	    mCheckList[i].setText(mCases.get(i).getTitle());
-	    mLinearLayout.addView(mCheckList[i]);
-	    mDesc[i] = new TextView(this);
-	    mDesc[i].setText(mCases.get(i).getDescription());
-	    mDesc[i].setTextSize(mDesc[i].getTextSize() - 2);
-	    mDesc[i].setPadding(42, 0, 10, 10);
-	    mLinearLayout.addView(mDesc[i]);
+        int length = mCases.size();
+        mCheckList = new CheckBox[length];
+        mDesc      = new TextView[length];
+        boolean gray = true;
+        for (int i = 0; i < length; i++) {
+            mCheckList[i] = new CheckBox(this);
+            mCheckList[i].setText(mCases.get(i).getTitle());
+            mLinearLayout.addView(mCheckList[i]);
+            mDesc[i] = new TextView(this);
+            mDesc[i].setText(mCases.get(i).getDescription());
+            mDesc[i].setTextSize(mDesc[i].getTextSize() - 2);
+            mDesc[i].setPadding(42, 0, 10, 10);
+            mLinearLayout.addView(mDesc[i]);
 
-	    if (gray) {
-		int color = 0xFF333333; //ARGB
-		mCheckList[i].setBackgroundColor(color);
-		mDesc[i].setBackgroundColor(color);
-	    }
+            if (gray) {
+            int color = 0xFF333333; //ARGB
+            mCheckList[i].setBackgroundColor(color);
+            mDesc[i].setBackgroundColor(color);
+            }
 
-	    gray = !gray;
-	}
+            gray = !gray;
+        }
     }
 
     public void onClick(View v) {
-	if (v == mRun) {
-	    for (int i = 0; i < mCheckList.length; i++) {
-			if (mCheckList[i].isChecked()) {
-				mCases.get(i).reset();
-			} else {
-				mCases.get(i).clear();
-			}
-	    }
-	    runCase(mCases);
-	} else if (v == mShow) {
-	    String result = getResult();
-	    Log.i(TAG,"\n\n"+result+"\n\n");
-	    writeToSDCard(mOutputFile, result);
-	    Intent intent = new Intent();
-	    intent.putExtra(Report.REPORT, result);
-	    intent.setClassName(Report.packageName(), Report.fullClassName());
-	    startActivity(intent);
-	} else if (v == mUpload) {
-		mXMLResult = getXMLResult();
-        writeToSDCard(mOutputXMLFile, mXMLResult);
+        if (v == mRun) {
+            for (int i = 0; i < mCheckList.length; i++) {
+                if (mCheckList[i].isChecked()) {
+                    mCases.get(i).reset();
+                } else {
+                    mCases.get(i).clear();
+                }
+            }
+            runCase(mCases);
+        } else if (v == mShow) {
+            String result = getResult();
+            Log.i(TAG,"\n\n"+result+"\n\n");
+            writeToSDCard(mOutputFile, result);
+            Intent intent = new Intent();
+            intent.putExtra(Report.REPORT, result);
+            intent.setClassName(Report.packageName(), Report.fullClassName());
+            startActivity(intent);
+        } else if (v == mUpload) {
+            mXMLResult = getXMLResult();
+            writeToSDCard(mOutputXMLFile, mXMLResult);
 
-	    Intent intent = new Intent();
-	    intent.putExtra(Upload.XML, mXMLResult);
-	    intent.setClassName(Upload.packageName(), Upload.fullClassName());
-	    startActivity(intent);
-	}
+            Intent intent = new Intent();
+            intent.putExtra(Upload.XML, mXMLResult);
+            intent.setClassName(Upload.packageName(), Upload.fullClassName());
+            startActivity(intent);
+        }
     }
 
     public void runCase(LinkedList<Case> list) {
-	Case pointer = null;
-	boolean finish = true;
-	for (int i = 0; i < list.size(); i++) {
-	    pointer = list.get(i);
-	    if (!pointer.isFinish()) {
-		finish = false;
-		break;
-	    }
-	}
+        Case pointer = null;
+        boolean finish = true;
+        for (int i = 0; i < list.size(); i++) {
+            pointer = list.get(i);
+            if (!pointer.isFinish()) {
+            finish = false;
+            break;
+            }
+        }
 
-	if (finish) {
-	    mBannerInfo.setText("Benchmarking complete.\nClick Show to read report, Upload to send.");
-        String result = getResult();
-        writeToSDCard(mOutputFile, result);
+        if (finish) {
+            mBannerInfo.setText("Benchmarking complete.\nClick Show to read report, Upload to send.");
+            String result = getResult();
+            writeToSDCard(mOutputFile, result);
 
-        mXMLResult = getXMLResult();
-        writeToSDCard(mOutputXMLFile, mXMLResult);
+            mXMLResult = getXMLResult();
+            writeToSDCard(mOutputXMLFile, mXMLResult);
 
-        onClick(mShow);
-        mTouchable = true;
-	} else {
-	    Intent intent = pointer.generateIntent();
-	    if (intent != null) {
-		startActivityForResult(intent, 0);
-	    }
-	}
+            onClick(mShow);
+            mTouchable = true;
+        } else {
+            Intent intent = pointer.generateIntent();
+            if (intent != null) {
+            startActivityForResult(intent, 0);
+            }
+        }
     }
 
-	public String getXMLResult() {
-	Date date = new Date();
-	//2010-05-28T17:40:25CST
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+    public String getXMLResult() {
+        Date date = new Date();
+        //2010-05-28T17:40:25CST
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
 
-	String xml = "";
-	xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
-	xml += "<result";
-	xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
-    xml += " manufacturer=\"" + Build.MANUFACTURER.replace(' ', '_') + "\"";
-    xml += " model=\"" + Build.MODEL.replace(' ', '_') + ":" + Build.DISPLAY + "\"";
-    xml += " buildTimestamp=\"" + sdf.format(new Date(Build.TIME)) + "\"";
+        String xml = "";
+        xml += "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+        xml += "<result";
+        xml += " executedTimestamp=\"" + sdf.format(date) + "\"";
+        xml += " manufacturer=\"" + Build.MANUFACTURER.replace(' ', '_') + "\"";
+        xml += " model=\"" + Build.MODEL.replace(' ', '_') + ":" + Build.DISPLAY + "\"";
+        xml += " buildTimestamp=\"" + sdf.format(new Date(Build.TIME)) + "\"";
 
-    try { // read kernel version
-        BufferedReader procVersion = new BufferedReader( new FileReader("/proc/version") );
-        StringBuffer sbuff = new StringBuffer();
-        String tmp;
-        while ( (tmp = procVersion.readLine()) != null)
-            sbuff.append(tmp);
-        procVersion.close();
-        tmp = sbuff.toString().replace("[\n\r]+", " ").replace(" +", ".");
-        xml += " version=\"" + tmp + "\"";
-    } catch (IOException e){
-        Log.e(TAG, "opening /proc/version failed: " + e.toString());
+        try { // read kernel version
+            BufferedReader procVersion = new BufferedReader( new FileReader("/proc/version") );
+            StringBuffer sbuff = new StringBuffer();
+            String tmp;
+            while ( (tmp = procVersion.readLine()) != null)
+                sbuff.append(tmp);
+            procVersion.close();
+            tmp = sbuff.toString().replace("[\n\r]+", " ").replace(" +", ".");
+            xml += " version=\"" + tmp + "\"";
+        } catch (IOException e){
+            Log.e(TAG, "opening /proc/version failed: " + e.toString());
+        }
+
+        try { // read and parse cpu info
+            BufferedReader procVersion = new BufferedReader( new FileReader("/proc/cpuinfo") );
+            StringBuffer sbuff = new StringBuffer();
+            String tmp;
+            while ( (tmp = procVersion.readLine()) != null)
+                sbuff.append(tmp + "\n");
+            procVersion.close();
+
+            tmp = sbuff.toString();
+
+            sbuff = new StringBuffer();
+
+            Pattern p1 = Pattern.compile("(Processor\\s*:\\s*(.*)\\s*[\n\r]+)");
+            Matcher m1 = p1.matcher(tmp);
+            if (m1.find()) sbuff.append(m1.group(2));
+
+            Pattern p2 = Pattern.compile("(Hardware\\s*:\\s*(.*)\\s*[\n\r]+)");
+            Matcher m2 = p2.matcher(tmp);
+            if (m2.find()) sbuff.append(":"+m2.group(2));
+
+            Pattern p3 = Pattern.compile("(Revision\\s*:\\s*(.*)\\s*[\n\r]+)");
+            Matcher m3 = p3.matcher(tmp);
+            if (m3.find()) sbuff.append(":"+m3.group(2));
+
+            Log.e(TAG, sbuff.toString());
+            xml += " cpu=\"" + sbuff.toString() + "\"";
+        } catch (IOException e){
+            Log.e(TAG, "opening /proc/version failed: " + e.toString());
+        }
+
+        xml += ">";
+
+        Case mycase;
+        for (int i = 0; i < mCases.size(); i++) {
+            mycase = mCases.get(i);
+            xml += mycase.getXMLBenchmark();
+        }
+
+        xml += "</result>";
+        return xml;
     }
-
-    try { // read and parse cpu info
-        BufferedReader procVersion = new BufferedReader( new FileReader("/proc/cpuinfo") );
-        StringBuffer sbuff = new StringBuffer();
-        String tmp;
-        while ( (tmp = procVersion.readLine()) != null)
-            sbuff.append(tmp + "\n");
-        procVersion.close();
-
-        tmp = sbuff.toString();
-
-        sbuff = new StringBuffer();
-
-        Pattern p1 = Pattern.compile("(Processor\\s*:\\s*(.*)\\s*[\n\r]+)");
-        Matcher m1 = p1.matcher(tmp);
-        if (m1.find()) sbuff.append(m1.group(2));
-
-        Pattern p2 = Pattern.compile("(Hardware\\s*:\\s*(.*)\\s*[\n\r]+)");
-        Matcher m2 = p2.matcher(tmp);
-        if (m2.find()) sbuff.append(":"+m2.group(2));
-
-        Pattern p3 = Pattern.compile("(Revision\\s*:\\s*(.*)\\s*[\n\r]+)");
-        Matcher m3 = p3.matcher(tmp);
-        if (m3.find()) sbuff.append(":"+m3.group(2));
-
-        Log.e(TAG, sbuff.toString());
-        xml += " cpu=\"" + sbuff.toString() + "\"";
-    } catch (IOException e){
-        Log.e(TAG, "opening /proc/version failed: " + e.toString());
-    }
-
-	xml += ">";
-
-	Case mycase;
-	for (int i = 0; i < mCases.size(); i++) {
-	    mycase = mCases.get(i);
-	    xml += mycase.getXMLBenchmark();
-	}
-
-	xml += "</result>";
-    return xml;
-	}
 
     public String getResult() {
-	String result = "";
-	Case mycase;
-	for (int i = 0; i < mCases.size(); i++) {
-	    mycase = mCases.get(i);
-        if ( !mycase.couldFetchReport() ) continue;
+        String result = "";
+        Case mycase;
+        for (int i = 0; i < mCases.size(); i++) {
+            mycase = mCases.get(i);
+            if ( !mycase.couldFetchReport() ) continue;
+            result += "============================================================\n";
+            result += mycase.getTitle() + "\n";
+            result += "------------------------------------------------------------\n";
+            result += mycase.getBenchmark().trim() + "\n";
+        }
         result += "============================================================\n";
-	    result += mycase.getTitle() + "\n";
-        result += "------------------------------------------------------------\n";
-	    result += mycase.getBenchmark().trim() + "\n";
-	}
-    result += "============================================================\n";
 
-	return result;
+        return result;
     }
     
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	if (data == null) {
-	    Log.i(TAG,"oooops....Intent is null");
-	    return;
-	}
+        if (data == null) {
+            Log.i(TAG,"oooops....Intent is null");
+            return;
+        }
 
-	Case mycase;
-	for (int i = 0; i < mCases.size(); i++) {
-	    mycase = mCases.get(i);
-	    if (mycase.realize(data)) {
-		mycase.parseIntent(data);
-		break;
-	    }
-	}
-	runCase(mCases);
+        Case mycase;
+        for (int i = 0; i < mCases.size(); i++) {
+            mycase = mCases.get(i);
+            if (mycase.realize(data)) {
+            mycase.parseIntent(data);
+            break;
+            }
+        }
+        runCase(mCases);
     }
 
     private boolean writeToSDCard(String filename, String output) {
-	File file = new File(SDCARD, filename);
+        File file = new File(SDCARD, filename);
 
-    if ( !file.canWrite() ) {
-        Log.i(TAG, "Permission denied, maybe SDCARD mounted to PC?");
-        return false;
-    }
+        if ( !file.canWrite() ) {
+            Log.i(TAG, "Permission denied, maybe SDCARD mounted to PC?");
+            return false;
+        }
 
-	if (file.exists()) {
-	    Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
-	    file.delete();
-	}
+        if (file.exists()) {
+            Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
+            file.delete();
+        }
 
-	try {
-        file.createNewFile();
-        FileOutputStream fos = new FileOutputStream(file);
-        fos.write(output.getBytes());
-        fos.flush();
-	} catch (Exception e) {
-        Log.i(TAG, "Write Failed.");
-	    e.printStackTrace();
-        return false;
-	}
-    return true;
+        try {
+            file.createNewFile();
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(output.getBytes());
+            fos.flush();
+        } catch (Exception e) {
+            Log.i(TAG, "Write Failed.");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

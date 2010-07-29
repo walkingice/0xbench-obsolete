@@ -23,60 +23,60 @@ public class TesterCanvas extends Tester {
     MyView mView;
 
     public String getTag() {
-	return TAG;
+        return TAG;
     }
 
     public static String getPackage() {
-	return PACKAGE;
+        return PACKAGE;
     }
 
     public static String getFullClassName() {
-	return getPackage()+".TesterCanvas";
+        return getPackage()+".TesterCanvas";
     }
 
     public int sleepBetweenRound() {
-	return 0;
+        return 0;
     }
     public int sleepBeforeStart() {
-	return 1000;
+        return 1000;
     }
 
     public void oneRound() {
-	mView.postInvalidate();
+        mView.postInvalidate();
     }
 
     public void onCreate(Bundle bundle) {
-	super.onCreate(bundle);
-	mView = new MyView(this);
-	setContentView(mView);
+        super.onCreate(bundle);
+        mView = new MyView(this);
+        setContentView(mView);
     }
 
     class MyView extends View {
-	int i = 0;
-	Random mRandom;
+        int i = 0;
+        Random mRandom;
 
-	MyView(Context context) {
-	    super(context);
-	    mRandom = new Random();
-	}
+        MyView(Context context) {
+            super(context);
+            mRandom = new Random();
+        }
 
-	@Override
-	protected void onWindowVisibilityChanged(int visibility) {
-	    super.onWindowVisibilityChanged(visibility);
-	    if (visibility != View.VISIBLE) {
-		return;
-	    }
+        @Override
+        protected void onWindowVisibilityChanged(int visibility) {
+            super.onWindowVisibilityChanged(visibility);
+            if (visibility != View.VISIBLE) {
+            return;
+            }
 
-	    startTester();
-	}
+            startTester();
+        }
 
-	@Override
-	public void onDraw(Canvas canvas) {
-	    super.onDraw(canvas);
-//	    int r = 0xFF & mRandom.nextInt();
-		int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
-	    canvas.drawRGB(r, r, r);
-	    decreaseCounter();
-	}
+        @Override
+        public void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+    //        int r = 0xFF & mRandom.nextInt();
+            int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
+            canvas.drawRGB(r, r, r);
+            decreaseCounter();
+        }
     }
 }

@@ -45,7 +45,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
      */
     public GLSurfaceView(Context context, GLWorld world, Tester tester) {
         super(context);
-	mTester = tester;
+    mTester = tester;
         mWorld = world;
         mHolder = getHolder();
         mHolder.addCallback(this);
@@ -54,14 +54,14 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, start our main acquisition thread.
-    	Log.d("GLSurfaceView", "surfaceCreated");
+        Log.d("GLSurfaceView", "surfaceCreated");
         mGLThread = new GLThread();
         mGLThread.start();
     }
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         // Surface will be destroyed when we return
-    	Log.d("GLSurfaceView", "surfaceDestroyed");
+        Log.d("GLSurfaceView", "surfaceDestroyed");
         mGLThread.requestExitAndWait();
         mGLThread = null;
     }
@@ -69,30 +69,30 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         // Surface size or format has changed. This should not happen in this
         // example.
-    	Log.d("GLSurfaceView", "surfaceChanged");
+        Log.d("GLSurfaceView", "surfaceChanged");
         mGLThread.onWindowResize(w, h);
     }
     
     public float getAngle() {
-    	return mAngle;
+        return mAngle;
     }
     
     public void setAngle(float angle) {
-    	mAngle = angle;
+        mAngle = angle;
     }
     
     public void setClient(GLSurfaceViewClient client) {
-    	mClient = client;
+        mClient = client;
     }
  
     // ----------------------------------------------------------------------
     
     public interface GLSurfaceViewClient {
-    	public void animate();
+        public void animate();
     }
     
     public float getFramerate() {
-    	return mGLThread.getFramerate();
+        return mGLThread.getFramerate();
     }
     
     // ----------------------------------------------------------------------
@@ -112,7 +112,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
         }
     
         public float getFramerate() {
-        	return mFramerate;
+            return mFramerate;
         }
         
         @Override
@@ -182,7 +182,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             // This is our main acquisition thread's loop, we go until
             // asked to quit.
              long starttime=0, stoptime=0, drawcount=0;
-	     long startTester = System.currentTimeMillis();
+         long startTester = System.currentTimeMillis();
             while (!mDone) {
                 // Update the asynchronous state (window size, key events)
                 int w, h;
@@ -191,7 +191,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     h = mHeight;
                 }
                 if (starttime == 0) {
-                	starttime = System.currentTimeMillis();
+                    starttime = System.currentTimeMillis();
                 }
 
                 /* draw a frame here */
@@ -201,15 +201,15 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                  * Once we're done with GL, we need to call post()
                  */
                 egl.eglSwapBuffers(dpy, surface);
-		gl.glFinish();
-		mTester.decreaseCounter();
-		mDone = mTester.isTesterFinished();
+        gl.glFinish();
+        mTester.decreaseCounter();
+        mDone = mTester.isTesterFinished();
                 drawcount++;
-            	stoptime = System.currentTimeMillis();
+                stoptime = System.currentTimeMillis();
                 if (stoptime - starttime >= 1) {
-                	mFramerate = (float)(1000 * drawcount)/(float)(stoptime - starttime);
-                	drawcount = 0;
-				}
+                    mFramerate = (float)(1000 * drawcount)/(float)(stoptime - starttime);
+                    drawcount = 0;
+                }
 
                 /*
                  * Always check for EGL_CONTEXT_LOST, which means the context
@@ -225,7 +225,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
             
-	     long stopTester = System.currentTimeMillis();
+         long stopTester = System.currentTimeMillis();
             /*
              * clean-up everything...
              */
@@ -234,7 +234,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             egl.eglDestroyContext(dpy, context);
             egl.eglDestroySurface(dpy, surface);
             egl.eglTerminate(dpy);
-	    mTester.finishTester(startTester, stopTester);
+        mTester.finishTester(startTester, stopTester);
         }
         
         private void drawFrame(GL10 gl, int w, int h) {
@@ -297,7 +297,7 @@ public class GLSurfaceView extends SurfaceView implements SurfaceHolder.Callback
             mWorld.draw(gl);
 
             if (mClient != null) {
-            	mClient.animate();
+                mClient.animate();
             }
         }
 

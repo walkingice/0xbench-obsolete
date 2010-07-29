@@ -21,60 +21,60 @@ public class CaseGLCube extends Case{
     public static int CubeRound = 1000;
 
     CaseGLCube() {
-	super("CaseGLCube", Kubench.getFullClassName(), 3, CubeRound);
+        super("CaseGLCube", Kubench.getFullClassName(), 3, CubeRound);
 
-    mType = "3d-fps";
-    String [] _tmp = {
-        "3d",
-        "opengl",
-        "render",
-        "apidemo",
-    };
-    mTags = _tmp;
+        mType = "3d-fps";
+        String [] _tmp = {
+            "3d",
+            "opengl",
+            "render",
+            "apidemo",
+        };
+        mTags = _tmp;
     }
 
     public String getTitle() {
-	return "OpenGL Cube";
+        return "OpenGL Cube";
     }
 
     public String getDescription() {
-	return "use OpenGL to draw a magic cube.";
+        return "use OpenGL to draw a magic cube.";
     }
 
     @Override
     public String getBenchmark() {
-	if (!couldFetchReport()) {
-	    return "GLCube has no report";
-	}
+        if (!couldFetchReport()) {
+            return "GLCube has no report";
+        }
 
-	String result = "";
-	long total = 0;
-	int length = mResult.length;
+        String result = "";
+        long total = 0;
+        int length = mResult.length;
 
-	for (int i = 0; i < length; i++) {
-	    float fps = mCaseRound / (mResult[i] / 1000f); // milliseconds to seconds
-	    result += "Round " + i + ": fps = " + fps + "\n";
-	    total  += fps;
-	}
+        for (int i = 0; i < length; i++) {
+            float fps = mCaseRound / (mResult[i] / 1000f); // milliseconds to seconds
+            result += "Round " + i + ": fps = " + fps + "\n";
+            total  += fps;
+        }
 
-	result += "Average: fps = " + ((float)total/length) + "\n";
-	return result;
+        result += "Average: fps = " + ((float)total/length) + "\n";
+        return result;
     }
 
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags);
-    s.mLog = getBenchmark();
-	for (int i = 0; i < mResult.length; i++) {
-	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);
-	    s.mResults.add(((Float)fps).doubleValue());
-	}
+        Scenario s = new Scenario(getTitle(), mType, mTags);
+        s.mLog = getBenchmark();
+        for (int i = 0; i < mResult.length; i++) {
+            float fps = (float)mCaseRound /  (mResult[i] / 1000f);
+            s.mResults.add(((Float)fps).doubleValue());
+        }
 
-    scenarios.add(s);
-    return scenarios;
+        scenarios.add(s);
+        return scenarios;
     }
 
 }

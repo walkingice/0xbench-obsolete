@@ -8,18 +8,18 @@ import android.util.Log;
 
 class MyGLSurfaceView extends GLSurfaceView {
     private TeapotRenderer mMyRenderer;
-	private Tester mTester;
-	private float xspeed;
-	private float yspeed;
-	private float zspeed;
+    private Tester mTester;
+    private float xspeed;
+    private float yspeed;
+    private float zspeed;
 
     public MyGLSurfaceView(Context context) {
-		super(context);
+        super(context);
     }
 
     @Override 
     public void setRenderer(GLSurfaceView.Renderer renderer) {
-    	mMyRenderer = (TeapotRenderer) renderer;
-    	super.setRenderer(renderer);
+        mMyRenderer = (TeapotRenderer) renderer;
+        super.setRenderer(renderer);
     }
 }

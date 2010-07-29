@@ -19,26 +19,26 @@ public class Report extends Activity {
 
     @Override
     protected void onCreate(Bundle bundle) {
-	super.onCreate(bundle);
-	setContentView(R.layout.report);
+        super.onCreate(bundle);
+        setContentView(R.layout.report);
 
-	mTextView = (TextView)findViewById(R.id.report_text);
+        mTextView = (TextView)findViewById(R.id.report_text);
 
-	Intent intent = getIntent();
-	String report = intent.getStringExtra(REPORT);
+        Intent intent = getIntent();
+        String report = intent.getStringExtra(REPORT);
 
-	if (report == null || report.equals("")) {
-	    mTextView.setText("oooops...report not found");
-	} else {
-	    mTextView.setText(report);
-	}
+        if (report == null || report.equals("")) {
+            mTextView.setText("oooops...report not found");
+        } else {
+            mTextView.setText(report);
+        }
     }
 
     public static String fullClassName() {
-	return "org.zeroxlab.benchmark.Report";
+        return "org.zeroxlab.benchmark.Report";
     }
 
     public static String packageName() {
-	return "org.zeroxlab.benchmark";
+        return "org.zeroxlab.benchmark";
     }
 }

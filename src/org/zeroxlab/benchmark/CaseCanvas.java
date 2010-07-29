@@ -19,61 +19,61 @@ public class CaseCanvas extends Case{
     public static int CanvasRound = 300;
 
     CaseCanvas() {
-	super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
+        super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
 
-    mType = "2d-fps";
-    String [] _tmp = {
-        "2d",
-        "render",
-        "view",
-    };
-    mTags = _tmp;
+        mType = "2d-fps";
+        String [] _tmp = {
+            "2d",
+            "render",
+            "view",
+        };
+        mTags = _tmp;
 
     }
 
     public String getTitle() {
-	return "Draw Canvas";
+        return "Draw Canvas";
     }
 
     public String getDescription() {
-	return "call canvas.drawRGB to fill the canvas repeatedly. It redraw for " + CanvasRound + " times";
+        return "call canvas.drawRGB to fill the canvas repeatedly. It redraw for " + CanvasRound + " times";
     }
 
     @Override
     public String getBenchmark() {
-	if (!couldFetchReport()) {
-	    return "Cavas has no report";
-	}
+        if (!couldFetchReport()) {
+            return "Cavas has no report";
+        }
 
-	String result = "";
-	long total = 0;
-	int length = mResult.length;
+        String result = "";
+        long total = 0;
+        int length = mResult.length;
 
-	for (int i = 0; i < length; i++) {
-	    float second = (mResult[i] / 1000f);
-	    float fps = (float)mCaseRound / second; // milliseconds to seconds
-	    result += "Round " + i +" fps = " + fps + "\n";
-	    total  += fps;
-	}
+        for (int i = 0; i < length; i++) {
+            float second = (mResult[i] / 1000f);
+            float fps = (float)mCaseRound / second; // milliseconds to seconds
+            result += "Round " + i +" fps = " + fps + "\n";
+            total  += fps;
+        }
 
-	result += "Average: fps = " + ((float)total/length) + "\n";
-	return result;
+        result += "Average: fps = " + ((float)total/length) + "\n";
+        return result;
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags);
-    s.mLog = getBenchmark();
-	for (int i = 0; i < mResult.length; i++) {
-	    float second = (mResult[i] / 1000f);
-	    float fps = (float)mCaseRound / second;
-	    s.mResults.add(((Float)fps).doubleValue());
-	}
+        Scenario s = new Scenario(getTitle(), mType, mTags);
+        s.mLog = getBenchmark();
+        for (int i = 0; i < mResult.length; i++) {
+            float second = (mResult[i] / 1000f);
+            float fps = (float)mCaseRound / second;
+            s.mResults.add(((Float)fps).doubleValue());
+        }
 
-    scenarios.add(s);
-    return scenarios;
+        scenarios.add(s);
+        return scenarios;
     }
 
 }

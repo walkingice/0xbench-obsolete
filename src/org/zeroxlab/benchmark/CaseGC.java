@@ -22,69 +22,69 @@ public class CaseGC extends Case{
     public static double time = 0.0;
 
     CaseGC() {
-	super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
+        super("CaseGC", "org.zeroxlab.benchmark.TesterGC", 1, 1); // GC benchmark only run once
 
-    mType = "msec";
-    String [] _tmp = {
-        "dalvik",
-        "garbagecollection",
-    };
-    mTags = _tmp;
+        mType = "msec";
+        String [] _tmp = {
+            "dalvik",
+            "garbagecollection",
+        };
+        mTags = _tmp;
     }
 
     public String getTitle() {
-	return "Garbage Collection";
+        return "Garbage Collection";
     }
 
     public String getDescription() {
-	return "It create long-live binary tree of depth and array of doubles to test GC";
+        return "It create long-live binary tree of depth and array of doubles to test GC";
     }
 
     @Override
     public void clear() {
-	super.clear();
-	mStringBuf = "";
+        super.clear();
+        mStringBuf = "";
     }
 
     @Override
     public void reset() {
-	super.reset();
-	mStringBuf = "";
+        super.reset();
+        mStringBuf = "";
     }
 
     @Override
     public String getBenchmark() {
 
-	if (!couldFetchReport()) {
-	    return "No benchmark report";
-	}
+        if (!couldFetchReport()) {
+            return "No benchmark report";
+        }
 
-	return mStringBuf;
+        return mStringBuf;
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mType, mTags);
-    s.mLog = getBenchmark();
-    s.mResults.add(time);
-    scenarios.add(s);
+        Scenario s = new Scenario(getTitle(), mType, mTags);
+        s.mLog = getBenchmark();
+        s.mResults.add(time);
+        scenarios.add(s);
 
-    return scenarios;
+        return scenarios;
     }
 
     @Override
     protected boolean saveResult(Intent intent, int index) {
-	String result = intent.getStringExtra(GCRESULT);
-    time = intent.getDoubleExtra(TIME, 0.0);
+        String result = intent.getStringExtra(GCRESULT);
+        time = intent.getDoubleExtra(TIME, 0.0);
 
-	if (result == null || result.equals("")) {
-	    mStringBuf += "\nReport not found\n";
-	} else {
-	    mStringBuf += "\n"+result+"\n";
-	}
+        if (result == null || result.equals("")) {
+            mStringBuf += "\nReport not found\n";
+        } else {
+            mStringBuf += "\n"+result+"\n";
+        }
 
-	return true;
+        return true;
     }
 }

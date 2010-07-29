@@ -24,17 +24,15 @@ public class LU
     */
 
 
-	public static final double num_flops(int N)
-	{
-		// rougly 2/3*N^3
+    public static final double num_flops(int N) {
+        // rougly 2/3*N^3
 
-		double Nd = (double) N;
+        double Nd = (double) N;
 
-		return (2.0 * Nd *Nd *Nd/ 3.0);
-	}
+        return (2.0 * Nd *Nd *Nd/ 3.0);
+    }
 
-    protected static double[] new_copy(double x[])
-    {
+    protected static double[] new_copy(double x[]) {
         int N = x.length;
         double T[] = new double[N];
         for (int i=0; i<N; i++)
@@ -43,15 +41,13 @@ public class LU
     }
 
 
-    protected static double[][] new_copy(double A[][])
-    {
+    protected static double[][] new_copy(double A[][]) {
         int M = A.length;
         int N = A[0].length;
 
         double T[][] = new double[M][N];
 
-        for (int i=0; i<M; i++)
-        {
+        for (int i=0; i<M; i++) {
             double Ti[] = T[i];
             double Ai[] = A[i];
             for (int j=0; j<N; j++)
@@ -63,8 +59,7 @@ public class LU
 
 
 
-    public static int[] new_copy(int x[])
-    {
+    public static int[] new_copy(int x[]) {
         int N = x.length;
         int T[] = new int[N];
         for (int i=0; i<N; i++)
@@ -72,31 +67,27 @@ public class LU
         return T;
     }
 
-    protected static final void insert_copy(double B[][], double A[][])
-    {
+    protected static final void insert_copy(double B[][], double A[][]) {
         int M = A.length;
         int N = A[0].length;
 
-		int remainder = N & 3;		 // N mod 4;
+        int remainder = N & 3;         // N mod 4;
 
-        for (int i=0; i<M; i++)
-        {
+        for (int i=0; i<M; i++) {
             double Bi[] = B[i];
             double Ai[] = A[i];
-			for (int j=0; j<remainder; j++)
+            for (int j=0; j<remainder; j++)
                 Bi[j] = Ai[j];
-            for (int j=remainder; j<N; j+=4)
-			{
-				Bi[j] = Ai[j];
-				Bi[j+1] = Ai[j+1];
-				Bi[j+2] = Ai[j+2];
-				Bi[j+3] = Ai[j+3];
-			}
-		}
+            for (int j=remainder; j<N; j+=4) {
+                Bi[j] = Ai[j];
+                Bi[j+1] = Ai[j+1];
+                Bi[j+2] = Ai[j+2];
+                Bi[j+3] = Ai[j+3];
+            }
+        }
         
     }
-    public double[][] getLU()
-    {
+    public double[][] getLU() {
         return new_copy(LU_);
     }
 
@@ -108,8 +99,7 @@ public class LU
         permute the right-hand side by this vector.
 
     */
-    public int[] getPivot()
-    {
+    public int[] getPivot() {
         return new_copy(pivot_);
     }
     
@@ -119,8 +109,7 @@ public class LU
         @param A (in) the matrix to associate with this
                 factorization.
     */
-    public LU( double A[][] )
-    {
+    public LU( double A[][] ) {
         int M = A.length;
         int N = A[0].length;
 
@@ -141,8 +130,7 @@ public class LU
         @param b (in) the right-hand side.
         @return solution vector.
     */
-    public double[] solve(double b[])
-    {
+    public double[] solve(double b[]) {
         double x[] = new_copy(b);
 
         solve(LU_, pivot_, x);
@@ -161,8 +149,7 @@ public class LU
         
     @return 0, if OK, nozero value, othewise.
 */
-public static int factor(double A[][],  int pivot[])
-{
+public static int factor(double A[][],  int pivot[]) {
  
 
 
@@ -171,18 +158,15 @@ public static int factor(double A[][],  int pivot[])
 
     int minMN = Math.min(M,N);
 
-    for (int j=0; j<minMN; j++)
-    {
+    for (int j=0; j<minMN; j++) {
         // find pivot in column j and  test for singularity.
 
         int jp=j;
         
         double t = Math.abs(A[j][j]);
-        for (int i=j+1; i<M; i++)
-        {
+        for (int i=j+1; i<M; i++) {
             double ab = Math.abs(A[i][j]);
-            if ( ab > t)
-            {
+            if ( ab > t) {
                 jp = i;
                 t = ab;
             }
@@ -197,8 +181,7 @@ public static int factor(double A[][],  int pivot[])
             return 1;       // factorization failed because of zero pivot
 
 
-        if (jp != j)
-        {
+        if (jp != j) {
             // swap rows j and jp
             double tA[] = A[j];
             A[j] = A[jp];
@@ -217,8 +200,7 @@ public static int factor(double A[][],  int pivot[])
         }
 
 
-        if (j < minMN-1)
-        {
+        if (j < minMN-1) {
             // rank-1 update to trailing submatrix:   E = E - x*y;
             //
             // E is the region A(j+1:M, j+1:N)
@@ -226,8 +208,7 @@ public static int factor(double A[][],  int pivot[])
             // y is row vector A(j,j+1:N)
 
 
-            for (int ii=j+1; ii<M; ii++)
-            {
+            for (int ii=j+1; ii<M; ii++) {
                 double Aii[] = A[ii];
                 double Aj[] = A[j];
                 double AiiJ = Aii[j];
@@ -254,14 +235,12 @@ public static int factor(double A[][],  int pivot[])
         @param b    (in/out) On input, the right-hand side.
                     On output, the solution vector.
     */
-    public static void solve(double LU[][], int pvt[], double b[])
-    {
+    public static void solve(double LU[][], int pvt[], double b[]) {
         int M = LU.length;
         int N = LU[0].length;
         int ii=0;
 
-        for (int i=0; i<M; i++)
-        {
+        for (int i=0; i<M; i++) {
             int ip = pvt[i];
             double sum = b[ip];
 
@@ -275,8 +254,7 @@ public static int factor(double A[][],  int pivot[])
             b[i] = sum;
         }
 
-        for (int i=N-1; i>=0; i--)
-        {
+        for (int i=N-1; i>=0; i--) {
             double sum = b[i];
             for (int j=i+1; j<N; j++)
                 sum -= LU[i][j] * b[j];

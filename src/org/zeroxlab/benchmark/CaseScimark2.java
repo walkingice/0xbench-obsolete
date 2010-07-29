@@ -23,95 +23,95 @@ public class CaseScimark2 extends Case{
     public static int Round  = 1;
 
     CaseScimark2() {
-	super("CaseScimark2", "org.zeroxlab.benchmark.TesterScimark2", Repeat, Round);
+        super("CaseScimark2", "org.zeroxlab.benchmark.TesterScimark2", Repeat, Round);
 
-    mType = "mflops";
-    String [] _tmp = {
-        "mflops",
-        "numeric",
-        "scientific",
-    };
-    mTags = _tmp;
+        mType = "mflops";
+        String [] _tmp = {
+            "mflops",
+            "numeric",
+            "scientific",
+        };
+        mTags = _tmp;
 
-	generateInfo();
+        generateInfo();
     }
 
     public String getTitle() {
-	return "Scimark2";
+        return "Scimark2";
     }
 
     public String getDescription() {
-	return "SciMark 2.0 is a Java benchmark for scientific and numerical computing. It measures several computational kernels and reports a composite score in approximate Mflops.";
+        return "SciMark 2.0 is a Java benchmark for scientific and numerical computing. It measures several computational kernels and reports a composite score in approximate Mflops.";
     }
 
     private void generateInfo() {
-	mInfo = new Bundle[Repeat];
-	for (int i = 0; i < mInfo.length; i++) {
-	    mInfo[i] = new Bundle();
-	}
+        mInfo = new Bundle[Repeat];
+        for (int i = 0; i < mInfo.length; i++) {
+            mInfo[i] = new Bundle();
+        }
     }
 
     @Override
     public void clear() {
-	super.clear();
-	generateInfo();
+        super.clear();
+        generateInfo();
     }
 
     @Override
     public void reset() {
-	super.reset();
-	generateInfo();
+        super.reset();
+        generateInfo();
     }
 
     @Override
     public String getBenchmark() {
-	if (!couldFetchReport()) {
-	    return "No benchmark report";
-	}
+        if (!couldFetchReport()) {
+            return "No benchmark report";
+        }
 
-	String result = "\n";
-	for (int i = 0; i < mInfo.length; i++) {
-	    result += TesterScimark2.bundleToString(mInfo[i]);
-	    result += "\n";
-	}
-	return result;
+        String result = "\n";
+        for (int i = 0; i < mInfo.length; i++) {
+            result += TesterScimark2.bundleToString(mInfo[i]);
+            result += "\n";
+        }
+        return result;
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    ArrayList<String> subBenchmarks = new ArrayList<String>();
-    subBenchmarks.add(TesterScimark2.COMPOSITE    );
-    subBenchmarks.add(TesterScimark2.FFT          );
-    subBenchmarks.add(TesterScimark2.SOR          );
-    subBenchmarks.add(TesterScimark2.MONTECARLO   );
-    subBenchmarks.add(TesterScimark2.SPARSEMATMULT);
-    subBenchmarks.add(TesterScimark2.LU           );
+        ArrayList<String> subBenchmarks = new ArrayList<String>();
+        subBenchmarks.add(TesterScimark2.COMPOSITE    );
+        subBenchmarks.add(TesterScimark2.FFT          );
+        subBenchmarks.add(TesterScimark2.SOR          );
+        subBenchmarks.add(TesterScimark2.MONTECARLO   );
+        subBenchmarks.add(TesterScimark2.SPARSEMATMULT);
+        subBenchmarks.add(TesterScimark2.LU           );
 
-    for (int i=0; i<subBenchmarks.size(); i++) {
-        String benchName = subBenchmarks.get(i);
-        Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags);
+        for (int i=0; i<subBenchmarks.size(); i++) {
+            String benchName = subBenchmarks.get(i);
+            Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags);
 
-        for(int j=0; j<mInfo.length; j++) 
-            s.mResults.add(mInfo[j].getDouble(benchName));
+            for(int j=0; j<mInfo.length; j++) 
+                s.mResults.add(mInfo[j].getDouble(benchName));
 
-        scenarios.add(s);
-    }
+            scenarios.add(s);
+        }
 
-    return scenarios;
+        return scenarios;
     }
 
     @Override
     protected boolean saveResult(Intent intent, int index) {
-	Bundle info = intent.getBundleExtra(LIN_RESULT);
-	if (info == null) {
-	    Log.i(TAG, "Weird! cannot find Scimark2Info");
-	    return false;
-	} else {
-	    mInfo[index] = info;
-	}
+        Bundle info = intent.getBundleExtra(LIN_RESULT);
+        if (info == null) {
+            Log.i(TAG, "Weird! cannot find Scimark2Info");
+            return false;
+        } else {
+            mInfo[index] = info;
+        }
 
-	return true;
+        return true;
     }
 }

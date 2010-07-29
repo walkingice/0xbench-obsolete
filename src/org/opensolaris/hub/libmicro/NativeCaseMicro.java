@@ -25,83 +25,83 @@ public class NativeCaseMicro  extends Case {
     public static int Round  = 1;
 
     public NativeCaseMicro() {
-	super("NativeCaseMicro", "org.opensolaris.hub.libmicro.NativeTesterMicro", Repeat, Round);
+        super("NativeCaseMicro", "org.opensolaris.hub.libmicro.NativeTesterMicro", Repeat, Round);
 
-    mType = "syscall-nsec";
-    String [] _tmp = {
-        "syscall", 
-    };
-    mTags = _tmp;
+        mType = "syscall-nsec";
+        String [] _tmp = {
+            "syscall", 
+        };
+        mTags = _tmp;
 
-	generateInfo();
+        generateInfo();
     }
 
     public String getTitle() {
-	return "LibMicro";
+        return "LibMicro";
     }
 
     public String getDescription() {
-	return "A test for native benchmarks. (Executes `ping google` command as seperate process, and displays stdout, stderr on display.)";
+        return "LibMicro is a portable set of microbenchmarks that many Solaris engineers used during Solaris 10 development to measure the performance of various system and library calls.";
     }
 
     private void generateInfo() {
-	mInfo = new Bundle[Repeat];
-	for (int i = 0; i < mInfo.length; i++) {
-	    mInfo[i] = new Bundle();
-	}
+        mInfo = new Bundle[Repeat];
+        for (int i = 0; i < mInfo.length; i++) {
+            mInfo[i] = new Bundle();
+        }
     }
 
     @Override
     public void clear() {
-	super.clear();
-	generateInfo();
+        super.clear();
+        generateInfo();
     }
 
     @Override
     public void reset() {
-	super.reset();
-	generateInfo();
+        super.reset();
+        generateInfo();
     }
 
     @Override
     public String getBenchmark() {
-	if (!couldFetchReport()) {
-	    return "No benchmark report";
-	}
+        if (!couldFetchReport()) {
+            return "No benchmark report";
+        }
 
-    return "";
-//	return mInfo[0].getString(NativeTesterMicro.REPORT);
+        return "";
+//    return mInfo[0].getString(NativeTesterMicro.REPORT);
     }
 
     @Override
     public ArrayList<Scenario> getScenarios () {
-    ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Bundle bundle = mInfo[0]; // only 1 run
-    for(String command: NativeTesterMicro.COMMANDS) {
-        String name = bundle.getString(command+"S");
-        float [] results = bundle.getFloatArray(command+"FA");
-        Scenario s = new Scenario(name, mType, mTags);
-        for(float result: results) 
-            s.mResults.add(new Double(result));
-        scenarios.add(s);
+        Bundle bundle = mInfo[0]; // only 1 run
+        for(String command: NativeTesterMicro.COMMANDS) {
+            String name = bundle.getString(command+"S");
+            float [] results = bundle.getFloatArray(command+"FA");
+            Scenario s = new Scenario(name, mType, mTags);
+            for(float result: results) 
+                s.mResults.add(new Double(result));
+            scenarios.add(s);
 
-    }
+        }
 
-    Log.e("TRACE", "end of getScenarios");
-    return scenarios;
+        Log.e("TRACE", "end of getScenarios");
+        return scenarios;
     }
 
     @Override
     protected boolean saveResult(Intent intent, int index) {
-	Bundle info = intent.getBundleExtra(NativeTesterMicro.RESULT);
-	if (info == null) {
-	    Log.i(TAG, "Weird! cannot find LibMicroInfo");
-	    return false;
-	} else {
-	    mInfo[index] = info;
-	}
+        Bundle info = intent.getBundleExtra(NativeTesterMicro.RESULT);
+        if (info == null) {
+            Log.i(TAG, "Weird! cannot find LibMicroInfo");
+            return false;
+        } else {
+            mInfo[index] = info;
+        }
 
-	return true;
+        return true;
     }
 }
