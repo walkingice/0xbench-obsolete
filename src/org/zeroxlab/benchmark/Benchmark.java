@@ -181,9 +181,11 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
         mShow = (Button)findViewById(R.id.btn_show);
         mShow.setOnClickListener(this);
+        mShow.setClickable(false);
 
         mUpload = (Button)findViewById(R.id.btn_upload);
         mUpload.setOnClickListener(this);
+        mUpload.setClickable(false);
 
         mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
@@ -249,8 +251,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
         for (int i = 0; i < list.size(); i++) {
             pointer = list.get(i);
             if (!pointer.isFinish()) {
-            finish = false;
-            break;
+                finish = false;
+                break;
             }
         }
 
@@ -262,6 +264,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
             mXMLResult = getXMLResult();
             writeToSDCard(mOutputXMLFile, mXMLResult);
 
+            mShow.setClickable(true);
+            mUpload.setClickable(true);
             onClick(mShow);
             mTouchable = true;
         } else {
@@ -273,6 +277,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
     }
 
     public String getXMLResult() {
+        if (mCases.size() == 0)
+            return "";
+
         Date date = new Date();
         //2010-05-28T17:40:25CST
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
