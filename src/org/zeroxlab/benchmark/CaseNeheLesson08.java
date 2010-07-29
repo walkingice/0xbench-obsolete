@@ -21,7 +21,7 @@ public class CaseNeheLesson08 extends Case {
     CaseNeheLesson08() {
 	super("NeheLesson08", Run.FullName, mNeheRepeat, mNeheRound);
 
-    mUnit = "3d-fps";
+    mType = "3d-fps";
 
     String [] _tmp = {
         "render",
@@ -66,7 +66,7 @@ public class CaseNeheLesson08 extends Case {
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mType, mTags);
     s.mLog = getBenchmark();
 	for (int i = 0; i < mResult.length; i++) {
 	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);

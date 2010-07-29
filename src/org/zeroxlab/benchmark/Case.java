@@ -35,7 +35,7 @@ public abstract class Case{
     private final static String ROUND  = "ROUND";
     protected int mCaseRound = 30;
 
-    public String mUnit = "";
+    public String mType = "";
     public String[] mTags = {};
 
     /**
@@ -251,7 +251,7 @@ public abstract class Case{
             continue;
         result += "<scenario";
         result += " benchmark=\"" + s.mName.replace(" ", "") + "\"";
-        result += " unit=\"" + s.mUnit + "\"";
+        result += " unit=\"" + s.mType + "\"";
         result += " tags=\"";
         for (String tag: s.mTags) 
             result += tag + ",";
@@ -266,6 +266,7 @@ public abstract class Case{
             return "";
         result += "</scenario>";
     }
+    Log.e("TRACE", "end of get xml bench");
 	return result;
     }
 }

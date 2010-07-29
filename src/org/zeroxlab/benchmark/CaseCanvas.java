@@ -21,7 +21,7 @@ public class CaseCanvas extends Case{
     CaseCanvas() {
 	super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
 
-    mUnit = "2d-fps";
+    mType = "2d-fps";
     String [] _tmp = {
         "2d",
         "render",
@@ -64,7 +64,7 @@ public class CaseCanvas extends Case{
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mType, mTags);
     s.mLog = getBenchmark();
 	for (int i = 0; i < mResult.length; i++) {
 	    float second = (mResult[i] / 1000f);

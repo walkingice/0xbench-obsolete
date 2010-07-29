@@ -23,7 +23,7 @@ public class CaseGLCube extends Case{
     CaseGLCube() {
 	super("CaseGLCube", Kubench.getFullClassName(), 3, CubeRound);
 
-    mUnit = "3d-fps";
+    mType = "3d-fps";
     String [] _tmp = {
         "3d",
         "opengl",
@@ -66,7 +66,7 @@ public class CaseGLCube extends Case{
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mType, mTags);
     s.mLog = getBenchmark();
 	for (int i = 0; i < mResult.length; i++) {
 	    float fps = (float)mCaseRound /  (mResult[i] / 1000f);

@@ -20,7 +20,7 @@ public class CaseDrawCircle extends Case{
 
     CaseDrawCircle() {
 	super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, CircleRound);
-    mUnit = "2d-fps";
+    mType = "2d-fps";
     String [] _tmp = {
         "2d",
         "render",
@@ -63,7 +63,7 @@ public class CaseDrawCircle extends Case{
     public ArrayList<Scenario> getScenarios () {
     ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-    Scenario s = new Scenario(getTitle(), mTags, mUnit);
+    Scenario s = new Scenario(getTitle(), mType, mTags);
     s.mLog = getBenchmark();
 	for (int i = 0; i < mResult.length; i++) {
 	    float second = (mResult[i] / 1000f);

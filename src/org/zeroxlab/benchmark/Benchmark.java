@@ -24,6 +24,8 @@ import java.util.regex.Matcher;
 import android.os.SystemClock;
 import android.app.ProgressDialog;
 
+import org.opensolaris.hub.libmicro.*;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
@@ -63,6 +65,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
 	Case nehe16 = new CaseNeheLesson16();
 	Case teapot = new CaseTeapot();
 	Case gc     = new CaseGC();
+
+    mCases.add(new NativeCaseMicro());
     // mflops
 	mCases.add(arith);
 	mCases.add(scimark2);
@@ -85,7 +89,13 @@ public class Benchmark extends Activity implements View.OnClickListener {
         mTouchable = false;
         initAuto();
     }
+
+    printHello();
     }
+    static {
+    System.loadLibrary("hello");
+    }
+    private native void printHello();
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -118,7 +128,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
     private void _checkCatCase(String [] Cats) {
     Arrays.sort(Cats);
     for (int i=0; i<mCheckList.length; i++) {
-        int search = Arrays.binarySearch(Cats, mCases.get(i).mUnit);
+        int search = Arrays.binarySearch(Cats, mCases.get(i).mType);
         if ( search  >= 0) 
             mCheckList[i].setChecked(true);
     }
@@ -142,13 +152,21 @@ public class Benchmark extends Activity implements View.OnClickListener {
         _checkCatCase( CAT.split(",") );
     if (TAG == null && CAT == null)
         _checkAllCase(true);
+    final Handler h = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 0x1234)
+                onClick(mRun);
+        }
+    };
     
     final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
     new Thread() {
         public void run() {
             SystemClock.sleep(1000);
             dialog.dismiss();
-//            onClick(mRun);
+            Message m = new Message();
+            m.what = 0x1234;
+            h.sendMessage(m);
         }
     }.start();
     mTouchable = true;

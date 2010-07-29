@@ -25,7 +25,7 @@ public class CaseScimark2 extends Case{
     CaseScimark2() {
 	super("CaseScimark2", "org.zeroxlab.benchmark.TesterScimark2", Repeat, Round);
 
-    mUnit = "mflops";
+    mType = "mflops";
     String [] _tmp = {
         "mflops",
         "numeric",
@@ -91,7 +91,7 @@ public class CaseScimark2 extends Case{
 
     for (int i=0; i<subBenchmarks.size(); i++) {
         String benchName = subBenchmarks.get(i);
-        Scenario s = new Scenario(getTitle()+":"+benchName, mTags, mUnit);
+        Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags);
 
         for(int j=0; j<mInfo.length; j++) 
             s.mResults.add(mInfo[j].getDouble(benchName));
