@@ -140,10 +140,12 @@ public abstract class NativeTester extends Tester {
                 };
                 try {
                     mProcess = mRuntime.exec(command, envp);
+                    if(mProcess == null)
+                        throw new Exception();
                 } catch (Exception e) {
                     Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
                     mNow = 0;
-                    interruptTester();
+                    continue;
                 }
                 Log.i(TAG, "command executed");
                 stdOutReader = new BufferedReader(new InputStreamReader(mProcess.getInputStream()));

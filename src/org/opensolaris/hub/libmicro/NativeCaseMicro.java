@@ -81,6 +81,8 @@ public class NativeCaseMicro  extends Case {
         for(String command: NativeTesterMicro.COMMANDS) {
             String name = bundle.getString(command+"S");
             float [] results = bundle.getFloatArray(command+"FA");
+            if(name == null || results == null)
+                continue;
             Scenario s = new Scenario(name, mType, mTags);
             for(float result: results) 
                 s.mResults.add(new Double(result));
@@ -88,7 +90,6 @@ public class NativeCaseMicro  extends Case {
 
         }
 
-        Log.e("TRACE", "end of getScenarios");
         return scenarios;
     }
 
@@ -96,7 +97,7 @@ public class NativeCaseMicro  extends Case {
     protected boolean saveResult(Intent intent, int index) {
         Bundle info = intent.getBundleExtra(NativeTesterMicro.RESULT);
         if (info == null) {
-            Log.i(TAG, "Weird! cannot find LibMicroInfo");
+            Log.i(TAG, "Cannot find LibMicroInfo");
             return false;
         } else {
             mInfo[index] = info;

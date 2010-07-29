@@ -43,6 +43,8 @@ public class NativeTesterMicro extends NativeTester {
 //            report.append("---------------------------\n");
 //            report.append(mStdOuts.get(command));
 //            report.append("---------------------------\n");
+            if(!mSockets.containsKey(command))
+                continue;
             String [] lines = mSockets.get(command).split("\n");
             String name = lines[0].trim().split("\t")[0];
             float [] list = new float[lines.length];
