@@ -93,8 +93,11 @@ public class CaseScimark2 extends Case{
             String benchName = subBenchmarks.get(i);
             Scenario s = new Scenario(getTitle()+":"+benchName, mType, mTags);
 
-            for(int j=0; j<mInfo.length; j++) 
-                s.mResults.add(mInfo[j].getDouble(benchName));
+            for(int j=0; j<mInfo.length; j++) {
+                double[] _tmp = mInfo[j].getDoubleArray(benchName + "array");
+                for(int k=0; k<_tmp.length; k++)
+                    s.mResults.add(_tmp[k]);
+            }
 
             scenarios.add(s);
         }

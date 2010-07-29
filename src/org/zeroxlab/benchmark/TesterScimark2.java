@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.content.Intent;
 import android.widget.TextView;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 public class TesterScimark2 extends Tester{
 
@@ -84,6 +86,15 @@ public class TesterScimark2 extends Tester{
         double sparsematmult_total = 0.0;
         double lu_total            = 0.0;
 
+        HashMap<String, double[]> store = new HashMap<String, double[]>();
+        store.put(COMPOSITE    , new double[length] );
+        store.put(FFT          , new double[length] );
+        store.put(SOR          , new double[length] );
+        store.put(MONTECARLO   , new double[length] );
+        store.put(SPARSEMATMULT, new double[length] );
+        store.put(LU           , new double[length] );
+
+
         for (int i = 0; i < length; i ++) {
             Bundle info = list[i];
 
@@ -98,6 +109,13 @@ public class TesterScimark2 extends Tester{
             montecarlo_total    += info.getDouble(MONTECARLO   );
             sparsematmult_total += info.getDouble(SPARSEMATMULT);
             lu_total            += info.getDouble(LU           );
+
+            store.get(COMPOSITE    )[i] = info.getDouble(COMPOSITE    );
+            store.get(FFT          )[i] = info.getDouble(FFT          );
+            store.get(SOR          )[i] = info.getDouble(SOR          );
+            store.get(MONTECARLO   )[i] = info.getDouble(MONTECARLO   );
+            store.get(SPARSEMATMULT)[i] = info.getDouble(SPARSEMATMULT);
+            store.get(LU           )[i] = info.getDouble(LU           );
         }
 
         result.putDouble(COMPOSITE    , composite_total    / length);
@@ -106,6 +124,13 @@ public class TesterScimark2 extends Tester{
         result.putDouble(MONTECARLO   , montecarlo_total   / length);
         result.putDouble(SPARSEMATMULT, sparsematmult_total/ length);
         result.putDouble(LU           , lu_total           / length);
+
+        result.putDoubleArray(COMPOSITE +"array"    , store.get(COMPOSITE    ) );
+        result.putDoubleArray(FFT +"array"          , store.get(FFT          ) );  
+        result.putDoubleArray(SOR +"array"          , store.get(SOR          ) ); 
+        result.putDoubleArray(MONTECARLO +"array"   , store.get(MONTECARLO   ) );
+        result.putDoubleArray(SPARSEMATMULT +"array", store.get(SPARSEMATMULT) );
+        result.putDoubleArray(LU +"array"           , store.get(LU           ) );
     }
 
     public static String bundleToString(Bundle bundle) {
