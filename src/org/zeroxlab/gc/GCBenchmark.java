@@ -1,17 +1,47 @@
 /*
- * Copyright (C) 2010 0xlab - http://0xlab.org/
+ * This is adapted from a benchmark written by John Ellis and Pete Kovac
+ * of Post Communications.
+ * It was modified by Hans Boehm of Silicon Graphics.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This is no substitute for real applications.  No actual application
+ * is likely to behave in exactly this way.  However, this benchmark was
+ * designed to be more representative of real applications than other
+ * Java GC benchmarks of which we are aware.
+ * It attempts to model those properties of allocation requests that
+ * are important to current GC techniques.
+ * It is designed to be used either to obtain a single overall performance
+ * number, or to give a more detailed estimate of how collector
+ * performance varies with object lifetimes.  It prints the time
+ * required to allocate and collect balanced binary trees of various
+ * sizes.  Smaller trees result in shorter object lifetimes.  Each cycle
+ * allocates roughly the same amount of memory.
+ * Two data structures are kept around during the entire process, so
+ * that the measured performance is representative of applications
+ * that maintain some live in-memory data.  One of these is a tree
+ * containing many pointers.  The other is a large array containing
+ * double precision floating point numbers.  Both should be of comparable
+ * size.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * The results are only really meaningful together with a specification
+ * of how much memory was used.  It is possible to trade memory for
+ * better time performance.  This benchmark should be run in a 32 MB
+ * heap, though we don't currently know how to enforce that uniformly.
+ * Unlike the original Ellis and Kovac benchmark, we do not attempt
+ * measure pause times.  This facility should eventually be added back
+ * in.  There are several reasons for omitting it for now.  The original
+ * implementation depended on assumptions about the thread scheduler
+ * that don't hold uniformly.  The results really measure both the
+ * scheduler and GC.  Pause time measurements tend to not fit well with
+ * current benchmark suites.  As far as we know, none of the current
+ * commercial Java implementations seriously attempt to minimize GC pause
+ * times.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ *	Known deficiencies:
+ *		- No way to check on memory use
+ *		- No cyclic data structures
+ *		- No attempt to measure variation with object size
+ *		- Results are sensitive to locking cost, but we dont
+ *		  check for proper locking
  */
 
 package org.zeroxlab.gc;
