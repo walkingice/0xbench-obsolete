@@ -168,44 +168,42 @@ public abstract class Tester extends Activity{
 
         private void lazyLoop() throws Exception {
             while (!isTesterFinished()) {
-            if (mNextRound) {
-                mNextRound = false;
-                oneRound();
-            } else {
-    //            sleep(mSleepingTime);
-                sleep(0);
-            }
+                if (mNextRound) {
+                    mNextRound = false;
+                    oneRound();
+                } else {
+        //            sleep(mSleepingTime);
+                    sleep(0);
+                }
             }
         }
 
         private void nervousLoop() throws Exception {
             while (!isTesterFinished()) {
-            oneRound();
+                oneRound();
             }
         }
 
         private void sleepLoop() throws Exception {
             while (!isTesterFinished()) {
-            oneRound();
-            sleep(mSleepingTime);
+                oneRound();
+                sleep(mSleepingTime);
             }
         }
 
         public void run() {
             try {
-            sleep(mSleepingStart);
+                sleep(mSleepingStart);
 
-            long start = SystemClock.uptimeMillis();
+                long start = SystemClock.uptimeMillis();
 
-            lazyLoop();
+                lazyLoop();
 
-            long end = SystemClock.uptimeMillis();
-            finishTester(start, end);
+                long end = SystemClock.uptimeMillis();
+                finishTester(start, end);
             } catch (Exception e) {
-            e.printStackTrace();
+                    e.printStackTrace();
             }
-
         }
     }
-
 }
