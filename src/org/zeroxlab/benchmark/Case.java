@@ -238,32 +238,41 @@ public abstract class Case{
 
     public String getXMLBenchmark() {
         if (!couldFetchReport()) {
+            Log.e(TAG, "cannot fetch report: " + getTitle() + " : " + isFinish() + " : " + mInvolved);
             return "";
         }
 
         String result = "";
 
         ArrayList<Scenario> scenarios = getScenarios();
+        Log.e(TAG, "length of scenarios: " + scenarios.size());
 
         for (Scenario s: scenarios) {
-            if (s == null)
+            if (s == null){
+                Log.e(TAG, "Scenario is null");
                 continue;
-            result += "<scenario";
-            result += " benchmark=\"" + s.mName.replace(" ", "") + "\"";
-            result += " unit=\"" + s.mType + "\"";
-            result += " tags=\"";
+            }
+            String _result = "";
+            _result += "<scenario";
+            _result += " benchmark=\"" + s.mName.replace(" ", "") + "\"";
+            _result += " unit=\"" + s.mType + "\"";
+            _result += " tags=\"";
             for (String tag: s.mTags) 
-                result += tag + ",";
-            result += "\"";
-            result += ">";
+                _result += tag + ",";
+            _result += "\"";
+            _result += ">";
             Double total = 0.0;
             for (Double value: s.mResults) {
-                result += value + " ";
+                _result += value + " ";
                 total += value;
             }
-            if (total == 0)
-                return "";
-            result += "</scenario>";
+            _result += "</scenario>";
+            if (total == 0){
+                Log.e(TAG, "_result total is 0: ");
+                Log.e(TAG, _result);
+                continue;
+            }
+            result += _result;
         }
         return result;
     }

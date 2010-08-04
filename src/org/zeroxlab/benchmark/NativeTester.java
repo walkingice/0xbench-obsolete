@@ -39,7 +39,7 @@ public abstract class NativeTester extends Tester {
     public final String ENV_VAR = "ZXBENCH_PORT";
 
     public final int CHECK_FREQ = 1000;
-    public final int IDLE_KILL = 1000 * 60;
+    public final int IDLE_KILL = 1000 * 60 * 5;
 
     public String mCommand;
     public Handler mHandler;
@@ -160,7 +160,6 @@ public abstract class NativeTester extends Tester {
                 } catch (IOException e) {
                     Log.e(TAG, "cannot acception incoming connection. " + e.toString());
                     mProcess.destroy();
-                    interruptTester();
                 }
                 Log.i(TAG, "connection accepted");
 
@@ -169,7 +168,6 @@ public abstract class NativeTester extends Tester {
                 } catch (IOException e) {
                     Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
                     mProcess.destroy();
-                    interruptTester();
                 }
                 Log.i(TAG, "stream created");
 
@@ -183,7 +181,6 @@ public abstract class NativeTester extends Tester {
                 } catch (InterruptedException e) {
                     Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
                     mProcess.destroy();
-                    interruptTester();
                 }
                 reportOutputs();
                 mStdOuts.put(command, stdOut.toString());
@@ -215,33 +212,37 @@ public abstract class NativeTester extends Tester {
                     value = mProcess.exitValue();
                 } catch (IllegalThreadStateException e) {
                     if ( Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) > IDLE_KILL ) {
-                        Log.e(TAG, "Native process idle for over " + IDLE_KILL/60 + " Seconds, killing.");
-                        reportOutputs();
+                        Log.e(TAG, "Native process idle for over " + IDLE_KILL/1000 + " Seconds, killing.");
                         mProcess.destroy();
-                        interruptTester();
                     }
                     SystemClock.sleep(CHECK_FREQ);
                     continue;
                 }
-                Log.i(TAG, "Process exited with value = " + value);
-                try {
-                    sckOutThread.join();
-                } catch (InterruptedException e) {
-                    Log.w(TAG, "socket update thread cannot join");
-                }
-                try {
-                    stdOutThread.join();
-                } catch (InterruptedException e) {
-                    Log.w(TAG, "stdout update thread cannot join");
-                }
-                try {
-                    stdErrThread.join();
-                } catch (InterruptedException e) {
-                    Log.w(TAG, "stderr update thread cannot join");
-                }
                 break;
             }
-
+            Log.i(TAG, "Process exited with value = " + value);
+            try {
+                stdOutThread.join();
+            } catch (InterruptedException e) {
+                Log.w(TAG, "stdout update thread cannot join");
+            }
+            try {
+                stdErrThread.join();
+            } catch (InterruptedException e) {
+                Log.w(TAG, "stderr update thread cannot join");
+            }
+            try {
+                sckOutThread.join();
+            } catch (InterruptedException e) {
+                Log.w(TAG, "socket update thread cannot join");
+            }
+            Log.i(TAG, "closing server socket");
+            try {
+                mClientSocket.close();
+                mServerSocket.close();
+            } catch (IOException e) {
+                Log.i(TAG, "close server socket failed: " + e.toString());
+            }
         }
     }
 
@@ -261,7 +262,7 @@ public abstract class NativeTester extends Tester {
             char[] c = new char[36];
             int count;
             try {
-                while ( (count = is.read(c,0,36)) >= 0 ) {
+                while ( (count = is.read(c,0,36)) != -1 ) {
                     mLastRead = SystemClock.uptimeMillis();
                     mBuffer.append(c, 0, count);
                     Message m = new Message();

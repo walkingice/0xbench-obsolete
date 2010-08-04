@@ -235,9 +235,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
             intent.setClassName(Report.packageName(), Report.fullClassName());
             startActivity(intent);
         } else if (v == mUpload) {
-            mXMLResult = getXMLResult();
-            writeToSDCard(mOutputXMLFile, mXMLResult);
-
             Intent intent = new Intent();
             intent.putExtra(Upload.XML, mXMLResult);
             intent.setClassName(Upload.packageName(), Upload.fullClassName());
@@ -261,13 +258,19 @@ public class Benchmark extends Activity implements View.OnClickListener {
             String result = getResult();
             writeToSDCard(mOutputFile, result);
 
-            mXMLResult = getXMLResult();
-            writeToSDCard(mOutputXMLFile, mXMLResult);
-
-            mShow.setClickable(true);
-            mUpload.setClickable(true);
-            onClick(mShow);
-            mTouchable = true;
+            final ProgressDialog dialogGetXml = new ProgressDialog(this).show(this, "Generating XML Report", "Please wait...", true, false);
+            new Thread() {
+                public void run() {
+                    mXMLResult = getXMLResult();
+                    Log.e(TAG, "XML: " + mXMLResult);
+                    writeToSDCard(mOutputXMLFile, mXMLResult);
+                    mShow.setClickable(true);
+                    mUpload.setClickable(true);
+                    onClick(mShow);
+                    mTouchable = true;
+                    dialogGetXml.dismiss();
+                }
+            }.start();
         } else {
             Intent intent = pointer.generateIntent();
             if (intent != null) {

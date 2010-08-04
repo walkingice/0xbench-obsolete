@@ -76,6 +76,7 @@ public class NativeCaseMicro  extends Case {
     @Override
     public ArrayList<Scenario> getScenarios () {
         ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+        Log.e(TAG, "in getScenarios: " + mInfo.length);
 
         Bundle bundle = mInfo[0]; // only 1 run
         for(String command: NativeTesterMicro.COMMANDS) {
@@ -83,7 +84,19 @@ public class NativeCaseMicro  extends Case {
             float [] results = bundle.getFloatArray(command+"FA");
             if(name == null || results == null)
                 continue;
-            Scenario s = new Scenario(name, mType, mTags);
+            ArrayList<String> _mTags = new ArrayList<String>();
+            _mTags.add((String)("exe:" + command.substring(command.indexOf("_")+1, command.indexOf(" "))));
+            String [] _tmp = command.split(" +-");
+            for(int i=1; i<_tmp.length; i++){
+                if(_tmp[i].matches("[NECLSW].*"))
+                    continue;
+                _mTags.add((String)(_tmp[i].trim().replace(' ', ':')));
+                Log.i(TAG, _tmp[i].trim().replace(' ', ':'));
+            }
+            Log.i(TAG, _mTags.toString());
+            Log.i(TAG, _mTags.toArray().toString());
+            String [] __mTags =  (String[])(_mTags.toArray(new String[_mTags.size()]));
+            Scenario s = new Scenario(name, mType, __mTags);
             for(float result: results) 
                 s.mResults.add(new Double(result));
             scenarios.add(s);
