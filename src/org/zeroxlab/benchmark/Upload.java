@@ -71,9 +71,9 @@ public class Upload extends Activity implements View.OnClickListener {
         mLogin.setOnClickListener(this);
 
         mBenchName = (EditText)findViewById(R.id.benchName);
-
         mEmail     = (EditText)findViewById(R.id.email);
         mAPIKey    = (EditText)findViewById(R.id.api);
+        mBenchName.setEnabled(false);
         mEmail.setEnabled(false);
         mAPIKey.setEnabled(false);
 
@@ -93,11 +93,13 @@ public class Upload extends Activity implements View.OnClickListener {
             int _index;
             String attr;
 
-            String benchName = getString(R.string.default_email);
+            String benchName = getString(R.string.default_benchname);
             String apiKey = getString(R.string.default_api);
+            String eMail = getString(R.string.default_email);
             if (mLogin.isChecked()) {
                 benchName = mBenchName.getText().toString();
                 apiKey = mAPIKey.getText().toString();
+                eMail = mEmail.getText().toString();
             }
 
             attr = "";
@@ -109,14 +111,15 @@ public class Upload extends Activity implements View.OnClickListener {
             Log.e(TAG, _mXML.toString());
 
             mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
-            mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
+            mb = new MicroBenchmark(_mXML.toString(), mURL, apiKey, benchName, handler) ;
             mb.start();
         } else if (v == mLogin) {
-            Log.i(TAG, "checkbox callback");
             if(mLogin.isChecked()) {
+                mBenchName.setEnabled(true);
                 mEmail.setEnabled(true);
                 mAPIKey.setEnabled(true);
             } else {
+                mBenchName.setEnabled(false);
                 mEmail.setEnabled(false);
                 mAPIKey.setEnabled(false);
             }
@@ -126,7 +129,6 @@ public class Upload extends Activity implements View.OnClickListener {
     Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             int state = msg.getData().getInt(MicroBenchmark.STATE);
-            Log.e(TAG, "check: " + state);
             if (state != MicroBenchmark.RUNNING) {
                 try {
                     dismissDialog(0);
@@ -134,6 +136,7 @@ public class Upload extends Activity implements View.OnClickListener {
                 } catch (Exception e) {
                 }
                 if (state == MicroBenchmark.DONE) {
+                    showDialog(3);
                     showDialog(1);
                 }
                 else {
@@ -169,6 +172,23 @@ public class Upload extends Activity implements View.OnClickListener {
                            }
                        });
                 return builder2.create();
+            case(3):
+                String benchName = getString(R.string.default_benchname);
+                String apiKey = getString(R.string.default_api);
+                String eMail = getString(R.string.default_email);
+                if (mLogin.isChecked()) {
+                    benchName = mBenchName.getText().toString();
+                    apiKey = mAPIKey.getText().toString();
+                    eMail = mEmail.getText().toString();
+                }
+                String url = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/" + eMail + "/" + benchName;
+
+                AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
+                builder3.setMessage( url )
+                        .setTitle("Result URL")
+                        .setPositiveButton("OK", null)
+                ;
+                return builder3.create();
             default:
                 return null;
         }

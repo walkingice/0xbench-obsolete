@@ -4,6 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <CheckBox
+        android:id="@+id/login"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login"
+        />
     <TextView  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"         
@@ -15,12 +21,6 @@
         android:layout_height="wrap_content"        
         android:text="@string/default_benchname"
         />          
-    <CheckBox
-        android:id="@+id/login"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/login"
-        />
     <TextView  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
