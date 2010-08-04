@@ -93,7 +93,6 @@ public class NativeCaseMicro  extends Case {
     @Override
     public ArrayList<Scenario> getScenarios () {
         ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
-        Log.e(TAG, "in getScenarios: " + mInfo.length);
 
         Bundle bundle = mInfo[0]; // only 1 run
         for(String command: NativeTesterMicro.COMMANDS) {

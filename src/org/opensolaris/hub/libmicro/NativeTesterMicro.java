@@ -29,7 +29,7 @@ public class NativeTesterMicro extends NativeTester {
 
     public static final String REPORT = "REPORT";
     public static final String RESULT = "RESULT";
-    private static final String Opts = "-E -C 50 -L -S -W";
+    private static final String Opts = "-E -C 200 -L -S -W";
     private static final String Path = "/system/bin/bench_";
     public static final String [] COMMANDS  = {
 
@@ -104,7 +104,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "mutex " + Opts + " -N mutex_st	-I 10",
         Path + "mutex " + Opts + " -N mutex_mt	-t -I 10	",
         Path + "mutex " + Opts + " -N mutex_T2     -T 2  -I 100",
-
+/*
         Path + "longjmp " + Opts + " -N longjmp	-I 10",
         Path + "siglongjmp " + Opts + " -N siglongjmp	-I 20",
 
@@ -370,6 +370,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "connection " + Opts + " -N conn_accept		-B 256      -a",
 
         Path + "close_tcp " + Opts + " -N close_tcp		-B 32  ",
+*/
 
     };
 
@@ -398,6 +399,7 @@ public class NativeTesterMicro extends NativeTester {
             ArrayList<Float> list = new ArrayList<Float>();
             for(String line: lines) {
                 String [] sp = line.trim().split("\t");
+                //TODO, tail data can be currpted (dirty fix)
                 if (sp.length != 2) {
                     Log.w(TAG, "error line: " + line.trim());
                     continue;
@@ -405,12 +407,13 @@ public class NativeTesterMicro extends NativeTester {
                 if(!name.equals(sp[0]))
                     Log.i(TAG, "Incompatible bench name in socket out: " + name + " v.s. " + sp[0]);
                 list.add(Float.parseFloat(sp[1]));
-                //TODO, some charactor are lost from the last bits of socket-in (dirty fix)
             }
-            float [] _list = new float[lines.length];
+            float [] _list = new float [lines.length -1];
             int i = 0;
             for(Float f: list) {
-                _list[i] = (float)f;
+                //TODO, tail data can be currpted (dirty fix)
+                if(i<lines.length-1)
+                    _list[i] = (float)f;
                 i = i+1;
             }
             bundle.putString(command+"S", name);

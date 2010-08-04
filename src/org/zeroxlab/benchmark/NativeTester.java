@@ -275,16 +275,16 @@ public abstract class NativeTester extends Tester {
         }
 
         public void run() {
-            char[] c = new char[36];
+            char[] c = new char[1024];
             int count;
             try {
-                while ( (count = is.read(c,0,36)) != -1 ) {
+                while ( (count = is.read(c,0,1024)) != -1 ) {
                     mLastRead = SystemClock.uptimeMillis();
                     mBuffer.append(c, 0, count);
                     Message m = new Message();
                     m.what = GUINOTIFIER;
                     mHandler.sendMessage(m);
-                    SystemClock.sleep(100);
+//                    SystemClock.sleep(100);
                 }
             } catch (IOException e) {
                 Log.e(TAG, "update buffer failed. " + e.toString());
