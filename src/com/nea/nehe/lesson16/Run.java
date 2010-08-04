@@ -47,7 +47,7 @@ public class Run extends Tester {
 
     @Override
     public int sleepBetweenRound() {
-        return 1000; // let gl run by itself, check periodically
+        return 0;
     }
 
     @Override

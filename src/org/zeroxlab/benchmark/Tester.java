@@ -172,8 +172,12 @@ public abstract class Tester extends Activity{
                     mNextRound = false;
                     oneRound();
                 } else {
-        //            sleep(mSleepingTime);
-                    sleep(0);
+                    sleep(mSleepingTime);
+                    // TODO: 
+                    // Benchmarks that calculates frequencies (e.g. fps) should be time,
+                    // for example, GL cases should run for a fixed time, and calculate 
+                    // # of frames rendered, instead of periodically checking if fixed 
+                    // # of frames had been rendered (which can hurt performance).
                 }
             }
         }
