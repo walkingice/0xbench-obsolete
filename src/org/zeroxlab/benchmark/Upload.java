@@ -50,11 +50,10 @@ public class Upload extends Activity implements View.OnClickListener {
     public final static String XML = "XML";
 
     EditText mBenchName;
-    EditText mAppSpot;
     EditText mEmail;
     EditText mAPIKey;
     Button mSend;
-    CheckBox mContribute;
+    CheckBox mLogin;
 
     String mURL;
     String mXML;
@@ -67,74 +66,59 @@ public class Upload extends Activity implements View.OnClickListener {
         super.onCreate(bundle);
         setContentView(R.layout.upload);
 
-        mContribute = (CheckBox)findViewById(R.id.contribute);
-        mContribute.setChecked(true);
-        mContribute.setClickable(false);
+        mLogin = (CheckBox)findViewById(R.id.login);
+        mLogin.setChecked(false);
+        mLogin.setOnClickListener(this);
 
         mBenchName = (EditText)findViewById(R.id.benchName);
+
         mEmail     = (EditText)findViewById(R.id.email);
         mAPIKey    = (EditText)findViewById(R.id.api);
-
-        mAppSpot   = (EditText)findViewById(R.id.appSpot);
-        mAppSpot.addTextChangedListener(new TextWatcher() { 
-            public void  afterTextChanged (Editable s) {
-               if(mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.default_appspot))){
-                   mContribute.setChecked(true);
-                   mContribute.setClickable(false);
-                   Log.e(TAG, "lock checkbox");
-               } else {
-                   mContribute.setClickable(true);
-                   Log.e(TAG, "unlock checkbox");
-               }
-            } 
-            public void beforeTextChanged(java.lang.CharSequence s,int a,int b,int c) {
-            }
-            public void onTextChanged(java.lang.CharSequence s,int a,int b,int c) {
-            }
-        });
-
-
+        mEmail.setEnabled(false);
+        mAPIKey.setEnabled(false);
 
         mSend      = (Button)findViewById(R.id.send);
         mSend.setOnClickListener(this);
 
         Intent intent = getIntent();
         mXML = intent.getStringExtra(XML);
-
     }
 
     public void onClick(View v) {
+        Log.i(TAG, "onclick listener");
         if (v == mSend) {
+            showDialog(0);
+
             StringBuffer _mXML;
             int _index;
             String attr;
 
-            showDialog(0);
+            String benchName = getString(R.string.default_email);
+            String apiKey = getString(R.string.default_api);
+            if (mLogin.isChecked()) {
+                benchName = mBenchName.getText().toString();
+                apiKey = mAPIKey.getText().toString();
+            }
+
             attr = "";
-            attr += " apiKey=\"" + mAPIKey.getText().toString() + "\"";
-            attr += " benchmark=\"" + mBenchName.getText().toString() + "\"";
+            attr += " apiKey=\"" + apiKey + "\"";
+            attr += " benchmark=\"" + benchName + "\"";
             _mXML = new StringBuffer(mXML);
             _index = _mXML.indexOf("result") + 6;
             _mXML.insert(_index, attr);
             Log.e(TAG, _mXML.toString());
 
-            mURL = "http://" + mAppSpot.getText().toString() + ".appspot.com:80/run/";
+            mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
             mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
             mb.start();
-            if(mContribute.isChecked() && !mAppSpot.getText().toString().toLowerCase().equals(getString(R.string.default_appspot))) {
-                // up load to contribute
-                showDialog(0);
-                attr = "";
-                attr += " apiKey=\"" + getString(R.string.default_api) + "\"";
-                attr += " benchmark=\"" + getString(R.string.default_benchname) + "\"";
-                _mXML = new StringBuffer(mXML);
-                _index = _mXML.indexOf("result") + 6;
-                _mXML.insert(_index, attr);
-                Log.e(TAG, _mXML.toString());
-
-                mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
-                mb = new MicroBenchmark(_mXML.toString(), mURL, mAPIKey.getText().toString(), mBenchName.getText().toString(), handler) ;
-                mb.start();
+        } else if (v == mLogin) {
+            Log.i(TAG, "checkbox callback");
+            if(mLogin.isChecked()) {
+                mEmail.setEnabled(true);
+                mAPIKey.setEnabled(true);
+            } else {
+                mEmail.setEnabled(false);
+                mAPIKey.setEnabled(false);
             }
         }
     }
@@ -199,9 +183,6 @@ public class Upload extends Activity implements View.OnClickListener {
         restoredText = prefs.getString("mBenchName", null);
         if (restoredText != null) 
             mBenchName.setText(restoredText, TextView.BufferType.EDITABLE);
-        restoredText = prefs.getString("mAppSpot", null);
-        if (restoredText != null) 
-            mAppSpot.setText(restoredText, TextView.BufferType.EDITABLE);
         restoredText = prefs.getString("mEmail", null);
         if (restoredText != null) 
             mEmail.setText(restoredText, TextView.BufferType.EDITABLE);
@@ -216,7 +197,6 @@ public class Upload extends Activity implements View.OnClickListener {
 
         SharedPreferences.Editor editor = getPreferences(0).edit();
         editor.putString("mBenchName",mBenchName.getText().toString());
-        editor.putString("mAppSpot",mAppSpot.getText().toString());
         editor.putString("mEmail",mEmail.getText().toString());
         editor.putString("mAPIKey",mAPIKey.getText().toString());
         editor.commit();

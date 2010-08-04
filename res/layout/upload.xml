@@ -15,33 +15,20 @@
         android:layout_height="wrap_content"        
         android:text="@string/default_benchname"
         />          
-    <TextView  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
-        android:text="@string/txtvw_appspot"
-        />     
-    <EditText 
-        android:id="@+id/appSpot"  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"        
-        android:text="@string/default_appspot"
-        />
     <CheckBox
-        android:id="@+id/contribute"
+        android:id="@+id/login"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/contribute"
+        android:text="@string/login"
         />
     <TextView  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
-        android:text="@string/txtvw_email"
         />     
     <EditText 
         android:id="@+id/email"  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content"        
-        android:text="@string/default_email"
         />
     <TextView  
         android:layout_width="fill_parent" 

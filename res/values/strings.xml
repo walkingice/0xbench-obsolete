@@ -4,8 +4,7 @@
 <string name="btn_show_text">Show</string>
 <string name="btn_upload_text">Upload</string>
 
-<string name="txtvw_benchname">Benchmark name:</string>
-<string name="txtvw_appspot">Appspot location:</string>
+<string name="txtvw_benchname">Upload to benchmark page:</string>
 <string name="txtvw_email">Email:</string>
 <string name="txtvw_api">API Key:</string>
 <string name="btn_send_text">Send</string>
@@ -15,7 +14,8 @@
 <string name="default_email">bizkit.tw@gmail.com</string>
 <string name="default_api">0a57da89-5242-4059-92c2-fa7a7d3b3dd0</string>
 
-<string name="contribute">Contribute data to 0xlab</string>
+<string name="login">Login</string>
+
 
 <!-- its not typo -->
 <string name="banner_info_text">Hell World!</string>
