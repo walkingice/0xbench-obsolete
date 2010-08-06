@@ -55,7 +55,7 @@ public abstract class NativeTester extends Tester {
     public final String ENV_VAR = "ZXBENCH_PORT";
 
     public final int CHECK_FREQ = 1000;
-    public final int IDLE_KILL = 1000 * 60 * 5;
+    public final int IDLE_KILL = 20000; //1000 * 60 * 5;
 
     public String mCommand;
     public Handler mHandler;
@@ -68,6 +68,10 @@ public abstract class NativeTester extends Tester {
     private BufferedReader stdOutReader;
     private BufferedReader stdErrReader;
     private BufferedReader sckOutReader;
+
+    private ProcessMonitor mProcessMonitor;
+    private boolean mProcessRunning = false;
+    private double mIdleTime;
 
     private StringBuilder stdOut = new StringBuilder();
     private StringBuilder stdErr = new StringBuilder();
@@ -92,7 +96,7 @@ public abstract class NativeTester extends Tester {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case GUINOTIFIER:
-                        mTextView.setText("stderr -->\n" + stdErr.toString() + "\nstdout -->\n" + stdOut.toString());
+                        mTextView.setText("idle time: " + mIdleTime + "\nstderr -->\n" + stdErr.toString() + "\nstdout -->\n" + stdOut.toString());
                         mScrollView.post(new Runnable() { 
                             public void run() { 
                                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN); 
@@ -122,7 +126,9 @@ public abstract class NativeTester extends Tester {
     private void reportOutputs() {
         Log.i(TAG, stdOut.toString() );
         Log.i(TAG, stdErr.toString() );
-        Log.i(TAG, sckOut.toString() );
+        String [] sckOutLines = sckOut.toString().split("\n");
+        for(String sckOutLine: sckOutLines)
+            Log.i(TAG,  sckOutLine);
     }
 
     public void oneRound() {
@@ -133,8 +139,15 @@ public abstract class NativeTester extends Tester {
         return mProcess.exitValue();
     }
 
-    public void kill() {
+    public void killProcess() {
         mProcess.destroy();
+        try {
+            mClientSocket.close();
+            mServerSocket.close();
+        } catch (IOException e) {
+            Log.i(TAG, "close server socket failed: " + e.toString());
+        }
+        mProcessRunning = false;
     }
 
     class ProcessRunner extends Thread {
@@ -143,6 +156,7 @@ public abstract class NativeTester extends Tester {
                 Log.i(TAG, "------------------------ process " + command + " start ------------------------ ");
                 try {
                     mServerSocket = new ServerSocket(0);
+                    mServerSocket.setSoTimeout(IDLE_KILL);
                 } catch (IOException e) {
                     Log.e(TAG, "cannot create ServerSocket. " + e.toString());
                     interruptTester();
@@ -158,6 +172,7 @@ public abstract class NativeTester extends Tester {
                     mProcess = mRuntime.exec(command, envp);
                     if(mProcess == null)
                         throw new Exception();
+                     mProcessRunning = true;
                 } catch (Exception e) {
                     Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
                     mNow = 0;
@@ -172,10 +187,12 @@ public abstract class NativeTester extends Tester {
                 stdErrThread.start();
 
                 try {
+                    Log.i(TAG, "waiting conncetion with timeout " + mServerSocket.getSoTimeout());
                     mClientSocket = mServerSocket.accept();
                 } catch (IOException e) {
                     Log.e(TAG, "cannot acception incoming connection. " + e.toString());
-                    mProcess.destroy();
+                    killProcess();
+                    continue;
                 }
                 Log.i(TAG, "connection accepted");
 
@@ -183,20 +200,22 @@ public abstract class NativeTester extends Tester {
                     sckOutReader = new BufferedReader(new InputStreamReader(mClientSocket.getInputStream()));
                 } catch (IOException e) {
                     Log.e(TAG, "cannot create input stream, lost connection? " + e.toString());
-                    mProcess.destroy();
+                    killProcess();
+                    continue;
                 }
                 Log.i(TAG, "stream created");
 
                 updateBuffer socketThread = new updateBuffer(sckOutReader, sckOut);
                 socketThread.start();
 
-                ProcessMonitor monitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
-                monitor.start();
+                mProcessMonitor = new ProcessMonitor(stdOutThread, stdErrThread, socketThread);
+                mProcessMonitor.start();
                 try {
-                    monitor.join();
+                    mProcessMonitor.join();
                 } catch (InterruptedException e) {
                     Log.e(TAG, "inturrupted before process monitor joins: " + e.toString());
-                    mProcess.destroy();
+                    killProcess();
+                    continue;
                 }
                 reportOutputs();
                 mStdOuts.put(command, stdOut.toString());
@@ -216,20 +235,30 @@ public abstract class NativeTester extends Tester {
         updateBuffer stdOutThread;
         updateBuffer stdErrThread;
         updateBuffer sckOutThread;
+        float idleTime;
         ProcessMonitor (updateBuffer stdOutThread, updateBuffer stdErrThread, updateBuffer sckOutThread) {
             this.stdOutThread = stdOutThread;
             this.stdErrThread = stdErrThread;
             this.sckOutThread = sckOutThread;
         }
         public void run() {
-            int value = -1024;
+            int value;
+            mIdleTime = 0.0;
             while (true) {
                 try {
                     value = mProcess.exitValue();
                 } catch (IllegalThreadStateException e) {
-                    if ( Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) > IDLE_KILL ) {
+                    mIdleTime = Math.min(Math.min(stdOutThread.idleTime(), stdErrThread.idleTime()), sckOutThread.idleTime()) ;
+                    Message m = new Message();
+                    m.what = GUINOTIFIER;
+                    mHandler.sendMessage(m);
+                    if ( mIdleTime > IDLE_KILL ) {
                         Log.e(TAG, "Native process idle for over " + IDLE_KILL/1000 + " Seconds, killing.");
-                        mProcess.destroy();
+                        killProcess();
+                        Log.w(TAG, "Monitor: ends with no update threads joined");
+                        //TODO: should find a way to end update threads gracefully
+                        return;
+
                     }
                     SystemClock.sleep(CHECK_FREQ);
                     continue;
@@ -242,16 +271,19 @@ public abstract class NativeTester extends Tester {
             } catch (InterruptedException e) {
                 Log.w(TAG, "stdout update thread cannot join");
             }
+            Log.i(TAG, "stdout update thread joined");
             try {
                 stdErrThread.join();
             } catch (InterruptedException e) {
                 Log.w(TAG, "stderr update thread cannot join");
             }
+            Log.i(TAG, "stderr update thread joined");
             try {
                 sckOutThread.join();
             } catch (InterruptedException e) {
                 Log.w(TAG, "socket update thread cannot join");
             }
+            Log.i(TAG, "socket update thread joined");
             Log.i(TAG, "closing server socket");
             try {
                 mClientSocket.close();
@@ -259,6 +291,7 @@ public abstract class NativeTester extends Tester {
             } catch (IOException e) {
                 Log.i(TAG, "close server socket failed: " + e.toString());
             }
+            Log.w(TAG, "Monitor: All update threads joined");
         }
     }
 
@@ -278,13 +311,16 @@ public abstract class NativeTester extends Tester {
             char[] c = new char[1024];
             int count;
             try {
-                while ( (count = is.read(c,0,1024)) != -1 ) {
+                while ( (count = is.read(c,0,1024)) != -1) {
                     mLastRead = SystemClock.uptimeMillis();
                     mBuffer.append(c, 0, count);
                     Message m = new Message();
                     m.what = GUINOTIFIER;
                     mHandler.sendMessage(m);
-//                    SystemClock.sleep(100);
+                    if (!mProcessRunning && !is.ready()) {
+                        is.close();
+                        break;
+                    }
                 }
             } catch (IOException e) {
                 Log.e(TAG, "update buffer failed. " + e.toString());

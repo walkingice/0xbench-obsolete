@@ -104,7 +104,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "mutex " + Opts + " -N mutex_st	-I 10",
         Path + "mutex " + Opts + " -N mutex_mt	-t -I 10	",
         Path + "mutex " + Opts + " -N mutex_T2     -T 2  -I 100",
-/*
+
         Path + "longjmp " + Opts + " -N longjmp	-I 10",
         Path + "siglongjmp " + Opts + " -N siglongjmp	-I 20",
 
@@ -139,15 +139,15 @@ public class NativeTesterMicro extends NativeTester {
         Path + "getsockname " + Opts + " -N getsockname	-I 100",
         Path + "getpeername " + Opts + " -N getpeername	-I 100",
 
-        Path + "chdir " + Opts + " -N chdir_tmp	-I 2000		$TDIR1 $TDIR2",
-        Path + "chdir " + Opts + " -N chdir_usr	-I 2000		$VDIR1 $VDIR2",
-
-        Path + "chdir " + Opts + " -N chgetwd_tmp	-I 3000	-g $TDIR1 $TDIR2",
-        Path + "chdir " + Opts + " -N chgetwd_usr	-I 3000	-g $VDIR1 $VDIR2",
-
-        Path + "realpath " + Opts + " -N realpath_tmp -I 3000		-f $TDIR1",
-        Path + "realpath " + Opts + " -N realpath_usr	-I 3000	-f $VDIR1",
-
+//        Path + "chdir " + Opts + " -N chdir_tmp	-I 2000		$TDIR1 $TDIR2",
+//        Path + "chdir " + Opts + " -N chdir_usr	-I 2000		$VDIR1 $VDIR2",
+//
+//        Path + "chdir " + Opts + " -N chgetwd_tmp	-I 3000	-g $TDIR1 $TDIR2",
+//        Path + "chdir " + Opts + " -N chgetwd_usr	-I 3000	-g $VDIR1 $VDIR2",
+//
+//        Path + "realpath " + Opts + " -N realpath_tmp -I 3000		-f $TDIR1",
+//        Path + "realpath " + Opts + " -N realpath_usr	-I 3000	-f $VDIR1",
+//
 //        Path + "stat " + Opts + " -N stat_tmp -I 1000		-f $TFILE",
 //        Path + "stat " + Opts + " -N stat_usr -I 1000		-f $VFILE",
 
@@ -370,7 +370,6 @@ public class NativeTesterMicro extends NativeTester {
         Path + "connection " + Opts + " -N conn_accept		-B 256      -a",
 
         Path + "close_tcp " + Opts + " -N close_tcp		-B 32  ",
-*/
 
     };
 
