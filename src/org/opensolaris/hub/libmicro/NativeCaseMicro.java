@@ -97,7 +97,7 @@ public class NativeCaseMicro  extends Case {
         Bundle bundle = mInfo[0]; // only 1 run
         for(String command: NativeTesterMicro.COMMANDS) {
             String name = bundle.getString(command+"S");
-            float [] results = bundle.getFloatArray(command+"FA");
+            String results = bundle.getString(command+"FA");
             if(name == null || results == null)
                 continue;
             ArrayList<String> _mTags = new ArrayList<String>();
@@ -112,9 +112,8 @@ public class NativeCaseMicro  extends Case {
             Log.i(TAG, _mTags.toString());
             Log.i(TAG, _mTags.toArray().toString());
             String [] __mTags =  (String[])(_mTags.toArray(new String[_mTags.size()]));
-            Scenario s = new Scenario(name, mType, __mTags);
-            for(float result: results) 
-                s.mResults.add(new Double(result));
+            Scenario s = new Scenario(name, mType, __mTags, true);
+            s.mStringResults = results;
             scenarios.add(s);
 
         }

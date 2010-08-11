@@ -172,7 +172,7 @@ public abstract class NativeTester extends Tester {
                     mProcess = mRuntime.exec(command, envp);
                     if(mProcess == null)
                         throw new Exception();
-                     mProcessRunning = true;
+                    mProcessRunning = true;
                 } catch (Exception e) {
                     Log.e(TAG, "Cannot execute command: `" + command + "`. " + e.toString());
                     mNow = 0;

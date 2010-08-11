@@ -26,15 +26,34 @@ public class Scenario {
     Date mTime;
 
     public ArrayList<Double> mResults;
+    public String mStringResults;
+    public boolean useStringResults;
     String mLog;
 
     public Scenario(String name, String type, String [] tags) {
-    mName = name;
-    mType = type;
-    mTags = tags;
+        useStringResults = false;
 
-    mTime = new Date();
-    mResults = new ArrayList<Double>();
+        mName = name;
+        mType = type;
+        mTags = tags;
+
+        mTime = new Date();
+        mResults = new ArrayList<Double>();
+    }
+
+    public Scenario(String name, String type, String [] tags, boolean useString) {
+        if (!useString) {
+            useStringResults = false;
+            mResults = new ArrayList<Double>();
+        } else {
+            useStringResults = true;
+        }
+
+        mName = name;
+        mType = type;
+        mTags = tags;
+
+        mTime = new Date();
     }
 }
 

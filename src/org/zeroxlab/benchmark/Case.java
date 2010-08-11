@@ -277,16 +277,25 @@ public abstract class Case{
                 _result += tag + ",";
             _result += "\"";
             _result += ">";
-            Double total = 0.0;
-            for (Double value: s.mResults) {
-                _result += value + " ";
-                total += value;
-            }
-            _result += "</scenario>";
-            if (total == 0){
-                Log.e(TAG, "_result total is 0: ");
-                Log.e(TAG, _result);
-                continue;
+            if(!s.useStringResults) {
+                Double total = 0.0;
+                for (Double value: s.mResults) {
+                    _result += value + " ";
+                    total += value;
+                }
+                _result += "</scenario>";
+                if (total == 0){
+                    Log.e(TAG, "_result total is 0: ");
+                    Log.e(TAG, _result);
+                    continue;
+                }
+            } else {
+                if(s.mStringResults == null || s.mStringResults.length() == 0) {
+                    Log.e(TAG, "string results is empty: " + s.mStringResults);
+                    continue;
+                }
+                _result += s.mStringResults;
+                _result += "</scenario>";
             }
             result += _result;
         }

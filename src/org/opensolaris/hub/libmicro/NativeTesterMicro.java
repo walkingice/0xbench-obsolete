@@ -204,7 +204,7 @@ public class NativeTesterMicro extends NativeTester {
 
         Path + "fork " + Opts + " -N fork_10		-B 10",
         Path + "fork " + Opts + " -N fork_100		-B 100  -C 100",
-        Path + "fork " + Opts + " -N fork_1000		-B 1000 -C 50",
+//        Path + "fork " + Opts + " -N fork_1000		-B 1000 -C 50",
 
         Path + "exit " + Opts + " -N exit_10		-B 10",
         Path + "exit " + Opts + " -N exit_100		-B 100",
@@ -395,28 +395,30 @@ public class NativeTesterMicro extends NativeTester {
                 continue;
             String [] lines = mSockets.get(command).trim().split("\n");
             String name = lines[0].trim().split("\t")[0];
-            ArrayList<Float> list = new ArrayList<Float>();
+            StringBuilder list = new StringBuilder();;
             for(String line: lines) {
                 String [] sp = line.trim().split("\t");
-                //TODO, tail data can be currpted (dirty fix)
                 if (sp.length != 2) {
                     Log.w(TAG, "error line: " + line.trim());
                     continue;
                 }
                 if(!name.equals(sp[0]))
                     Log.i(TAG, "Incompatible bench name in socket out: " + name + " v.s. " + sp[0]);
-                list.add(Float.parseFloat(sp[1]));
-            }
-            float [] _list = new float [lines.length -1];
-            int i = 0;
-            for(Float f: list) {
-                //TODO, tail data can be currpted (dirty fix)
-                if(i<lines.length-1)
-                    _list[i] = (float)f;
-                i = i+1;
+
+                //TODO  changing from string to float will use up too much memory
+                //      causing outOfMemory exception.
+                //      should save in string format to bundle. easier to generate xml, too.
+                try {
+                    Float.parseFloat(sp[1]);
+                } catch (Exception e) { // error format
+                    Log.e(TAG, "cannot parse '" + sp[1] + "' in line: " +  line);
+                    continue;
+                }
+                list.append(sp[1].trim() + " ");
             }
             bundle.putString(command+"S", name);
-            bundle.putFloatArray(command+"FA", _list);
+            bundle.putString(command+"FA", list.toString().trim());
+
         }
 //        bundle.putString(REPORT, report.toString());
         intent.putExtra(RESULT, bundle);
