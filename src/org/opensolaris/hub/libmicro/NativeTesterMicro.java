@@ -23,15 +23,17 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.util.Log;
 
+import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NativeTesterMicro extends NativeTester {
 
     public static final String REPORT = "REPORT";
     public static final String RESULT = "RESULT";
-    private static final String Opts = "-E -C 200 -L -S -W";
+    private static final String Opts = "-E -C 70 -L -S -W";
     private static final String Path = "/system/bin/bench_";
-    public static final String [] COMMANDS  = {
+    public static final List<String> COMMANDS  = Arrays.asList(
 
         Path + "getpid " + Opts + " -N getpid -I 5",
 
@@ -82,7 +84,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "memcpy " + Opts + " -N memcpy_10	-s 10	-I 10 ",
         Path + "memcpy " + Opts + " -N memcpy_1k	-s 1k	-I 50",
         Path + "memcpy " + Opts + " -N memcpy_10k	-s 10k	-I 800",
-        Path + "memcpy " + Opts + " -N memcpy_1m	-s 1m   -I 500000",
+//        Path + "memcpy " + Opts + " -N memcpy_1m	-s 1m   -I 500000",
 //        Path + "memcpy " + Opts + " -N memcpy_10m	-s 10m  -I 5000000",
 
         Path + "strcpy " + Opts + " -N strcpy_10	-s 10   -I 5 ",
@@ -369,16 +371,16 @@ public class NativeTesterMicro extends NativeTester {
 
         Path + "connection " + Opts + " -N conn_accept		-B 256      -a",
 
-        Path + "close_tcp " + Opts + " -N close_tcp		-B 32  ",
+        Path + "close_tcp " + Opts + " -N close_tcp		-B 32  "
 
-    };
+    );
 
     
     @Override
     protected String getTag() {
         return "Native Micro";
     };
-    protected final String[] getCommands() {
+    protected final List<String> getCommands() {
         return COMMANDS;
     }
 
@@ -409,12 +411,12 @@ public class NativeTesterMicro extends NativeTester {
                 //      causing outOfMemory exception.
                 //      should save in string format to bundle. easier to generate xml, too.
                 try {
-                    Float.parseFloat(sp[1]);
+                    int toInt = (int)Float.parseFloat(sp[1]);
+                    list.append(toInt + " ");
                 } catch (Exception e) { // error format
                     Log.e(TAG, "cannot parse '" + sp[1] + "' in line: " +  line);
                     continue;
                 }
-                list.append(sp[1].trim() + " ");
             }
             bundle.putString(command+"S", name);
             bundle.putString(command+"FA", list.toString().trim());

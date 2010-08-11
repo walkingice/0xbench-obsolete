@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.lang.Math;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import java.net.Socket;
 import java.net.ServerSocket;
@@ -110,7 +111,7 @@ public abstract class NativeTester extends Tester {
         startTester();
     }
 
-    protected abstract String[] getCommands();
+    protected abstract List<String> getCommands();
 
     protected abstract boolean saveResult(Intent intent);
 
