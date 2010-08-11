@@ -54,10 +54,10 @@ public class NativeTesterMicro extends NativeTester {
         Path + "memset " + Opts + " -N memset_4k_uc -s 4k    -u -I 400",
         Path + "memset " + Opts + " -N memset_10k	-s 10k	-I 600	 ",
         Path + "memset " + Opts + " -N memset_1m	-s 1m	-I 200000",
-        Path + "memset " + Opts + " -N memset_10m	-s 10m -I 2000000 ",
-        Path + "memset " + Opts + " -N memsetP2_10m	-s 10m -P 2 -I 2000000 ",
+//        Path + "memset " + Opts + " -N memset_10m	-s 10m -I 2000000 ",
+//        Path + "memset " + Opts + " -N memsetP2_10m	-s 10m -P 2 -I 2000000 ",
 
-        Path + "memrand " + Opts + " -N memrand	-s 128m -B 10000",
+//        Path + "memrand " + Opts + " -N memrand	-s 128m -B 10000",
 
         Path + "isatty " + Opts + " -N isatty_yes   ",
 //        Path + "isatty " + Opts + " -N isatty_no  -f $IFILE",
@@ -83,7 +83,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "memcpy " + Opts + " -N memcpy_1k	-s 1k	-I 50",
         Path + "memcpy " + Opts + " -N memcpy_10k	-s 10k	-I 800",
         Path + "memcpy " + Opts + " -N memcpy_1m	-s 1m   -I 500000",
-        Path + "memcpy " + Opts + " -N memcpy_10m	-s 10m  -I 5000000",
+//        Path + "memcpy " + Opts + " -N memcpy_10m	-s 10m  -I 5000000",
 
         Path + "strcpy " + Opts + " -N strcpy_10	-s 10   -I 5 ",
         Path + "strcpy " + Opts + " -N strcpy_1k	-s 1k   -I 100",
@@ -208,7 +208,7 @@ public class NativeTesterMicro extends NativeTester {
 
         Path + "exit " + Opts + " -N exit_10		-B 10",
         Path + "exit " + Opts + " -N exit_100		-B 100",
-        Path + "exit " + Opts + " -N exit_1000		-B 1000 -C 50",
+//        Path + "exit " + Opts + " -N exit_1000		-B 1000 -C 50",
 
         Path + "exit " + Opts + " -N exit_10_nolibc	-e -B 10",
 
