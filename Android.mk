@@ -28,4 +28,5 @@ LOCAL_JNI_SHARED_LIBRARIES := libhello
 
 include $(BUILD_PACKAGE)
 
+include $(LOCAL_PATH)/native/Android.mk
 
