@@ -102,15 +102,13 @@ public class NativeCaseMicro  extends Case {
                 continue;
             ArrayList<String> _mTags = new ArrayList<String>();
             _mTags.add((String)("exe:" + command.substring(command.indexOf("_")+1, command.indexOf(" "))));
-            String [] _tmp = command.split(" +-");
-            for(int i=1; i<_tmp.length; i++){
-                if(_tmp[i].matches("[NECLSW].*"))
-                    continue;
-                _mTags.add((String)(_tmp[i].trim().replace(' ', ':')));
-                Log.i(TAG, _tmp[i].trim().replace(' ', ':'));
-            }
-            Log.i(TAG, _mTags.toString());
-            Log.i(TAG, _mTags.toArray().toString());
+//            String [] _tmp = command.split(" +-");
+//            for(int i=1; i<_tmp.length; i++){
+//                if(_tmp[i].matches("[NECLSW].*"))
+//                    continue;
+//                _mTags.add((String)(_tmp[i].trim().replace(' ', ':')));
+//                Log.i(TAG, _tmp[i].trim().replace(' ', ':'));
+//            }
             String [] __mTags =  (String[])(_mTags.toArray(new String[_mTags.size()]));
             Scenario s = new Scenario(name, mType, __mTags, true);
             s.mStringResults = results;

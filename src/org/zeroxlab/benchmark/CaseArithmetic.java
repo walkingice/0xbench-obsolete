@@ -45,6 +45,7 @@ public class CaseArithmetic extends Case{
         String [] _tmp = {
             "numeric",
             "mflops",
+            "scientific",
         };
         mTags = _tmp;
 

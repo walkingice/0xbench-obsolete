@@ -107,8 +107,8 @@ public class NativeTesterMicro extends NativeTester {
         Path + "mutex " + Opts + " -N mutex_mt	-t -I 10	",
         Path + "mutex " + Opts + " -N mutex_T2     -T 2  -I 100",
 
-        Path + "longjmp " + Opts + " -N longjmp	-I 10",
-        Path + "siglongjmp " + Opts + " -N siglongjmp	-I 20",
+//        Path + "longjmp " + Opts + " -N longjmp	-I 10",
+//        Path + "siglongjmp " + Opts + " -N siglongjmp	-I 20",
 
         Path + "getrusage " + Opts + " -N getrusage	-I 200",
 
@@ -120,13 +120,13 @@ public class NativeTesterMicro extends NativeTester {
         Path + "mktime " + Opts + " -N mktime       -I 500   ",
         Path + "mktime " + Opts + " -N mktimeT2 -T 2 -I 1000 ",
 
-        Path + "cascade_mutex " + Opts + " -N c_mutex_1	-I 50",
-        Path + "cascade_mutex " + Opts + " -N c_mutex_10	-T 10 -I 5000",
-        Path + "cascade_mutex " + Opts + " -N c_mutex_200	-T 200	-I 2000000",
+//        Path + "cascade_mutex " + Opts + " -N c_mutex_1	-I 50",
+//        Path + "cascade_mutex " + Opts + " -N c_mutex_10	-T 10 -I 5000",
+//        Path + "cascade_mutex " + Opts + " -N c_mutex_200	-T 200	-I 2000000",
 
-        Path + "cascade_cond " + Opts + " -N c_cond_1	-I 100",
-        Path + "cascade_cond " + Opts + " -N c_cond_10	-T 10	-I 3000",
-        Path + "cascade_cond " + Opts + " -N c_cond_200	-T 200	-I 2000000",
+//        Path + "cascade_cond " + Opts + " -N c_cond_1	-I 100",
+//        Path + "cascade_cond " + Opts + " -N c_cond_10	-T 10	-I 3000",
+//        Path + "cascade_cond " + Opts + " -N c_cond_200	-T 200	-I 2000000",
 
         Path + "cascade_flock " + Opts + " -N c_flock	-I 1000	",
         Path + "cascade_flock " + Opts + " -N c_flock_10	-P 10   -I 50000",
@@ -177,7 +177,7 @@ public class NativeTesterMicro extends NativeTester {
 
         Path + "listen " + Opts + " -N listen		-B 100",
 
-        Path + "connection " + Opts + " -N connection		-B 256 ",
+//        Path + "connection " + Opts + " -N connection		-B 256 ",
 
         Path + "poll " + Opts + " -N poll_10	-n 10	-I 500",
         Path + "poll " + Opts + " -N poll_100	-n 100	-I 1000",
@@ -202,7 +202,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "pthread_create   " + Opts + " -N pthread_8		-B 8",
         Path + "pthread_create   " + Opts + " -N pthread_32		-B 32",
         Path + "pthread_create   " + Opts + " -N pthread_128		-B 128",
-        Path + "pthread_create   " + Opts + " -N pthread_512		-B 512",
+//        Path + "pthread_create   " + Opts + " -N pthread_512		-B 512",
 
         Path + "fork " + Opts + " -N fork_10		-B 10",
         Path + "fork " + Opts + " -N fork_100		-B 100  -C 100",
@@ -328,7 +328,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "munmap " + Opts + " -N unmap_ra8k	-l 8k	-I 1000	-r	-f MAP_ANON",
         Path + "munmap " + Opts + " -N unmap_ra128k	-l 128k	-I 2000	-r	-f MAP_ANON",
 
-        Path + "connection " + Opts + " -N conn_connect		-B 256 	-c",
+//        Path + "connection " + Opts + " -N conn_connect		-B 256 	-c",
 
         Path + "munmap " + Opts + " -N unmap_wz8k	-l 8k	-I 1000	-w	-f /dev/zero",
         Path + "munmap " + Opts + " -N unmap_wz128k	-l 128k	-I 8000	-w	-f /dev/zero",
@@ -369,7 +369,7 @@ public class NativeTesterMicro extends NativeTester {
         Path + "pipe " + Opts + " -N pipe_tmt4k	-s 4k	-I 8000	-x tcp  -m mt",
         Path + "pipe " + Opts + " -N pipe_tmp4k	-s 4k	-I 8000	-x tcp  -m mp",
 
-        Path + "connection " + Opts + " -N conn_accept		-B 256      -a",
+//        Path + "connection " + Opts + " -N conn_accept		-B 256      -a",
 
         Path + "close_tcp " + Opts + " -N close_tcp		-B 32  "
 
