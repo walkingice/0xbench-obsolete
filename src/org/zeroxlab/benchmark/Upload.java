@@ -44,6 +44,8 @@ import android.os.Handler;
 import android.os.Bundle;
 import android.os.Message;
 
+import java.util.HashSet;
+
 public class Upload extends Activity implements View.OnClickListener {
 
     public final static String TAG = "Upload";
@@ -58,6 +60,9 @@ public class Upload extends Activity implements View.OnClickListener {
     String mURL;
     String mXML;
     String mFailMsg;
+
+    String mHash;
+    HashSet<String> mHashSet = new HashSet<String>();
 
     MicroBenchmark mb;
 
@@ -87,8 +92,6 @@ public class Upload extends Activity implements View.OnClickListener {
     public void onClick(View v) {
         Log.i(TAG, "onclick listener");
         if (v == mSend) {
-            showDialog(0);
-
             StringBuffer _mXML;
             int _index;
             String attr;
@@ -112,7 +115,14 @@ public class Upload extends Activity implements View.OnClickListener {
 
             mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
             mb = new MicroBenchmark(_mXML.toString(), mURL, apiKey, benchName, handler) ;
-            mb.start();
+            // this is not really a hash
+            mHash = apiKey + benchName;
+            if(!mHashSet.contains(mHash)){
+                showDialog(0);
+                mb.start();
+            } else {
+                showDialog(4);
+            }
         } else if (v == mLogin) {
             if(mLogin.isChecked()) {
                 mBenchName.setEnabled(true);
@@ -138,6 +148,7 @@ public class Upload extends Activity implements View.OnClickListener {
                 if (state == MicroBenchmark.DONE) {
                     showDialog(3);
                     showDialog(1);
+                    mHashSet.add(mHash);
                 }
                 else {
                     showDialog(2);
@@ -181,6 +192,13 @@ public class Upload extends Activity implements View.OnClickListener {
                         .setPositiveButton("OK", null)
                 ;
                 return builder3.create();
+            case(4):
+                AlertDialog.Builder builder4 = new AlertDialog.Builder(this);
+                builder4.setMessage( "You have already uploaded results to this location." )
+                        .setTitle("Error")
+                        .setPositiveButton("OK", null)
+                ;
+                return builder4.create();
             default:
                 return null;
         }
