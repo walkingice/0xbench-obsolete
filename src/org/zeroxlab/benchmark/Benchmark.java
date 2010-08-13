@@ -59,7 +59,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     private Button   mRun;
     private Button   mShow;
-    private Button   mUpload;
     private CheckBox mCheckList[];
     private TextView mDesc[];
     private TextView mBannerInfo;
@@ -211,10 +210,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
         mShow.setOnClickListener(this);
         mShow.setClickable(false);
 
-        mUpload = (Button)findViewById(R.id.btn_upload);
-        mUpload.setOnClickListener(this);
-        mUpload.setClickable(false);
-
         mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
         mBannerInfo = (TextView)findViewById(R.id.banner_info);
@@ -260,12 +255,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
             writeToSDCard(mOutputFile, result);
             Intent intent = new Intent();
             intent.putExtra(Report.REPORT, result);
+            intent.putExtra(Report.XML, mXMLResult);
             intent.setClassName(Report.packageName(), Report.fullClassName());
-            startActivity(intent);
-        } else if (v == mUpload) {
-            Intent intent = new Intent();
-            intent.putExtra(Upload.XML, mXMLResult);
-            intent.setClassName(Upload.packageName(), Upload.fullClassName());
             startActivity(intent);
         }
     }
@@ -282,7 +273,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         }
 
         if (finish) {
-            mBannerInfo.setText("Benchmarking complete.\nClick Upload to send.\nUploaded results:\nhttp://0xbenchmark.appspot.com");
+            mBannerInfo.setText("Benchmarking complete.\nClick Show to upload.\nUploaded results:\nhttp://0xbenchmark.appspot.com");
             String result = getResult();
             writeToSDCard(mOutputFile, result);
 
@@ -293,7 +284,6 @@ public class Benchmark extends Activity implements View.OnClickListener {
                     Log.e(TAG, "XML: " + mXMLResult);
                     writeToSDCard(mOutputXMLFile, mXMLResult);
                     mShow.setClickable(true);
-                    mUpload.setClickable(true);
                     onClick(mShow);
                     mTouchable = true;
                     dialogGetXml.dismiss();

@@ -20,18 +20,25 @@ import android.util.Log;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Button;
 import android.content.*;
 import java.nio.*;
 
 import java.util.LinkedList;
 
 /* Construct a basic UI */
-public class Report extends Activity {
+public class Report extends Activity implements View.OnClickListener {
 
     public final static String TAG = "Repord";
     public final static String REPORT = "REPORT";
-    TextView mTextView;
+    public final static String XML = "XML";
+    private TextView mTextView;
+
+    private Button mUpload;
+    private Button mBack;
+    private String mXMLResult;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -40,13 +47,32 @@ public class Report extends Activity {
 
         mTextView = (TextView)findViewById(R.id.report_text);
 
+        mUpload = (Button)findViewById(R.id.btn_upload);
+        mUpload.setOnClickListener(this);
+
+        mBack = (Button)findViewById(R.id.btn_back);
+        mBack.setOnClickListener(this);
+
         Intent intent = getIntent();
         String report = intent.getStringExtra(REPORT);
+        mXMLResult = intent.getStringExtra(XML);
 
         if (report == null || report.equals("")) {
             mTextView.setText("oooops...report not found");
         } else {
             mTextView.setText(report);
+        }
+    }
+
+    public void onClick(View v) {
+        if (v == mBack) {
+            finish();
+        } else if (v == mUpload) {
+            Intent intent = new Intent();
+            intent.putExtra(Upload.XML, mXMLResult);
+            intent.setClassName(Upload.packageName(), Upload.fullClassName());
+            
+            startActivity(intent);
         }
     }
 
