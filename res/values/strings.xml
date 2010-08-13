@@ -4,6 +4,7 @@
 <string name="btn_show_text">Show</string>
 <string name="btn_upload_text">Upload</string>
 
+<string name="txtvw_upload_help">Click "send" to upload to default page, or check "login" to create your own page (you need to get apikey from 0xBenchWeb first).</string>
 <string name="txtvw_benchname">Upload to benchmark page:</string>
 <string name="txtvw_email">Email:</string>
 <string name="txtvw_api">API Key:</string>

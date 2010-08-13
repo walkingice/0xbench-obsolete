@@ -4,6 +4,12 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <TextView  
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"         
+        android:text="@string/txtvw_upload_help"
+        android:textSize="28px"
+        />     
     <CheckBox
         android:id="@+id/login"
         android:layout_width="fill_parent"
