@@ -241,14 +241,17 @@ public class Benchmark extends Activity implements View.OnClickListener {
 
     public void onClick(View v) {
         if (v == mRun) {
+            int numberOfCaseChecked = 0;
             for (int i = 0; i < mCheckList.length; i++) {
                 if (mCheckList[i].isChecked()) {
                     mCases.get(i).reset();
+                    numberOfCaseChecked++;
                 } else {
                     mCases.get(i).clear();
                 }
             }
-            runCase(mCases);
+            if(numberOfCaseChecked>0)
+                runCase(mCases);
         } else if (v == mShow) {
             String result = getResult();
             Log.i(TAG,"\n\n"+result+"\n\n");
