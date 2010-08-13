@@ -200,7 +200,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         mLinearLayout = (LinearLayout)findViewById(R.id.list_container);
 
         mBannerInfo = (TextView)findViewById(R.id.banner_info);
-        mBannerInfo.setText("Hello!\nSelect benchmark targets and click Run.");
+        mBannerInfo.setText("Hello!\nSelect benchmark targets and click Run.\nSee uploaded results: http://0xbenchmark.appspot.com/");
 
         int length = mCases.size();
         mCheckList = new CheckBox[length];
@@ -264,7 +264,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         }
 
         if (finish) {
-            mBannerInfo.setText("Benchmarking complete.\nClick Show to read report, Upload to send.");
+            mBannerInfo.setText("Benchmarking complete.\nClick Show to read report, Upload to send.\nSee uploaded results: http://0xbenchmark.appspot.com/");
             String result = getResult();
             writeToSDCard(mOutputFile, result);
 
