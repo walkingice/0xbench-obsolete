@@ -415,7 +415,7 @@ public class Benchmark extends Activity implements View.OnClickListener {
         File file = new File(SDCARD, filename);
 
         if (file.exists()) {
-            Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
+            Log.i(TAG, "File exists, delete SDCARD/" + filename);
             file.delete();
         }
 
