@@ -42,6 +42,9 @@ import android.app.ProgressDialog;
 
 import org.opensolaris.hub.libmicro.*;
 
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
@@ -67,9 +70,21 @@ public class Benchmark extends Activity implements View.OnClickListener {
     LinkedList<Case> mCases;
     boolean mTouchable = true;
 
+    private WakeLock mWakeLock;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mWakeLock.release();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+        mWakeLock.acquire();
+
         setContentView(R.layout.main);
         mCases = new LinkedList<Case>();
         Case arith  = new CaseArithmetic();
