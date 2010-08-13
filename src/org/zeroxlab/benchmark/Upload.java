@@ -173,18 +173,10 @@ public class Upload extends Activity implements View.OnClickListener {
                        });
                 return builder2.create();
             case(3):
-                String benchName = getString(R.string.default_benchname);
-                String apiKey = getString(R.string.default_api);
-                String eMail = getString(R.string.default_email);
-                if (mLogin.isChecked()) {
-                    benchName = mBenchName.getText().toString();
-                    apiKey = mAPIKey.getText().toString();
-                    eMail = mEmail.getText().toString();
-                }
-                String url = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/" + eMail + "/" + benchName;
+                String url = "http://" + getString(R.string.default_appspot) + ".appspot.com/";
 
                 AlertDialog.Builder builder3 = new AlertDialog.Builder(this);
-                builder3.setMessage( url )
+                builder3.setMessage( "Please goto " + url + " for results" )
                         .setTitle("Result URL")
                         .setPositiveButton("OK", null)
                 ;
