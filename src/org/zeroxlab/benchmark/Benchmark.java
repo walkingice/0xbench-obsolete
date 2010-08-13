@@ -45,13 +45,15 @@ import org.opensolaris.hub.libmicro.*;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 
+import android.os.Environment;
+
 /* Construct a basic UI */
 public class Benchmark extends Activity implements View.OnClickListener {
 
     public final static String TAG     = "Benchmark";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
 
-    private final static String SDCARD      = "/sdcard";
+    private final static File SDCARD = Environment.getExternalStorageDirectory();
     private final static String mOutputFile = "0xBenchmark";
 
     private static String mXMLResult;
@@ -405,12 +407,12 @@ public class Benchmark extends Activity implements View.OnClickListener {
     }
 
     private boolean writeToSDCard(String filename, String output) {
-        File file = new File(SDCARD, filename);
-
-        if ( !file.canWrite() ) {
+        if ( !SDCARD.canWrite() ) {
             Log.i(TAG, "Permission denied, maybe SDCARD mounted to PC?");
             return false;
         }
+
+        File file = new File(SDCARD, filename);
 
         if (file.exists()) {
             Log.i(TAG, "File exists, delete " + SDCARD + "/" + filename);
