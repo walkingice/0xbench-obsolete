@@ -96,8 +96,8 @@ public class Benchmark extends Activity implements View.OnClickListener {
         Case nehe16 = new CaseNeheLesson16();
         Case teapot = new CaseTeapot();
         Case gc     = new CaseGC();
+        Case libMicro = new NativeCaseMicro();
 
-        mCases.add(new NativeCaseMicro());
         // mflops
         mCases.add(arith);
         mCases.add(scimark2);
@@ -111,6 +111,9 @@ public class Benchmark extends Activity implements View.OnClickListener {
         mCases.add(teapot);
         // vm
         mCases.add(gc);
+        // native
+        mCases.add(libMicro);
+
         initViews();
 
         Intent intent = getIntent();

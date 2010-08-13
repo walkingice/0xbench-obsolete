@@ -58,7 +58,7 @@ public class NativeCaseMicro  extends Case {
     }
 
     public String getDescription() {
-        return "LibMicro is a portable set of microbenchmarks that many Solaris engineers used during Solaris 10 development to measure the performance of various system and library calls.";
+        return "(Requires root and pre-deployed binaries) LibMicro is a portable set of microbenchmarks that many Solaris engineers used during Solaris 10 development to measure the performance of various system and library calls.";
     }
 
     private void generateInfo() {
