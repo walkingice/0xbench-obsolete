@@ -10,6 +10,7 @@
 <string name="txtvw_api">API Key:</string>
 <string name="btn_send_text">Send</string>
 <string name="btn_back_text">Done</string>
+<string name="btn_login_google">Login for API-key</string>
 
 <string name="default_benchname">PublicPage</string>
 <string name="default_appspot">0xbenchmark</string>

@@ -46,14 +46,25 @@ import android.os.Message;
 
 import java.util.HashSet;
 
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebChromeClient;
+import android.webkit.JsResult;
+import android.graphics.Bitmap;
+
+
 public class Upload extends Activity implements View.OnClickListener {
 
     public final static String TAG = "Upload";
     public final static String XML = "XML";
 
+    public final static String mMobileLoginUrl = "http://0xbenchmark.appspot.com/mobileLogin";
+
     EditText mBenchName;
     EditText mEmail;
     EditText mAPIKey;
+    Button mLoginGoogle;
     Button mSend;
     CheckBox mLogin;
 
@@ -65,6 +76,11 @@ public class Upload extends Activity implements View.OnClickListener {
     HashSet<String> mHashSet = new HashSet<String>();
 
     MicroBenchmark mb;
+
+    Handler mUploadHandler;
+    Handler mLoginHandler;
+
+    boolean mLogedin = false;
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -78,15 +94,49 @@ public class Upload extends Activity implements View.OnClickListener {
         mBenchName = (EditText)findViewById(R.id.benchName);
         mEmail     = (EditText)findViewById(R.id.email);
         mAPIKey    = (EditText)findViewById(R.id.api);
+        mLoginGoogle    = (Button)findViewById(R.id.login_google);
+        mLoginGoogle.setOnClickListener(this);
         mBenchName.setEnabled(false);
         mEmail.setEnabled(false);
         mAPIKey.setEnabled(false);
+        mLoginGoogle.setEnabled(false);
 
         mSend      = (Button)findViewById(R.id.send);
         mSend.setOnClickListener(this);
 
         Intent intent = getIntent();
         mXML = intent.getStringExtra(XML);
+
+        mUploadHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                int state = msg.getData().getInt(MicroBenchmark.STATE);
+                if (state != MicroBenchmark.RUNNING) {
+                    try {
+                        dismissDialog(0);
+                        removeDialog(0);
+                    } catch (Exception e) {
+                    }
+                    if (state == MicroBenchmark.DONE) {
+                        showDialog(3);
+                        showDialog(1);
+                        mHashSet.add(mHash);
+                    }
+                    else {
+                        showDialog(2);
+                    }
+                    Log.e(TAG, msg.getData().getString(MicroBenchmark.MSG));
+                }
+            }
+        };
+
+
+        mLoginHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                dismissDialog(5);
+            }
+        };
+
+
     }
 
     public void onClick(View v) {
@@ -114,7 +164,7 @@ public class Upload extends Activity implements View.OnClickListener {
             Log.e(TAG, _mXML.toString());
 
             mURL = "http://" + getString(R.string.default_appspot) + ".appspot.com:80/run/";
-            mb = new MicroBenchmark(_mXML.toString(), mURL, apiKey, benchName, handler) ;
+            mb = new MicroBenchmark(_mXML.toString(), mURL, apiKey, benchName, mUploadHandler) ;
             // this is not really a hash
             mHash = apiKey + benchName;
             if(!mHashSet.contains(mHash)){
@@ -128,35 +178,18 @@ public class Upload extends Activity implements View.OnClickListener {
                 mBenchName.setEnabled(true);
                 mEmail.setEnabled(true);
                 mAPIKey.setEnabled(true);
+                mLoginGoogle.setEnabled(true);
             } else {
                 mBenchName.setEnabled(false);
                 mEmail.setEnabled(false);
                 mAPIKey.setEnabled(false);
+                mLoginGoogle.setEnabled(false);
             }
+        } else if (v == mLoginGoogle) {
+            showDialog(5);
         }
-    }
 
-    Handler handler = new Handler() {
-        public void handleMessage(Message msg) {
-            int state = msg.getData().getInt(MicroBenchmark.STATE);
-            if (state != MicroBenchmark.RUNNING) {
-                try {
-                    dismissDialog(0);
-                    removeDialog(0);
-                } catch (Exception e) {
-                }
-                if (state == MicroBenchmark.DONE) {
-                    showDialog(3);
-                    showDialog(1);
-                    mHashSet.add(mHash);
-                }
-                else {
-                    showDialog(2);
-                }
-                Log.e(TAG, msg.getData().getString(MicroBenchmark.MSG));
-            }
-        }
-    };
+    }
 
     protected Dialog onCreateDialog(int id) {
         switch(id) {
@@ -199,8 +232,65 @@ public class Upload extends Activity implements View.OnClickListener {
                         .setPositiveButton("OK", null)
                 ;
                 return builder4.create();
+            case(5): // webview
+                Dialog mWebDialog = new Dialog(this);
+                mWebDialog.setContentView(R.layout.login_dialog);
+                mWebDialog.setTitle("Login to Google");
+
+                WebView mWebView = (WebView) mWebDialog.findViewById(R.id.web_view);
+                mWebView.setWebViewClient(new MyWebViewClient());
+                mWebView.setWebChromeClient(new MyWebChromeClient());
+
+                WebSettings webSettings = mWebView.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                webSettings.setSupportZoom(false);
+
+                mWebView.loadUrl(mMobileLoginUrl);
+                return mWebDialog;
+
+            case(6):
+                ProgressDialog dialog2 = new ProgressDialog(this);
+                dialog2.setMessage("Connecting, please wait...");
+                return dialog2;
+
             default:
                 return null;
+        }
+    }
+
+    final class MyWebChromeClient extends WebChromeClient {
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
+            Log.e(TAG, message);
+            String [] values = message.split("\t");
+            if (values.length == 3 && values[0].equals("returnValue")) {
+                mEmail.setText(values[1]);
+                mAPIKey.setText(values[2]);
+                mLoginHandler.sendMessage(new Message());
+            }
+            result.confirm();
+            return true;
+        }
+    }
+
+    final class MyWebViewClient extends WebViewClient {
+        @Override
+        public void onPageStarted (WebView view, String url, Bitmap favicon) {
+            super.onPageStarted(view, url, favicon);
+            showDialog(6);
+        }
+        @Override
+        public void onPageFinished (WebView view, String url) {
+            super.onPageFinished(view, url);
+            dismissDialog(6);
+            removeDialog(6);
+            dismissDialog(5);
+            showDialog(5);
+        }
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
         }
     }
 
