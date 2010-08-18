@@ -68,7 +68,7 @@ public class GCBench {
                 return 2 * TreeSize(kStretchTreeDepth) / TreeSize(i);
         }
 
-	// Build tree top down, assigning to older objects. 
+	// Build tree top down, assigning to older objects.
 	static void Populate(int iDepth, Node thisNode) {
 		if (iDepth<=0) {
 			return;

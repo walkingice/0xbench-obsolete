@@ -8,7 +8,7 @@ import android.util.Log;
 
 Reformatted by Jonathan Hardwick (jch@cs.cmu.edu), 3/28/96
 Run benchmark 10 times to decrease effects of timer granularity, 10/20/96
-Compare to LinpackLoopOpt.java.    
+Compare to LinpackLoopOpt.java.
 See http://www.cs.cmu.edu/~jch/java/linpack.html for details
 
 
@@ -23,7 +23,6 @@ Translated to C by Bonnie Toy 5/88
          Jack Dongarra)
 
 */
-
 
 import android.util.*;
 
@@ -45,8 +44,6 @@ public class LinpackLoop {
         return (System.currentTimeMillis() - second_orig)/1000;
     }
 
-    
-    
     public String run_benchmark () {
         double a[][] = new double[200][201];
         double b[] = new double[200];
@@ -56,7 +53,7 @@ public class LinpackLoop {
         double kf;
         int n,i,ntimes,info,lda,ldaa,kflops;
         int ipvt[] = new int[200];
-        
+
         double mflops_result;
         double residn_result;
         double time_result;
@@ -66,9 +63,9 @@ public class LinpackLoop {
         ldaa = 200;
         cray = .056;
         n = 100;
-        
+
         ops = (2.0e0*(n*n*n))/3.0 + 2.0*(n*n);
-        
+
         norma = matgen(a,lda,n,b);
         time = second();
         for (i = 0; i < 10; i++) {
@@ -76,7 +73,7 @@ public class LinpackLoop {
             dgesl(a,lda,n,ipvt,b,0);
         }
         total = (second() - time) / 10.0D;
-        
+
         for (i = 0; i < n; i++) {
             x[i] = b[i];
         }
@@ -93,7 +90,7 @@ public class LinpackLoop {
             normx = (normx > Math.abs((double)x[i]))
                 ? normx : Math.abs((double)x[i]);
         }
-        
+
         eps_result = epslon((double)1.0);
         residn_result = resid/( n*norma*normx*eps_result );
         time_result = total;
@@ -114,13 +111,11 @@ public class LinpackLoop {
             "    Norm Res: " + residn_result +
             "    Precision: " + eps_result);
     }
-    
 
-    
     double matgen (double a[][], int lda, int n, double b[]) {
         double norma;
         int init, i, j;
-        
+
         init = 1325;
         norma = 0.0;
         /*    Next two for() statements switched.    Solver wants
@@ -141,41 +136,39 @@ public class LinpackLoop {
                 b[i] = b[i] + a[j][i];
             }
         }
-        
+
         return norma;
     }
-    
 
-    
     /*
         dgefa factors a double precision matrix by gaussian elimination.
-        
+
         dgefa is usually called by dgeco, but it can be called
         directly with a saving in time if    rcond    is not needed.
         (time for dgeco) = (1 + 9/n)*(time for dgefa) .
-        
+
         on entry
-        
+
         a             double precision[n][lda]
         the matrix to be factored.
-        
+
         lda         integer
         the leading dimension of the array    a .
-        
+
         n             integer
         the order of the matrix    a .
-        
+
         on return
-        
+
         a             an upper triangular matrix and the multipliers
         which were used to obtain it.
         the factorization can be written    a = l*u    where
         l    is a product of permutation and unit lower
         triangular matrices and    u    is upper triangular.
-        
+
         ipvt        integer[n]
         an integer vector of pivot indices.
-        
+
         info        integer
         = 0    normal value.
         = k    if    u[k][k] .eq. 0.0 .    this is not an error
@@ -183,51 +176,52 @@ public class LinpackLoop {
         indicate that dgesl or dgedi will divide by zero
         if called.    use    rcond    in dgeco for a reliable
         indication of singularity.
-        
+
         linpack. this version dated 08/14/78.
         cleve moler, university of new mexico, argonne national lab.
-        
+
         functions
-        
+
         blas daxpy,dscal,idamax
     */
+
     int dgefa( double a[][], int lda, int n, int ipvt[]) {
         double t;
         int j,k,kp1,l,nm1;
         int info;
-        
+
         // gaussian elimination with partial pivoting
-        
+
         info = 0;
         nm1 = n - 1;
         if (nm1 >=    0) {
             for (k = 0; k < nm1; k++) {
                 kp1 = k + 1;
-                
+
                 // find l = pivot index
-                
+
                 l = idamax(n-k,a[k],k,1) + k;
                 ipvt[k] = l;
-                
+
                 // zero pivot implies this column already triangularized
-                
+
                 if (a[k][l] != 0) {
-                    
+
                     // interchange if necessary
-                    
+
                     if (l != k) {
                         t = a[k][l];
                         a[k][l] = a[k][k];
                         a[k][k] = t;
                     }
-                    
+
                     // compute multipliers
-                    
+
                     t = -1.0/a[k][k];
                     dscal(n-(k+1),t,a[k],k+1,1);
-                    
+
                     // row elimination with column indexing
-                    
+
                     for (j = kp1; j < n; j++) {
                         t = a[j][l];
                         if (l != k) {
@@ -245,52 +239,50 @@ public class LinpackLoop {
         }
         ipvt[n-1] = n-1;
         if (a[(n-1)][(n-1)] == 0) info = n-1;
-        
+
         return info;
     }
 
-    
-    
     /*
         dgesl solves the double precision system
         a * x = b    or    trans(a) * x = b
         using the factors computed by dgeco or dgefa.
-    
+
         on entry
-    
+
         a             double precision[n][lda]
         the output from dgeco or dgefa.
-    
+
         lda         integer
         the leading dimension of the array    a .
-        
+
         n             integer
         the order of the matrix    a .
-    
+
         ipvt        integer[n]
         the pivot vector from dgeco or dgefa.
 
         b             double precision[n]
         the right hand side vector.
-        
+
         job         integer
         = 0                 to solve    a*x = b ,
         = nonzero     to solve    trans(a)*x = b    where
         trans(a)    is the transpose.
-        
+
         on return
-        
+
         b             the solution vector    x .
-        
+
         error condition
-        
+
         a division by zero will occur if the input factor contains a
         zero on the diagonal.    technically this indicates singularity
         but it is often caused by improper arguments or improper
         setting of lda .    it will not occur if the subroutines are
         called correctly and if dgeco has set rcond .gt. 0.0
         or dgefa has set info .eq. 0 .
-        
+
         to compute    inverse(a) * c    where    c    is a matrix
         with    p    columns
         dgeco(a,lda,n,ipvt,rcond,z)
@@ -298,14 +290,15 @@ public class LinpackLoop {
         for (j=0,j<p,j++)
         dgesl(a,lda,n,ipvt,c[j][0],0);
         }
-        
+
         linpack. this version dated 08/14/78 .
         cleve moler, university of new mexico, argonne national lab.
-        
+
         functions
-        
+
         blas daxpy,ddot
     */
+
     void dgesl( double a[][], int lda, int n, int ipvt[], double b[], int job) {
         double t;
         int k,kb,l,nm1;
@@ -345,7 +338,7 @@ public class LinpackLoop {
                 b[k] = (b[k] - t)/a[k][k];
             }
 
-            // now solve trans(l)*x = y 
+            // now solve trans(l)*x = y
 
             if (nm1 >= 1) {
                 for (kb = 1; kb < nm1; kb++) {
@@ -361,8 +354,6 @@ public class LinpackLoop {
             }
         }
     }
-
-
 
     /*
         constant times a vector plus a vector.
@@ -393,7 +384,7 @@ public class LinpackLoop {
 
                 int _r = n % 4;
                 int _n = n - _r;
-                
+
                 for (i = 0;i < _n; i+=4) {
                     dy[i +dy_off] = dy[i +dy_off] + da*dx[i +dx_off];
                     dy[i+1 +dy_off] = dy[i+1 +dy_off] + da*dx[i+1 +dx_off];
@@ -405,8 +396,6 @@ public class LinpackLoop {
             }
         }
     }
-
-
 
     /*
         forms the dot product of two vectors.
@@ -420,7 +409,7 @@ public class LinpackLoop {
         dtemp = 0;
 
         if (n > 0) {
-            
+
             if (incx != 1 || incy != 1) {
 
                 // code for unequal increments or equal increments not equal to 1
@@ -437,7 +426,7 @@ public class LinpackLoop {
             } else {
 
                 // code for both increments equal to 1
-    
+
                 for (i=0;i < n; i++)
                     dtemp = dtemp + dx[i +dx_off]*dy[i +dy_off];
             }
@@ -445,8 +434,6 @@ public class LinpackLoop {
         return(dtemp);
     }
 
-    
-    
     /*
         scales a vector by a constant.
         jack dongarra, linpack, 3/11/78.
@@ -472,8 +459,6 @@ public class LinpackLoop {
         }
     }
 
-    
-    
     /*
         finds the index of element having max. absolute value.
         jack dongarra, linpack, 3/11/78.
@@ -516,11 +501,9 @@ public class LinpackLoop {
         return (itemp);
     }
 
-
-    
     /*
         estimate unit roundoff in quantities of size x.
-        
+
         this program should function properly on all systems
         satisfying the following two assumptions,
         1.    the base used in representing dfloating point
@@ -539,12 +522,12 @@ public class LinpackLoop {
         the next larger dfloating point number.
         the developers of eispack would appreciate being informed
         about any systems where these assumptions do not hold.
-        
+
         *****************************************************************
         this routine is one of the auxiliary routines used by eispack iii
         to avoid machine dependencies.
         *****************************************************************
-    
+
         this version dated 4/6/83.
     */
     double epslon (double x) {
@@ -560,27 +543,25 @@ public class LinpackLoop {
         return(eps*Math.abs((double)x));
     }
 
-    
-
     /*
         purpose:
         multiply matrix m times vector x and add the result to vector y.
-        
+
         parameters:
-        
+
         n1 integer, number of elements in vector y, and number of rows in
         matrix m
-        
+
         y double [n1], vector of length n1 to which is added
         the product m*x
-        
+
         n2 integer, number of elements in vector x, and number of columns
         in matrix m
-        
+
         ldm integer, leading dimension of array m
-        
+
         x double [n2], vector of length n2
-        
+
         m double [ldm][n2], matrix of n1 rows and n2 columns
     */
     void dmxpy ( int n1, double y[], int n2, int ldm, double x[], double m[][]) {
